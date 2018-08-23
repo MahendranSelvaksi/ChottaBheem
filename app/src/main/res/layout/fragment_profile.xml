@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".fragment.ProfileFragment">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:orientation="vertical"
+            android:padding="5dp">
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="2.5dp"
+                android:layout_marginTop="5dp">
+
+                <com.unsullied.chottabheem.utils.CustomEditText
+                    android:id="@+id/reg_username_et"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:cursorVisible="true"
+                    android:gravity="center_vertical"
+                    android:hint="Name"
+                    android:imeOptions="actionNext"
+                    android:inputType="text|textNoSuggestions|textPersonName|textCapSentences"
+                    android:maxLines="1"
+                    android:padding="05dp"
+                    android:textColor="@color/PrimaryText"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColorHint="@color/SecondaryText"
+                    app:customFont="novalight.ttf" />
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="2.5dp"
+                android:layout_marginTop="5dp">
+
+                <com.unsullied.chottabheem.utils.CustomEditText
+                    android:id="@+id/reg_email_et"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="1dp"
+                    android:cursorVisible="true"
+                    android:gravity="center_vertical"
+                    android:hint="Email ID"
+                    android:imeOptions="actionNext"
+                    android:inputType="textEmailAddress"
+                    android:maxLines="1"
+                    android:padding="05dp"
+                    android:textColor="@color/PrimaryText"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColorHint="@color/SecondaryText"
+                    app:customFont="novalight.ttf" />
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="2.5dp"
+                android:layout_marginTop="5dp">
+
+                <com.unsullied.chottabheem.utils.CustomEditText
+                    android:id="@+id/reg_mobile_et"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="1dp"
+                    android:cursorVisible="true"
+                    android:gravity="center_vertical"
+                    android:hint="Phone no"
+                    android:imeOptions="actionNext"
+                    android:inputType="phone"
+                    android:maxLength="10"
+                    android:maxLines="1"
+                    android:padding="05dp"
+                    android:textColor="@color/PrimaryText"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColorHint="@color/SecondaryText"
+                    app:customFont="novalight.ttf" />
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="2.5dp"
+                android:layout_marginTop="5dp">
+
+                <com.unsullied.chottabheem.utils.CustomEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="1dp"
+                    android:cursorVisible="true"
+                    android:gravity="center_vertical"
+                    android:hint="Referral Count"
+                    android:imeOptions="actionNext"
+                    android:maxLines="1"
+                    android:padding="05dp"
+                    android:textColor="@color/PrimaryText"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColorHint="@color/SecondaryText"
+                    app:customFont="novalight.ttf"/>
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="2.5dp"
+                android:layout_marginTop="5dp">
+
+                <com.unsullied.chottabheem.utils.CustomEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="1dp"
+                    android:cursorVisible="true"
+                    android:gravity="center_vertical"
+                    android:hint="Parent"
+                    android:imeOptions="actionNext"
+                    android:maxLines="1"
+                    android:padding="05dp"
+                    android:textColor="@color/PrimaryText"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColorHint="@color/SecondaryText"
+                    app:customFont="novalight.ttf"/>
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp">
+
+                <com.unsullied.chottabheem.utils.CustomEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="1dp"
+                    android:cursorVisible="true"
+                    android:gravity="center_vertical"
+                    android:hint="Child"
+                    android:imeOptions="actionNext"
+                    android:maxLines="1"
+                    android:padding="05dp"
+                    android:textColor="@color/PrimaryText"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColorHint="@color/SecondaryText"
+                    app:customFont="novalight.ttf"/>
+            </android.support.design.widget.TextInputLayout>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="40dp"
+                android:background="@drawable/custom_button"
+                android:padding="5dp"
+                android:text="Submit"
+                android:textColor="@android:color/white"
+                android:visibility="gone" />
+        </LinearLayout>
+    </ScrollView>
+
+</FrameLayout>

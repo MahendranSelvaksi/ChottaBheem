@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".activity.VerificationActivity">
+
+    <include
+        android:id="@+id/verificationToolbar"
+        layout="@layout/custom_toolbar" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:orientation="vertical"
+            android:padding="5dp">
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="2.5dp"
+                android:layout_marginTop="5dp">
+
+                <com.unsullied.chottabheem.utils.CustomEditText
+                    android:id="@+id/verify_username_et"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:cursorVisible="true"
+                    android:gravity="center_vertical"
+                    android:hint="Name"
+                    android:imeOptions="actionNext"
+                    android:inputType="text|textNoSuggestions|textPersonName|textCapSentences"
+                    android:maxLines="1"
+                    android:padding="05dp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="@color/PrimaryText"
+                    android:textColorHint="@color/SecondaryText"
+                    app:customFont="novalight.ttf" />
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="2.5dp"
+                android:layout_marginTop="5dp">
+
+                <com.unsullied.chottabheem.utils.CustomEditText
+                    android:id="@+id/verify_email_et"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="1dp"
+                    android:cursorVisible="true"
+                    android:gravity="center_vertical"
+                    android:hint="Email ID"
+                    android:imeOptions="actionNext"
+                    android:inputType="textEmailAddress"
+                    android:maxLines="1"
+                    android:padding="05dp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="@color/PrimaryText"
+                    android:textColorHint="@color/SecondaryText"
+                    app:customFont="novalight.ttf" />
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="2.5dp"
+                android:layout_marginTop="5dp">
+
+                <com.unsullied.chottabheem.utils.CustomEditText
+                    android:id="@+id/verify_referral_code_et"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="1dp"
+                    android:cursorVisible="true"
+                    android:gravity="center_vertical"
+                    android:hint="Referral Code"
+                    android:imeOptions="actionNext"
+                    android:inputType="text"
+                    android:maxLines="1"
+                    android:padding="05dp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="@color/PrimaryText"
+                    android:textColorHint="@color/SecondaryText"
+                    app:customFont="novalight.ttf" />
+            </android.support.design.widget.TextInputLayout>
+
+            <LinearLayout
+                android:id="@+id/agreeCBLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+
+                <CheckBox
+                    android:id="@+id/agreeCB"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"/>
+
+                <com.unsullied.chottabheem.utils.CustomTextView
+                    android:id="@+id/agreeCBTV"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:gravity="left"
+                    android:text="@string/agreeCheckBoxStr"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="@color/SecondaryText"
+                    app:customFont="novalight.ttf" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/subscriptionCBLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+
+                <CheckBox
+                    android:id="@+id/subscriptionCB"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"/>
+
+                <com.unsullied.chottabheem.utils.CustomTextView
+                    android:id="@+id/subscriptionCBTV"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:gravity="left"
+                    android:text="@string/subscriptionCheckBoxStr"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="@color/SecondaryText"
+                    app:customFont="novalight.ttf" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/verify_submit_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="0dp"
+                android:layout_marginRight="0dp"
+                android:layout_marginTop="30dp"
+                android:background="@drawable/custom_button"
+                android:gravity="center"
+                android:text="Send"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="@color/tabTextColor" />
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragment.AdminRequestFragment">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/adminRequestRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="10dp" />
+
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/addRequestFAB"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right|end"
+        android:layout_marginBottom="20dp"
+        android:layout_marginEnd="20dp"
+        android:src="@drawable/ic_add" />
+
+</FrameLayout>

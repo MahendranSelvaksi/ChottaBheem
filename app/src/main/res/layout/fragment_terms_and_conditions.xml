@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".fragment.TermsAndConditionsFragment">
+    <include
+        android:id="@+id/termsAndConditionToolbar"
+        layout="@layout/custom_toolbar"
+        android:visibility="gone"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:layout_marginBottom="0dp"
+        android:fitsSystemWindows="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:layout_marginBottom="0dp"
+            android:orientation="vertical">
+            <!-- TODO: Update blank fragment layout -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top|center"
+                android:gravity="center"
+                android:text="@string/terms_and_conditionsTitle"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Title"
+                android:visibility="gone" />
+
+            <com.unsullied.chottabheem.utils.CustomTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:layout_margin="3dp"
+                android:gravity="left"
+                android:text="General"
+                android:textAllCaps="true"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="@color/PrimaryText"
+                app:customFont="novabold.ttf" />
+
+            <com.unsullied.chottabheem.utils.CustomTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left|start"
+                android:layout_marginEnd="5dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="5dp"
+                android:gravity="left"
+                android:text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                android:textColor="@color/SecondaryText"
+                app:customFont="novalight.ttf" />
+
+            <com.unsullied.chottabheem.utils.CustomTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:layout_marginTop="10dp"
+                android:gravity="left"
+                android:text="Condition of Use"
+                android:textAllCaps="true"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="@color/PrimaryText"
+                app:customFont="novabold.ttf" />
+
+            <com.unsullied.chottabheem.utils.CustomTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:layout_marginEnd="5dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="5dp"
+                android:gravity="left"
+                android:text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                android:textColor="@color/SecondaryText"
+                app:customFont="novalight.ttf" />
+
+            <com.unsullied.chottabheem.utils.CustomTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:layout_marginTop="10dp"
+                android:gravity="left"
+                android:text="Limitations of liability"
+                android:textAllCaps="true"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="@color/PrimaryText"
+                app:customFont="novabold.ttf" />
+
+            <com.unsullied.chottabheem.utils.CustomTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left|start"
+                android:layout_marginBottom="40dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="5dp"
+                android:gravity="left"
+                android:text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                android:textColor="@color/SecondaryText"
+                app:customFont="novalight.ttf" />
+        </LinearLayout>
+    </ScrollView>
+
+
+</LinearLayout>

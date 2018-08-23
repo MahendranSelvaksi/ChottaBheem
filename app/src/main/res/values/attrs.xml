@@ -1,0 +1,32 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Declare custom theme attributes that allow changing which styles are
+         used for button bars depending on the API level.
+         ?android:attr/buttonBarStyle is new as of API 11 so this is
+         necessary to support previous API levels. -->
+    <declare-styleable name="ButtonBarContainerTheme">
+        <attr name="metaButtonBarStyle" format="reference" />
+        <attr name="metaButtonBarButtonStyle" format="reference" />
+    </declare-styleable>
+    <declare-styleable name="TintedProgressBar">
+        <attr name="tint_color" format="color" />
+    </declare-styleable>
+
+    <declare-styleable name="CustomTextView">
+        <attr name="customFont" format="string" />
+    </declare-styleable>
+
+    <declare-styleable name="MaterialSpinner" tools:ignore="ResourceName">
+        <attr name="ms_arrow_tint" format="color"/>
+        <attr name="ms_hide_arrow" format="boolean"/>
+        <attr name="ms_background_color" format="color"/>
+        <attr name="ms_text_color" format="color"/>
+        <attr name="ms_dropdown_max_height" format="dimension"/>
+        <attr name="ms_dropdown_height" format="dimension">
+            <enum name="fill_parent" value="-1"/>
+            <enum name="match_parent" value="-1"/>
+            <enum name="wrap_content" value="-2"/>
+        </attr>
+    </declare-styleable>
+
+</resources>

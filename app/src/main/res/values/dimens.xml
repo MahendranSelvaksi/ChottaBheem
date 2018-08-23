@@ -1,0 +1,86 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+
+
+    <dimen name="default_padding_top">8dp</dimen>
+    <dimen name="default_padding_bottom">8dp</dimen>
+    <dimen name="inner_padding_left">0dp</dimen>
+    <dimen name="inner_padding_right">0dp</dimen>
+    <dimen name="floating_label_text_size">12sp</dimen>
+    <dimen name="bottom_text_size">12sp</dimen>
+    <dimen name="inner_components_spacing">8dp</dimen>
+    <dimen name="bottom_ellipsis_height">4dp</dimen>
+
+
+    <!--
+          ~ Copyright (C) 2016 Jared Rummler <jared.rummler@gmail.com>
+          ~
+          ~ Licensed under the Apache License, Version 2.0 (the "License");
+          ~ you may not use this file except in compliance with the License.
+          ~ You may obtain a copy of the License at
+          ~
+          ~      http://www.apache.org/licenses/LICENSE-2.0
+          ~
+          ~ Unless required by applicable law or agreed to in writing, software
+          ~ distributed under the License is distributed on an "AS IS" BASIS,
+          ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+          ~ See the License for the specific language governing permissions and
+          ~ limitations under the License.
+          ~
+          -->
+
+
+    <dimen name="ms__padding_left">24dp</dimen>
+    <dimen name="ms__padding_top">12dp</dimen>
+    <dimen name="ms__item_height">48dp</dimen>
+    <dimen name="ms__popup_padding_left">24dp</dimen>
+    <dimen name="ms__popup_padding_top">12dp</dimen>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="nav_header_vertical_spacing">16dp</dimen>
+    <dimen name="nav_header_height">160dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="appbar_padding_top">8dp</dimen>
+    <dimen name="tab_max_width">264dp</dimen>
+    <dimen name="tab_padding_bottom">5dp</dimen>
+    <dimen name="tab_label">14sp</dimen>
+    <dimen name="custom_tab_layout_height">72dp</dimen>
+    <dimen name="textSizeBody">14sp</dimen>
+    <dimen name="textSizeBodyLarge">16sp</dimen>
+    <dimen name="textSizePrescHF">12sp</dimen>
+    <dimen name="textSizePrint">10sp</dimen>
+    <dimen name="textSizeSubHeading">18sp</dimen>
+    <dimen name="textSizeTitle">22sp</dimen>
+    <dimen name="textSizeBigTitle">26sp</dimen>
+    <dimen name="cardViewCornerRadius">5sp</dimen>
+    <dimen name="moreLessButtonSize">35dp</dimen>
+    <dimen name="buyMedicinePlaceOrderScreenCompletionIndicator">50dp</dimen>
+    <dimen name="homeLayoutMarginStart">10dp</dimen>
+    <dimen name="homeLayoutMarginEnd">10dp</dimen>
+    <dimen name="imageSize">30dp</dimen>
+    <dimen name="tableRowPaddingTop">10dp</dimen>
+    <dimen name="ePrescButtonPadding">15dp</dimen>
+    <dimen name="ePrescIconSize">30dp</dimen>
+    <dimen name="spacingNormal">5dp</dimen>
+    <dimen name="spacingLarge">10dp</dimen>
+    <dimen name="spacingExtraLarge">30dp</dimen>
+    <dimen name="thumb_width">30dp</dimen>
+    <dimen name="thumb_height">30dp</dimen>
+
+    <dimen name="bubble_thumb_width">70dp</dimen>
+    <dimen name="bubble_thumb_height">70dp</dimen>
+
+
+    <dimen name="fab_size_normal">56dp</dimen>
+    <dimen name="fab_size_mini">40dp</dimen>
+    <dimen name="labels_text_size">14sp</dimen>
+    <dimen name="medicineListDividerHeight">7dp</dimen>
+
+    <dimen name="icon_size">40dp</dimen>
+
+
+</resources>
+

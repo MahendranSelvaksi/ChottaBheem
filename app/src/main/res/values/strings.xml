@@ -1,0 +1,64 @@
+<resources>
+    <string name="app_name">Chotta Bheem</string>
+    <string name="FACEBOOK_APP_ID">580483265681896</string>
+    <string name="ACCOUNT_KIT_CLIENT_TOKEN">35be1302d0f03ddbb16102e547fa1f25</string>
+
+
+    // if your Facebook App ID is 1234567, you should use ak1234567
+    <string name="ak_login_protocol_scheme">ak35be1302d0f03ddbb16102e547fa1f25</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="title_activity_splash">SplashActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+
+    <string name="loginContent">It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.</string>
+    <string name="homeTitle">Home</string>
+    <string name="profileTitle">Profile</string>
+    <string name="admin_requestTitle">Admin Request</string>
+    <string name="terms_and_conditionsTitle">Terms and Conditions</string>
+    <string name="privacy_policyTitle">Privacy Policy</string>
+    <string name="contact_usTitle">Contact Us</string>
+    <string name="about_usTitle">About Us</string>
+    <string name="share_referral_codeTitle">Share Referral Code</string>
+    <string name="setting_Title">Setting</string>
+    <string name="add_admin_request_Title">Add Request</string>
+    <string name="exit">Exit</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="copyRightsStr">&#169; Copyrights Aadhavan Associates, Pvt ltd</string>
+
+    <array name="menuArray">
+        <item>Mobile \n Recharge</item>
+        <item>Bus \n Booking</item>
+        <item>Movie \n Ticket</item>
+        <item>DTH \n Recharge</item>
+        <item>Data card \n Recharge</item>
+        <item>Postpaid \n Recharge</item>
+        <item>Electricity \n Bill</item>
+        <item>Gas</item>
+        <item>Insurance</item>
+        <item>Landline</item>
+        <item>Broadband Bill \n Payment</item>
+    </array>
+    <array name="operatorArry">
+        <item>----</item>
+        <item>AirTel</item>
+        <item>Vodafone</item>
+        <item>BSNL</item>
+        <item>Jio</item>
+        <item>Idea</item>
+    </array>
+    <string name="title_activity_main2">Main2Activity</string>
+    <string name="termsCondition">By Signing up, you agree to Chotta Bheem\'s Terms &amp; Conditions and Privacy policy</string>
+    <string name="agreeCheckBoxStr">I Agree the Terms and Conditions</string>
+    <string name="subscriptionCheckBoxStr">I Agree to pay subscription changes of Rs.99</string>
+</resources>

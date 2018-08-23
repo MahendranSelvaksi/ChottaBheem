@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/toolbar"
+    android:layout_width="match_parent"
+    android:layout_height="58dp"
+    android:background="@color/colorPrimaryDark"
+    android:minHeight="?attr/actionBarSize"
+    android:titleTextColor="#ffffff">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="left"
+        android:foregroundGravity="center"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <com.unsullied.chottabheem.utils.CustomTextView
+            android:id="@+id/toolbar_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="@string/app_name"
+            android:textAppearance="@style/TextAppearance.Widget.AppCompat.Toolbar.Title"
+            android:textColor="@color/tabTextColor"
+            app:customFont="novabold.ttf" />
+
+        <LinearLayout
+            android:id="@+id/pointsLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:orientation="vertical"
+            >
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_outline_account_balance_wallet_24px" />
+
+            <com.unsullied.chottabheem.utils.CustomTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="100 point(s)"
+                android:textColor="@android:color/white"
+                app:customFont="nova.ttf" />
+        </LinearLayout>
+    </RelativeLayout>
+</android.support.v7.widget.Toolbar>

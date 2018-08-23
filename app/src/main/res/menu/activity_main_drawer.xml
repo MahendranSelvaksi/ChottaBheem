@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="none">
+
+        <item
+            android:id="@+id/navHome"
+            android:icon="@drawable/ic_outline_home_24px"
+            android:title="@string/homeTitle"/>
+        <item
+            android:id="@+id/navProfile"
+            android:icon="@drawable/ic_outline_person_24px"
+            android:title="@string/profileTitle"/>
+        <item
+            android:id="@+id/navAdminReq"
+            android:icon="@drawable/ic_outline_how_to_reg_24px"
+            android:title="@string/admin_requestTitle"/>
+        <item
+            android:id="@+id/navTerms"
+            android:icon="@drawable/ic_outline_description_24px"
+            android:title="@string/terms_and_conditionsTitle"/>
+        <item
+            android:id="@+id/navPrivatePolicy"
+            android:icon="@drawable/ic_outline_pan_tool_24px"
+            android:title="@string/privacy_policyTitle"/>
+
+        <item
+            android:id="@+id/navContact"
+            android:icon="@drawable/ic_outline_contacts_24px"
+            android:title="@string/contact_usTitle"/>
+        <item
+            android:id="@+id/navAbout"
+            android:icon="@drawable/ic_outline_settings_input_antenna_24px"
+            android:title="@string/about_usTitle"/>
+        <item
+            android:id="@+id/navShareReferral"
+            android:icon="@drawable/ic_outline_share_24px"
+            android:title="@string/share_referral_codeTitle"/>
+        <item
+            android:id="@+id/navSetting"
+            android:icon="@drawable/ic_outline_settings_24px"
+            android:title="@string/setting_Title"/>
+        <item
+            android:id="@+id/navExit"
+            android:icon="@drawable/ic_outline_exit_to_app_24px"
+            android:title="@string/exit"/>
+    </group>
+</menu>
