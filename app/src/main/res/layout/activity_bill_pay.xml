@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/sponsor3"
+    android:background="@color/shapeBgColor"
     android:orientation="vertical"
     tools:context=".activity.BillPayActivity">
 
@@ -14,22 +14,49 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:fillViewport="true">
 
-        <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            app:cardBackgroundColor="@android:color/white"
-            app:cardCornerRadius="3dp"
-            app:cardElevation="2dp"
-            app:cardUseCompatPadding="true">
+            android:layout_height="match_parent"
+            android:layout_margin="20dp"
+            android:background="@drawable/folder_bg"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="20dp"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/billIconIV"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:padding="5dp"
+                    android:src="@drawable/ic_light_bulb" />
+
+                <com.unsullied.chottabheem.utils.CustomTextView
+                    android:id="@+id/billTitleTV"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center"
+                    android:text="@string/app_name"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="@android:color/black"
+                    app:customFont="novalight.ttf" />
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="50dp"
                 android:orientation="vertical"
                 android:padding="5dp">
 
@@ -62,8 +89,8 @@
 
                     <Button
                         android:id="@+id/operatorSelectBtn"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
                         android:layout_gravity="right|center_vertical"
                         android:layout_marginRight="10dp"
                         android:background="@drawable/ic_drop_down" />
@@ -154,7 +181,7 @@
                 </FrameLayout>
 
 
-                <Button
+                <com.unsullied.chottabheem.utils.CustomTextView
                     android:id="@+id/payBtn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -164,13 +191,14 @@
                     android:layout_marginTop="25dp"
                     android:background="@drawable/pay_button"
                     android:gravity="center"
-                    android:padding="0dp"
-                    android:text="Pay"
+                    android:padding="10dp"
+                    android:text="Pay now"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                     android:textColor="@color/tabTextColor"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    app:customFont="novalight.ttf" />
 
             </LinearLayout>
-        </android.support.v7.widget.CardView>
+        </LinearLayout>
     </ScrollView>
 </LinearLayout>

@@ -182,6 +182,7 @@ public class HomeFragment extends BaseFragment {
         Intent rechargeIntent = new Intent(mActivity, position <= 3 ? RechargeActivity.class : BillPayActivity.class);
         rechargeIntent.putExtra(AppConstants.TITLE_INTENT_KEY, selectedStr);
         rechargeIntent.putExtra(AppConstants.HINT_INTENT_KEY, hintData.get(position));
+        rechargeIntent.putExtra(AppConstants.ICON_INTENT_KEY,iconsArray[position]);
         startActivity(rechargeIntent);
     }
 }

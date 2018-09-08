@@ -17,6 +17,7 @@ public class AppConstants {
     /*Pay Bill Activity*/
     public static final String TITLE_INTENT_KEY = "IntentTitle";
     public static final String HINT_INTENT_KEY = "IntentHint";
+    public static final String ICON_INTENT_KEY = "IntentIcon";
 
     public static final int OPERATOR_INTENT_REQUEST_CODE = 10001;
 

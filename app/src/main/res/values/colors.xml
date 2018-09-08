@@ -34,4 +34,6 @@
     <color name="SecondaryText">#868686</color>
     <color name="SubText">#A0A0A0</color>
     <color name="DividerColor">#B6B6B6</color>
+    
+    <color name="shapeBgColor">#cde7e5e5</color>
 </resources>

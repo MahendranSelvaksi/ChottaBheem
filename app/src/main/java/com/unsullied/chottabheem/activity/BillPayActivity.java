@@ -7,11 +7,14 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.unsullied.chottabheem.R;
 import com.unsullied.chottabheem.utils.AppConstants;
 import com.unsullied.chottabheem.utils.CustomEditText;
+import com.unsullied.chottabheem.utils.CustomTextView;
+import com.unsullied.chottabheem.utils.Utility;
 
 public class BillPayActivity extends AppCompatActivity {
 
@@ -19,18 +22,25 @@ public class BillPayActivity extends AppCompatActivity {
     private TextView tittleTV;
     private FrameLayout operatorLayout, numberLayout, dobLayout;
     private CustomEditText dobET, operatorET, mobileNumberET;
-    private Button operatorSelectBtn, contactBtn, dobBtn, payBtn;
+    private Button operatorSelectBtn, contactBtn, dobBtn;
     private TextInputLayout mobileNumberTIL;
+    private CustomTextView payBtn, billTitleTV;
+    private ImageView billIconIV;
 
     private String intentTitleStr, intentHintStr;
+    private int pageIcon;
+    private Utility myUtility;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bill_pay);
 
+        myUtility = new Utility();
+
         intentTitleStr = getIntent().getStringExtra(AppConstants.TITLE_INTENT_KEY);
         intentHintStr = getIntent().getStringExtra(AppConstants.HINT_INTENT_KEY);
+        pageIcon = getIntent().getIntExtra(AppConstants.ICON_INTENT_KEY, 0);
 
         toolbar = findViewById(R.id.billPayToolbar);
         tittleTV = toolbar.findViewById(R.id.toolbar_title);
@@ -56,8 +66,13 @@ public class BillPayActivity extends AppCompatActivity {
         contactBtn = findViewById(R.id.contactBtn);
         dobBtn = findViewById(R.id.dobBtn);
         payBtn = findViewById(R.id.payBtn);
+        billTitleTV = findViewById(R.id.billTitleTV);
+        billIconIV = findViewById(R.id.billIconIV);
 
+        myUtility.printLogcat("Image ::::" + pageIcon);
         setHintForEditText(intentHintStr);
+        billTitleTV.setText(intentTitleStr.trim());
+        billIconIV.setImageResource(pageIcon);
 
 
         dobLayout.setVisibility(View.GONE);
@@ -67,7 +82,7 @@ public class BillPayActivity extends AppCompatActivity {
 
 
     private void setHintForEditText(String hint) {
-      //  mobileNumberET.setHint(hint.trim());
+        //  mobileNumberET.setHint(hint.trim());
         mobileNumberTIL.setHint(hint);
     }
 }
