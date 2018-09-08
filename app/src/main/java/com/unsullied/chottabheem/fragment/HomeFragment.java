@@ -2,6 +2,7 @@ package com.unsullied.chottabheem.fragment;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -10,10 +11,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.unsullied.chottabheem.R;
+import com.unsullied.chottabheem.activity.BillPayActivity;
+import com.unsullied.chottabheem.activity.RechargeActivity;
 import com.unsullied.chottabheem.adapter.HomeMenuAdapter;
+import com.unsullied.chottabheem.utils.AppConstants;
 import com.unsullied.chottabheem.utils.BaseFragment;
 import com.unsullied.chottabheem.utils.Utility;
 
@@ -45,10 +48,11 @@ public class HomeFragment extends BaseFragment {
     private Activity mActivity;
     private Utility myUtility;
     private List<String> menuData;
+    private List<String> hintData;
     private HomeMenuAdapter menuAdapter;
     private List<Integer> menuIcons;
-    private int[] iconsArray = new int[]{R.drawable.ic_online_payment, R.drawable.ic_bus_ticket,
-            R.drawable.ic_ticket, R.drawable.ic_satellite_dish, R.drawable.ic_mobile_broadband_modem, R.drawable.ic_payment_method
+    private int[] iconsArray = new int[]{R.drawable.ic_online_payment, /*R.drawable.ic_bus_ticket,
+            R.drawable.ic_ticket,*/ R.drawable.ic_satellite_dish, R.drawable.ic_mobile_broadband_modem, R.drawable.ic_payment_method
             , R.drawable.ic_light_bulb, R.drawable.ic_gas, R.drawable.ic_insurance, R.drawable.ic_telephone, R.drawable.ic_wifi};
 
     public HomeFragment() {
@@ -113,9 +117,12 @@ public class HomeFragment extends BaseFragment {
         mActivity = getActivity();
         myUtility = new Utility();
         menuData = new ArrayList<>();
+        hintData = new ArrayList<>();
         menuIcons = new ArrayList<>();
         String[] menuArray = getResources().getStringArray(R.array.menuArray);
+        String[] hintArray = getResources().getStringArray(R.array.hintArray);
         menuData.addAll(Arrays.asList(menuArray));
+        hintData.addAll(Arrays.asList(hintArray));
         for (int i = 0; i < iconsArray.length; i++) {
             menuIcons.add(iconsArray[i]);
         }
@@ -150,9 +157,9 @@ public class HomeFragment extends BaseFragment {
 
 
     public void callNextActivity(int position) {
-        String selectedStr=menuData.get(position).trim();
-        Toast.makeText(mContext, ""+selectedStr, Toast.LENGTH_SHORT).show();
-       if (selectedStr.equals(menuData.get(0))){
+        String selectedStr = menuData.get(position).trim();
+       // Toast.makeText(mContext, "" + selectedStr, Toast.LENGTH_SHORT).show();
+       /*if (selectedStr.equals(menuData.get(0))){
 
        }else if (selectedStr.equals(menuData.get(1))){
 
@@ -170,7 +177,11 @@ public class HomeFragment extends BaseFragment {
 
        }else if (selectedStr.equals(menuData.get(8))){
 
-       }
+       }*/
 
+        Intent rechargeIntent = new Intent(mActivity, position <= 3 ? RechargeActivity.class : BillPayActivity.class);
+        rechargeIntent.putExtra(AppConstants.TITLE_INTENT_KEY, selectedStr);
+        rechargeIntent.putExtra(AppConstants.HINT_INTENT_KEY, hintData.get(position));
+        startActivity(rechargeIntent);
     }
 }

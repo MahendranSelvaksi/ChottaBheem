@@ -3,7 +3,6 @@ package com.unsullied.chottabheem.utils;
 import android.Manifest;
 import android.util.Base64;
 
-
 import com.unsullied.chottabheem.BuildConfig;
 
 import java.io.UnsupportedEncodingException;
@@ -12,8 +11,14 @@ public class AppConstants {
 
     public static final String APP_NAME = "Chotta bheem";
 
-    public static final boolean DEBUG=true;
-    public static final String TAG="Chotta Bheem";
+    public static final boolean DEBUG = true;
+    public static final String TAG = "Chotta Bheem";
+
+    /*Pay Bill Activity*/
+    public static final String TITLE_INTENT_KEY = "IntentTitle";
+    public static final String HINT_INTENT_KEY = "IntentHint";
+
+    public static final int OPERATOR_INTENT_REQUEST_CODE = 10001;
 
 
     /*Network Library Error */

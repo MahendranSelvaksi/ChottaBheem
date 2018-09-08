@@ -38,8 +38,8 @@
 
     <array name="menuArray">
         <item>Mobile \n Recharge</item>
-        <item>Bus \n Booking</item>
-        <item>Movie \n Ticket</item>
+        <!-- <item>Bus \n Booking</item>
+        <item>Movie \n Ticket</item>-->
         <item>DTH \n Recharge</item>
         <item>Data card \n Recharge</item>
         <item>Postpaid \n Recharge</item>
@@ -48,6 +48,20 @@
         <item>Insurance</item>
         <item>Landline</item>
         <item>Broadband Bill \n Payment</item>
+    </array>
+
+    <array name="hintArray">
+        <item>Enter phone number</item>
+        <!-- <item>Bus \n Booking</item>
+        <item>Movie \n Ticket</item>-->
+        <item>Enter DTH id</item>
+        <item>Enter number</item>
+        <item>Enter phone number</item>
+        <item>Account number</item>
+        <item>Consumer no</item>
+        <item>Policy Number</item>
+        <item>Landline Number</item>
+        <item>Directory Number</item>
     </array>
     <array name="operatorArry">
         <item>----</item>
