@@ -2,7 +2,6 @@ package com.unsullied.chottabheem.fragment;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -11,9 +10,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
-import com.unsullied.chottabheem.adapter.HomeMenuAdapter;
 import com.unsullied.chottabheem.R;
+import com.unsullied.chottabheem.adapter.HomeMenuAdapter;
 import com.unsullied.chottabheem.utils.BaseFragment;
 import com.unsullied.chottabheem.utils.Utility;
 
@@ -48,7 +48,7 @@ public class HomeFragment extends BaseFragment {
     private HomeMenuAdapter menuAdapter;
     private List<Integer> menuIcons;
     private int[] iconsArray = new int[]{R.drawable.ic_online_payment, R.drawable.ic_bus_ticket,
-            R.drawable.ic_ticket, R.drawable.ic_satellite_dish,  R.drawable.ic_mobile_broadband_modem, R.drawable.ic_payment_method
+            R.drawable.ic_ticket, R.drawable.ic_satellite_dish, R.drawable.ic_mobile_broadband_modem, R.drawable.ic_payment_method
             , R.drawable.ic_light_bulb, R.drawable.ic_gas, R.drawable.ic_insurance, R.drawable.ic_telephone, R.drawable.ic_wifi};
 
     public HomeFragment() {
@@ -123,7 +123,7 @@ public class HomeFragment extends BaseFragment {
 
         homeMenuRecyclerView.setHasFixedSize(true);
         homeMenuRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 3));
-        menuAdapter = new HomeMenuAdapter(mContext, menuData, iconsArray);
+        menuAdapter = new HomeMenuAdapter(mContext, menuData, iconsArray, this);
         homeMenuRecyclerView.setAdapter(menuAdapter);
     }
 
@@ -146,5 +146,31 @@ public class HomeFragment extends BaseFragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onHomeFragmentListener(BaseFragment mFragment, String parameter);
+    }
+
+
+    public void callNextActivity(int position) {
+        String selectedStr=menuData.get(position).trim();
+        Toast.makeText(mContext, ""+selectedStr, Toast.LENGTH_SHORT).show();
+       if (selectedStr.equals(menuData.get(0))){
+
+       }else if (selectedStr.equals(menuData.get(1))){
+
+       }else if (selectedStr.equals(menuData.get(2))){
+
+       }else if (selectedStr.equals(menuData.get(3))){
+
+       }else if (selectedStr.equals(menuData.get(4))){
+
+       }else if (selectedStr.equals(menuData.get(5))){
+
+       }else if (selectedStr.equals(menuData.get(6))){
+
+       }else if (selectedStr.equals(menuData.get(7))){
+
+       }else if (selectedStr.equals(menuData.get(8))){
+
+       }
+
     }
 }

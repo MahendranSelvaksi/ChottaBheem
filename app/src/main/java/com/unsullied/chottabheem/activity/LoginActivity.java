@@ -16,7 +16,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.facebook.accountkit.Account;
 import com.facebook.accountkit.AccountKit;
@@ -85,9 +84,9 @@ myUtility=new Utility();
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               /* startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                finish();*/
-                phoneLogin();
+                startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                finish();
+                //phoneLogin();
                 /*AccessToken accessToken = AccountKit.getCurrentAccessToken();
 
                 if(accessToken !=null)
