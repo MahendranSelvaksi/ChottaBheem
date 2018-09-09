@@ -27,6 +27,7 @@ import com.facebook.accountkit.ui.AccountKitActivity;
 import com.facebook.accountkit.ui.AccountKitConfiguration;
 import com.facebook.accountkit.ui.LoginType;
 import com.unsullied.chottabheem.R;
+import com.unsullied.chottabheem.utils.AppConstants;
 import com.unsullied.chottabheem.utils.PatternEditableBuilder;
 import com.unsullied.chottabheem.utils.Utility;
 
@@ -39,7 +40,8 @@ public class LoginActivity extends AppCompatActivity {
     public static int APP_REQUEST_CODE = 99;
     Toolbar toolbar;
     private TextView tittleTV, termsTV;
-private Utility myUtility;
+    private Utility myUtility;
+
     @SuppressWarnings("deprecation")
     public static Spanned fromHtml(String html) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
@@ -53,7 +55,7 @@ private Utility myUtility;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-myUtility=new Utility();
+        myUtility = new Utility();
         toolbar = (Toolbar) findViewById(R.id.loginToolBar);
         tittleTV = toolbar.findViewById(R.id.toolbar_title);
 
@@ -84,9 +86,9 @@ myUtility=new Utility();
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                finish();
-                //phoneLogin();
+                /*startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                finish();*/
+                phoneLogin();
                 /*AccessToken accessToken = AccountKit.getCurrentAccessToken();
 
                 if(accessToken !=null)
@@ -158,7 +160,7 @@ myUtility=new Utility();
 
                 }*/
                 myUtility.printLogcat(toastMessage);
-               getAccount();
+                getAccount();
 
                 // If you have an authorization code, retrieve it from
                 // loginResult.getAuthorizationCode()
@@ -199,7 +201,7 @@ myUtility=new Utility();
     /**
      * Gets current account from Facebook Account Kit which include user's phone number.
      */
-    private void getAccount(){
+    private void getAccount() {
         AccountKit.getCurrentAccount(new AccountKitCallback<Account>() {
             @Override
             public void onSuccess(final Account account) {
@@ -208,17 +210,21 @@ myUtility=new Utility();
 
                 // Get phone number
                 PhoneNumber phoneNumber = account.getPhoneNumber();
-                myUtility.printLogcat("FB ID::::"+account.getId());
+                myUtility.printLogcat("FB ID::::" + account.getId());
                 String phoneNumberString = phoneNumber.toString();
-                myUtility.printLogcat("Phone Number::"+phoneNumberString);
-                myUtility.printLogcat("Email:::"+account.getEmail());
-                startActivity(new Intent(LoginActivity.this, VerificationActivity.class));
+                myUtility.printLogcat("Phone Number::" + phoneNumberString);
+                myUtility.printLogcat("Email:::" + account.getEmail());
+                Intent verifyIntent = new Intent(LoginActivity.this, VerificationActivity.class);
+                verifyIntent.putExtra(AppConstants.FB_ID_KEY, account.getId());
+                verifyIntent.putExtra(AppConstants.USER_EMAIL_ID_KEY, account.getEmail()==null ? "" : account.getEmail().trim());
+                verifyIntent.putExtra(AppConstants.USER_MOBILE_KEY, phoneNumberString);
+                startActivity(verifyIntent);
                 finish();
             }
 
             @Override
             public void onError(final AccountKitError error) {
-                Log.e("AccountKit",error.toString());
+                Log.e("AccountKit", error.toString());
                 // Handle Error
             }
         });

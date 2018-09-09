@@ -56,4 +56,13 @@
         <item name="android:thumb">@drawable/custom_thumb</item>
         <item name="android:thumbOffset">10.0dip</item>
     </style>
+
+    <style name="AppTheme.default" parent="PayumoneyAppTheme">
+        <item name="colorPrimary">@color/colorPrimaryDark</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorPrimaryDark</item>
+        <item name="colorButtonNormal">@color/colorPrimaryDark</item>
+        <item name="alertDialogTheme">@style/AlertDialogStyle_Default</item>
+        <item name="actionMenuTextColor">@color/white</item>
+    </style>
 </resources>

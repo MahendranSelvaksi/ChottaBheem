@@ -24,6 +24,7 @@
             android:orientation="vertical">
 
             <com.unsullied.chottabheem.utils.CustomTextView
+                android:id="@+id/userNameTV"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="1.5dp"
@@ -32,7 +33,7 @@
                 android:layout_marginRight="3dp"
                 android:layout_marginStart="3dp"
                 android:layout_marginTop="3dp"
-                android:text="Mahendran"
+                android:text=""
                 android:layout_gravity="center_vertical"
                 android:padding="2dp"
                 android:textAllCaps="true"
@@ -41,6 +42,7 @@
                 app:customFont="novabold.ttf" />
 
             <com.unsullied.chottabheem.utils.CustomTextView
+                android:id="@+id/userMobileTV"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="1.5dp"
@@ -49,7 +51,7 @@
                 android:layout_marginRight="3dp"
                 android:layout_marginStart="3dp"
                 android:layout_marginTop="3dp"
-                android:text="9629040472"
+                android:text=""
                 android:layout_gravity="center_vertical"
                 android:padding="2dp"
                 android:textColor="@color/SecondaryText"

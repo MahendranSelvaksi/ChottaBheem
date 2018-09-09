@@ -1,5 +1,5 @@
 apply plugin: 'com.android.application'
-String APK_NAME = "Chotta Bheem", VERSION_NAME = "v1", SUFFIX = "0809"
+String APK_NAME = "Chotta Bheem", VERSION_NAME = "v1", SUFFIX = "0909"
 repositories {
     jcenter()
 }
@@ -53,5 +53,6 @@ dependencies {
     //implementation project (':MaterialDesign')
     implementation 'com.google.firebase:firebase-core:11.8.0'
     implementation 'com.google.firebase:firebase-messaging:11.8.0'
+    implementation 'com.payumoney.sdkui:plug-n-play:1.2.0'
 }
 apply plugin: 'com.google.gms.google-services'

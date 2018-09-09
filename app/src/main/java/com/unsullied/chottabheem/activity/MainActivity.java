@@ -1,13 +1,14 @@
 package com.unsullied.chottabheem.activity;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -17,10 +18,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.facebook.accountkit.AccountKit;
 import com.unsullied.chottabheem.R;
 import com.unsullied.chottabheem.fragment.AboutUsFragment;
 import com.unsullied.chottabheem.fragment.AddAdminRequestFragment;
@@ -31,8 +30,10 @@ import com.unsullied.chottabheem.fragment.PrivatePolicyFragment;
 import com.unsullied.chottabheem.fragment.ProfileFragment;
 import com.unsullied.chottabheem.fragment.SettingsFragment;
 import com.unsullied.chottabheem.fragment.TermsAndConditionsFragment;
+import com.unsullied.chottabheem.utils.AppConstants;
 import com.unsullied.chottabheem.utils.BaseFragment;
 import com.unsullied.chottabheem.utils.CustomTextView;
+import com.unsullied.chottabheem.utils.SessionManager;
 import com.unsullied.chottabheem.utils.Utility;
 
 public class MainActivity extends AppCompatActivity
@@ -44,10 +45,11 @@ public class MainActivity extends AppCompatActivity
         AddAdminRequestFragment.OnFragmentInteractionListener {
     DrawerLayout drawer;
     Toolbar toolbar;
-    private CustomTextView titleTV, logoutTV;
+    private CustomTextView titleTV, logoutTV, userNameTV, userMobileTV;
     private Utility mUtility;
     private LinearLayout pointsLayout;
-
+    private SessionManager mSessionManager;
+    private Context mContext;
     boolean doubleBackToExitPressedOnce = false;
 
     @Override
@@ -58,8 +60,8 @@ public class MainActivity extends AppCompatActivity
         titleTV = toolbar.findViewById(R.id.toolbar_title);
         pointsLayout = toolbar.findViewById(R.id.pointsLayout);
         mUtility = new Utility();
-
-
+        mSessionManager = new SessionManager();
+        mContext = getApplicationContext();
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -71,6 +73,11 @@ public class MainActivity extends AppCompatActivity
 
         View hView = navigationView.getHeaderView(0);
         logoutTV = (CustomTextView) hView.findViewById(R.id.logoutTV);
+        userNameTV = (CustomTextView) hView.findViewById(R.id.userNameTV);
+        userMobileTV = (CustomTextView) hView.findViewById(R.id.userMobileTV);
+
+        userNameTV.setText(mSessionManager.getValueFromSessionByKey(mContext,AppConstants.USER_SESSION_NAME,AppConstants.USER_NAME_KEY));
+        userMobileTV.setText(mSessionManager.getValueFromSessionByKey(mContext,AppConstants.USER_SESSION_NAME,AppConstants.USER_MOBILE_KEY));
 
         logoutTV.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -411,6 +418,7 @@ public class MainActivity extends AppCompatActivity
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
+                        mSessionManager.logoutSession(getApplicationContext(), AppConstants.USER_SESSION_NAME);
                         startActivity(new Intent(MainActivity.this, LoginActivity.class));
                         finishAffinity();
                     }

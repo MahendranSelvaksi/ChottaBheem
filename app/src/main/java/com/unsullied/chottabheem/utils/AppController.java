@@ -8,6 +8,7 @@ import android.util.Log;
 import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.internal.ANRequestQueue;
 import com.facebook.accountkit.AccountKit;
+import com.unsullied.chottabheem.utils.paymentgateway.AppEnvironment;
 import com.unsullied.chottabheem.utils.push_notification.RegistrationIntentService;
 
 import java.util.concurrent.TimeUnit;
@@ -18,11 +19,13 @@ import okhttp3.OkHttpClient;
 public class AppController extends Application {
 
     private static AppController mInstance;
+    AppEnvironment appEnvironment;
 
     @Override
     public void onCreate() {
         super.onCreate();
         mInstance = this;
+        appEnvironment = AppEnvironment.SANDBOX;
         AccountKit.initialize(getApplicationContext());
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
                 .connectTimeout(30, TimeUnit.SECONDS)
@@ -66,6 +69,12 @@ public class AppController extends Application {
                 .writeTimeout(30, TimeUnit.SECONDS)
                 .build();
     }
+    public AppEnvironment getAppEnvironment() {
+        return appEnvironment;
+    }
 
+    public void setAppEnvironment(AppEnvironment appEnvironment) {
+        this.appEnvironment = appEnvironment;
+    }
 
 }

@@ -75,4 +75,121 @@
     <string name="termsCondition">By Signing up, you agree to Chotta Bheem\'s Terms &amp; Conditions and Privacy policy</string>
     <string name="agreeCheckBoxStr">I Agree the Terms and Conditions</string>
     <string name="subscriptionCheckBoxStr">I Agree to pay subscription changes of Rs.99</string>
+    <string-array name="circleNameArray">
+        <item>Delhi/NCR</item>
+        <item>Mumbai</item>
+        <item>Kolkata</item>
+        <item>Maharashtra</item>
+        <item>Andhra Pradesh</item>
+        <item>Tamil Nadu</item>
+        <item>Karnataka</item>
+        <item>Gujarat</item>
+        <item>Uttar Pradesh (E)</item>
+        <item>Madhya Pradesh</item>
+        <item>Uttar Pradesh (W)</item>
+        <item>West Bengal</item>
+        <item>Rajasthan</item>
+        <item>Kerala</item>
+        <item>Punjab</item>
+        <item>Haryana</item>
+        <item>Bihar &amp; Jharkhand</item>
+        <item>Orissa</item>
+        <item>Assam</item>
+        <item>North East</item>
+        <item>Himachal Pradesh</item>
+        <item>Jammu &amp; Kashmir</item>
+        <item>Chennai</item>
+    </string-array>
+    <integer-array name="circleCodeArray">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+        <item>11</item>
+        <item>12</item>
+        <item>13</item>
+        <item>14</item>
+        <item>15</item>
+        <item>16</item>
+        <item>17</item>
+        <item>18</item>
+        <item>19</item>
+        <item>20</item>
+        <item>21</item>
+        <item>22</item>
+        <item>23</item>
+    </integer-array>
+
+    <string-array name="dthOperatorNameArray">
+        <item>VIDEOCON DTH</item>
+        <item>SUN DTH</item>
+        <item>BIG TV DTH</item>
+        <item>TATA SKY DTH</item>
+        <item>AIRTEL DTH</item>
+        <item>DISH DTH</item>
+    </string-array>
+
+    <integer-array name="dthOperatorIdArray">
+        <item>28</item>
+        <item>26</item>
+        <item>24</item>
+        <item>27</item>
+        <item>23</item>
+        <item>25</item>
+    </integer-array>
+
+
+    <string-array name="postpaidNameArray">
+        <item> Vodafone</item>
+        <item>Airtel</item>
+        <item>Bsnl</item>
+        <item>Idea</item>
+        <item>Loop</item>
+        <item>Reliance CDMA</item>
+        <item>Reliance GSM</item>
+        <item>Tata Docomo GSM</item>
+        <item>Tata Indicom</item>
+        <item>Tata Walky</item>
+        <item>Aircel</item>
+        <item>MTS</item>
+    </string-array>
+
+    <integer-array name="postpaidIdArray">
+        <item>30</item>
+        <item>31</item>
+        <item>32</item>
+        <item>33</item>
+        <item>34</item>
+        <item>35</item>
+        <item>36</item>
+        <item>37</item>
+        <item>38</item>
+        <item>39</item>
+        <item>40</item>
+        <item>41</item>
+    </integer-array>
+
+    <string-array name="landlineNameArray">
+        <item>RELIANCE INFOCOM LANDLINE</item>
+        <item>TIKONA INTERNET LANDLINE</item>
+        <item>AIRTEL LANDLINE</item>
+        <item>BSNL LANDLINE</item>
+        <item>TATA DOCOMO CDMA LANDLINE</item>
+        <item>MTNL DELHI</item>
+    </string-array>
+
+    <integer-array name="landlineIdArray">
+        <item>42</item>
+        <item>43</item>
+        <item>44</item>
+        <item>45</item>
+        <item>46</item>
+        <item>47</item>
+    </integer-array>
 </resources>

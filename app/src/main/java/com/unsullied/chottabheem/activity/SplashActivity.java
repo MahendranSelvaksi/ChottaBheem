@@ -2,14 +2,13 @@ package com.unsullied.chottabheem.activity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.MotionEvent;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.unsullied.chottabheem.R;
+import com.unsullied.chottabheem.utils.SessionManager;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -71,6 +70,7 @@ public class SplashActivity extends AppCompatActivity {
             hide();
         }
     };*/
+
     /**
      * Touch listener to use for in-layout UI controls to delay hiding the
      * system UI. This is to prevent the jarring behavior of controls going away
@@ -85,7 +85,6 @@ public class SplashActivity extends AppCompatActivity {
             return false;
         }
     };*/
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -110,22 +109,22 @@ public class SplashActivity extends AppCompatActivity {
             @Override
             public void run() {
                 //Do something after 100ms
-              /*  if (new AppSessionManager(SplashActivity.this).isEmailID()) {
+                if (new SessionManager().isLogged(getApplicationContext())) {
                     Intent nextIntent = new Intent(SplashActivity.this, MainActivity.class);
                     startActivity(nextIntent);
                     finishAffinity();
-                } else {*/
+                } else {
                     Intent nextIntent = new Intent(SplashActivity.this, LoginActivity.class);
                     startActivity(nextIntent);
                     finishAffinity();
-                //}
+                }
 
             }
         }, 5000);
         // Upon interacting with UI controls, delay any scheduled hide()
         // operations to prevent the jarring behavior of controls going away
         // while interacting with the UI.
-     //   findViewById(R.id.dummy_button).setOnTouchListener(mDelayHideTouchListener);
+        //   findViewById(R.id.dummy_button).setOnTouchListener(mDelayHideTouchListener);
     }
 
     /*@Override

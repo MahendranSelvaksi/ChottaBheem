@@ -20,8 +20,8 @@ public class BillPayActivity extends AppCompatActivity {
 
     Toolbar toolbar;
     private TextView tittleTV;
-    private FrameLayout operatorLayout, numberLayout, dobLayout;
-    private CustomEditText dobET, operatorET, mobileNumberET;
+    private FrameLayout operatorLayout, numberLayout, dobLayout, amountLayout;
+    private CustomEditText dobET, operatorET, mobileNumberET, amountET;
     private Button operatorSelectBtn, contactBtn, dobBtn;
     private TextInputLayout mobileNumberTIL;
     private CustomTextView payBtn, billTitleTV;
@@ -58,10 +58,12 @@ public class BillPayActivity extends AppCompatActivity {
         operatorLayout = findViewById(R.id.operatorLayout);
         numberLayout = findViewById(R.id.numberLayout);
         dobLayout = findViewById(R.id.dobLayout);
+        amountLayout = findViewById(R.id.amountLayout);
         mobileNumberTIL = findViewById(R.id.mobileNumberTIL);
         dobET = findViewById(R.id.dobET);
         operatorET = findViewById(R.id.operatorET);
         mobileNumberET = findViewById(R.id.mobileNumberET);
+        amountET = findViewById(R.id.amountET);
         operatorSelectBtn = findViewById(R.id.operatorSelectBtn);
         contactBtn = findViewById(R.id.contactBtn);
         dobBtn = findViewById(R.id.dobBtn);
