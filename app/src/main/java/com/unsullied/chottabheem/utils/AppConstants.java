@@ -56,6 +56,7 @@ public class AppConstants {
     public static final String ICON_INTENT_KEY = "IntentIcon";
 
     public static final int OPERATOR_INTENT_REQUEST_CODE = 10001;
+    public   static final int PICK_CONTACT=1;
 
     public static final String FB_ID_KEY = "fbId";
     public static final String USER_NAME_KEY = "UserName";
@@ -81,13 +82,13 @@ public class AppConstants {
 
 
     /*Marshmallow Permissions*/
-    public static final int CALL_PHONE_REQUEST_CODE = 1;
+    public static final int READ_CONTACTS_REQUEST_CODE = 501;
     public static final int ALL_REQUEST_CODE = 0;
 
     public static final String[] ALL_PERMISSIONS = {
-            Manifest.permission.CALL_PHONE
+            Manifest.permission.READ_CONTACTS
     };
-    public static final String CALL_PHONE_PERMISSIONS = Manifest.permission.CALL_PHONE;
+    public static final String READ_CONTACTS_PERMISSIONS = Manifest.permission.READ_CONTACTS;
 
     public static String convertBase64(String text) {
         byte[] data = new byte[0];

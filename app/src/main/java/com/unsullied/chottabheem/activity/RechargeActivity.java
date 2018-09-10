@@ -6,8 +6,13 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.ContactsContract;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -36,6 +41,7 @@ import com.payumoney.sdkui.ui.utils.ResultModel;
 import com.unsullied.chottabheem.R;
 import com.unsullied.chottabheem.utils.AppConstants;
 import com.unsullied.chottabheem.utils.AppController;
+import com.unsullied.chottabheem.utils.AppPermissions;
 import com.unsullied.chottabheem.utils.ConnectivityReceiver;
 import com.unsullied.chottabheem.utils.CustomEditText;
 import com.unsullied.chottabheem.utils.CustomTextView;
@@ -59,6 +65,8 @@ import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import static com.unsullied.chottabheem.utils.AppConstants.PICK_CONTACT;
+
 public class RechargeActivity extends AppCompatActivity implements View.OnClickListener {
 
     Toolbar toolbar;
@@ -70,7 +78,7 @@ public class RechargeActivity extends AppCompatActivity implements View.OnClickL
     private TextInputLayout mobileNumberTIL;
     private ImageView rechargeIconIV;
 
-    private String intentTitleStr, intentHintStr;
+    private String intentTitleStr, intentHintStr, cNumber;
     private int pageIcon;
     private Utility myUtility;
 
@@ -85,6 +93,7 @@ public class RechargeActivity extends AppCompatActivity implements View.OnClickL
     private PayUmoneySdkInitializer.PaymentParam mPaymentParams;
     private String nameStr, emailIdStr;
     private SessionManager mSessionManager;
+    private AppPermissions mRuntimePermission;
 
 
     @Override
@@ -101,7 +110,7 @@ public class RechargeActivity extends AppCompatActivity implements View.OnClickL
         intentTitleStr = getIntent().getStringExtra(AppConstants.TITLE_INTENT_KEY);
         intentHintStr = getIntent().getStringExtra(AppConstants.HINT_INTENT_KEY);
         pageIcon = getIntent().getIntExtra(AppConstants.ICON_INTENT_KEY, 0);
-
+        mRuntimePermission = new AppPermissions(mActivity);
         toolbar = (Toolbar) findViewById(R.id.rechargeToolbar);
         tittleTV = toolbar.findViewById(R.id.toolbar_title);
 
@@ -210,6 +219,7 @@ public class RechargeActivity extends AppCompatActivity implements View.OnClickL
         rechargeBtn.setOnClickListener(this);
         browsePlansTV.setOnClickListener(this);
         operatorET.setOnClickListener(this);
+        contactBtn.setOnClickListener(this);
 
     }
 
@@ -308,6 +318,12 @@ public class RechargeActivity extends AppCompatActivity implements View.OnClickL
 
         } else if (v == operatorET) {
             myUtility.hideKeyboard(mActivity, operatorET);
+        } else if (v == contactBtn) {
+            if (mRuntimePermission.hasPermission(AppConstants.READ_CONTACTS_PERMISSIONS)) {
+                callContactIntent();
+            } else {
+                mRuntimePermission.requestPermission(AppConstants.READ_CONTACTS_PERMISSIONS, AppConstants.READ_CONTACTS_REQUEST_CODE);
+            }
         }
     }
 
@@ -547,6 +563,33 @@ public class RechargeActivity extends AppCompatActivity implements View.OnClickL
             } else {
                 myUtility.printLogcat("Both objects are null!");
             }
+        } else if (requestCode == AppConstants.PICK_CONTACT) {
+            if (resultCode == RESULT_OK) {
+                Uri contactData = data.getData();
+                Cursor c = managedQuery(contactData, null, null, null, null);
+                if (c.moveToFirst()) {
+
+
+                    String id = c.getString(c.getColumnIndexOrThrow(ContactsContract.Contacts._ID));
+
+                    String hasPhone = c.getString(c.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER));
+
+                    if (hasPhone.equalsIgnoreCase("1")) {
+                        Cursor phones = getContentResolver().query(
+                                ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,
+                                ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = " + id,
+                                null, null);
+                        phones.moveToFirst();
+                        cNumber = phones.getString(phones.getColumnIndex("data1"));
+                        cNumber=cNumber.replaceAll(" ", "");
+                        System.out.println("number is:" + cNumber);
+                        phoneNumberWithOutCountryCode(cNumber);
+                    }
+                    // String name = c.getString(c.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
+
+
+                }
+            }
         }
     }
 
@@ -639,5 +682,43 @@ public class RechargeActivity extends AppCompatActivity implements View.OnClickL
                 }
             }
         }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == AppConstants.READ_CONTACTS_REQUEST_CODE) {
+            String permission = permissions[0];
+            int grantResult = grantResults[0];
+            if (permission.equals(AppConstants.READ_CONTACTS_PERMISSIONS)) {
+                if (grantResult == PackageManager.PERMISSION_GRANTED) {
+                    callContactIntent();
+                } else {
+                    mRuntimePermission.requestPermission(AppConstants.READ_CONTACTS_PERMISSIONS, AppConstants.READ_CONTACTS_REQUEST_CODE);
+                }
+            }
+        }
+
+    }
+
+    private void callContactIntent() {
+        Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
+        startActivityForResult(intent, PICK_CONTACT);
+    }
+
+    public void phoneNumberWithOutCountryCode(String phoneNumberWithCountryCode) {
+        String phoneNumberWithoutCountryCode = "";
+        if (phoneNumberWithCountryCode.startsWith("+") && phoneNumberWithCountryCode.length() == 13) {
+            String[] phonenUmber = phoneNumberWithCountryCode.split("\\+91");
+            myUtility.printLogcat("Split 0::"+phonenUmber[0]);
+            myUtility.printLogcat("Split 1::"+phonenUmber[1]);
+            phoneNumberWithoutCountryCode = phonenUmber[1];
+        } else {
+            phoneNumberWithoutCountryCode = phoneNumberWithCountryCode;
+        }
+        Log.e("number is", phoneNumberWithoutCountryCode);
+        mobileNumberET.setText(phoneNumberWithoutCountryCode);
+        getOperatorBackground(phoneNumberWithoutCountryCode.substring(0, 4));
+
     }
 }
