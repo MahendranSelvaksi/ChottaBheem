@@ -42,12 +42,21 @@ public class AppConstants {
     public static final String OPIONAL_VALUE2_KEY = "&opvalue2=";
     public static final String TYPE_KEY = "&type="; //Mobile Recharge Type . Possible values  2G , 3G , FTT , LSC , OTR , RMG , SMS , TUP
     public static final String CIRCLE_CODE = "&circleCode=";
+    public static final String RESULT_CODE_KEY="resCode";
+
+    public static final String FTT_VALUE="FTT";
+    public static final String DATA_VALUE="DATA";
+    public static final String SPL_VALUE="SPL";
+    public static final String TUP_VALUE="TUP";
+    public static final String RMG_VALUE="RMG";
+
 
 
     /* API Name */
     public static final String RECHARGE_API = "recharge.php?";//Failed Response::: {"data":{"orderId":86591857,"status":"FAILED","mobile":"9790205451","amount":"50","operatorId":0,"error_code":143,"service":0,"bal":"0.0000","creditUsed":null,"resText":"Invalid opvalue 1","billAmount":null,"billName":null}}
     public static final String OPERATOR_CHECK_API = "mob_details.php?";
     public static final String RECHARGE_PLAN_API = "rech_plan.php?";
+
 
 
     /*Pay Bill Activity*/

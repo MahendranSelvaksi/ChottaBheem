@@ -44,10 +44,10 @@
         <item>Data card \n Recharge</item>
         <item>Postpaid \n Recharge</item>
         <item>Electricity \n Bill</item>
-        <item>Gas</item>
+        <item>Gas Bill</item>
         <item>Insurance</item>
         <item>Landline</item>
-        <item>Broadband Bill \n Payment</item>
+        <item>Broadband</item>
     </array>
 
     <array name="hintArray">
@@ -192,4 +192,22 @@
         <item>46</item>
         <item>47</item>
     </integer-array>
+
+    <string-array name="browse_plans_key">
+        <item>SPL</item>
+        <item>DATA</item>
+        <item>FTT</item>
+        <item>TUP</item>
+        <item>RMG</item>
+    </string-array>
+
+    <string-array name="browse_plans_titles">
+        <item>Special Offers</item>
+        <item>Data Plans</item>
+        <item>Full Talk Time</item>
+        <item>Top-Up</item>
+        <item>Roaming</item>
+    </string-array>
+
+     <string name="Rs">\u20B9 1000</string> <!--//rupee symbol:-->
 </resources>

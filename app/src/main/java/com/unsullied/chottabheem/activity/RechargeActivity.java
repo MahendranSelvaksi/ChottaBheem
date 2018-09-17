@@ -315,7 +315,13 @@ public class RechargeActivity extends AppCompatActivity implements View.OnClickL
                 launchPayUMoneyFlow(String.valueOf(rechargeAmount));
             }
         } else if (v == browsePlansTV) {
-
+            if (selectedOperatorId > 0) {
+                Intent browsePlansIntent = new Intent(mActivity, BrowsePlansActivity.class);
+                browsePlansIntent.putExtra(AppConstants.JSON_OPERATOR_ID_KEY, selectedOperatorId);
+                startActivity(browsePlansIntent);
+            } else {
+                Toast.makeText(this, "Please choose operator..", Toast.LENGTH_SHORT).show();
+            }
         } else if (v == operatorET) {
             myUtility.hideKeyboard(mActivity, operatorET);
         } else if (v == contactBtn) {
@@ -581,7 +587,7 @@ public class RechargeActivity extends AppCompatActivity implements View.OnClickL
                                 null, null);
                         phones.moveToFirst();
                         cNumber = phones.getString(phones.getColumnIndex("data1"));
-                        cNumber=cNumber.replaceAll(" ", "");
+                        cNumber = cNumber.replaceAll(" ", "");
                         System.out.println("number is:" + cNumber);
                         phoneNumberWithOutCountryCode(cNumber);
                     }
@@ -710,8 +716,8 @@ public class RechargeActivity extends AppCompatActivity implements View.OnClickL
         String phoneNumberWithoutCountryCode = "";
         if (phoneNumberWithCountryCode.startsWith("+") && phoneNumberWithCountryCode.length() == 13) {
             String[] phonenUmber = phoneNumberWithCountryCode.split("\\+91");
-            myUtility.printLogcat("Split 0::"+phonenUmber[0]);
-            myUtility.printLogcat("Split 1::"+phonenUmber[1]);
+            myUtility.printLogcat("Split 0::" + phonenUmber[0]);
+            myUtility.printLogcat("Split 1::" + phonenUmber[1]);
             phoneNumberWithoutCountryCode = phonenUmber[1];
         } else {
             phoneNumberWithoutCountryCode = phoneNumberWithCountryCode;

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="1dp"
+    app:cardBackgroundColor="@android:color/white"
+    app:cardCornerRadius="3dp"
+    app:cardElevation="2dp"
+    app:cardUseCompatPadding="true">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="2dp"
+            android:layout_marginTop="5dp"
+            android:layout_weight="0.3"
+            android:orientation="vertical">
+
+            <com.unsullied.chottabheem.utils.CustomTextView
+                android:id="@+id/planDetailTV"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/subscriptionCheckBoxStr"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                android:textColor="@color/PrimaryText"
+                app:customFont="novalight.ttf" />
+
+            <LinearLayout
+                android:id="@+id/validityLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginTop="05dp"
+                android:orientation="horizontal">
+
+                <com.unsullied.chottabheem.utils.CustomTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Validity : "
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="@color/DividerColor"
+                    app:customFont="nova.ttf" />
+
+                <com.unsullied.chottabheem.utils.CustomTextView
+                    android:id="@+id/validityValueTV"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="10 Days"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="@color/PrimaryText"
+                    app:customFont="nova.ttf" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <View
+            android:layout_width="1.5dp"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:background="@color/DividerColor" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <com.unsullied.chottabheem.utils.CustomTextView
+                android:id="@+id/planAmountTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|center"
+                android:background="@drawable/plans_amount_style"
+                android:gravity="center"
+                android:padding="5dp"
+                android:text="@string/Rs"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                android:textColor="@color/colorPrimaryDark"
+                app:customFont="nova.ttf" />
+        </LinearLayout>
+
+    </LinearLayout>
+</android.support.v7.widget.CardView>

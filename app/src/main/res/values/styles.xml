@@ -25,7 +25,7 @@
         <item name="android:background">@color/colorPrimary</item>
     </style>
 
-    <style name="AppLoginTheme" parent="Theme.AccountKit" >
+    <style name="AppLoginTheme" parent="Theme.AccountKit">
         <item name="android:windowNoTitle">true</item>
     </style>
 
@@ -47,10 +47,13 @@
         <item name="android:minHeight">10dip</item>
         <item name="android:maxHeight">20dip</item>
     </style>
+
     <style name="Widget.SeekBar.Normal" parent="@android:style/Widget.SeekBar">
         <item name="android:maxHeight">8.0dip</item>
         <item name="android:indeterminateOnly">false</item>
-        <item name="android:indeterminateDrawable">@android:drawable/progress_indeterminate_horizontal</item>
+        <item name="android:indeterminateDrawable">
+            @android:drawable/progress_indeterminate_horizontal
+        </item>
         <item name="android:progressDrawable">@drawable/seekbar_horizantal</item>
         <item name="android:minHeight">8.0dip</item>
         <item name="android:thumb">@drawable/custom_thumb</item>

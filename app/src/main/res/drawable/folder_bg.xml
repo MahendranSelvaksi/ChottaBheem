@@ -14,8 +14,8 @@
 
 
     <item
-        android:bottom="380dp"
-        android:left="180dp"
+        android:bottom="420dp"
+        android:left="120dp"
         android:right="-260dp"
         android:top="-100dp">
 
