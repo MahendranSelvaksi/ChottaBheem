@@ -1,11 +1,16 @@
 package com.unsullied.chottabheem.activity;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -16,6 +21,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.accountkit.Account;
 import com.facebook.accountkit.AccountKit;
@@ -26,21 +32,29 @@ import com.facebook.accountkit.PhoneNumber;
 import com.facebook.accountkit.ui.AccountKitActivity;
 import com.facebook.accountkit.ui.AccountKitConfiguration;
 import com.facebook.accountkit.ui.LoginType;
+import com.unsullied.chottabheem.BuildConfig;
 import com.unsullied.chottabheem.R;
 import com.unsullied.chottabheem.utils.AppConstants;
 import com.unsullied.chottabheem.utils.PatternEditableBuilder;
 import com.unsullied.chottabheem.utils.Utility;
+import com.unsullied.chottabheem.utils.mvp.LoginMVP;
+import com.unsullied.chottabheem.utils.mvp.LoginPresenter;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.regex.Pattern;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity implements LoginMVP.View {
     Button loginBtn;
     public static int APP_REQUEST_CODE = 99;
     Toolbar toolbar;
     private TextView tittleTV, termsTV;
     private Utility myUtility;
+    private String deviceId, accountId, versionCode, phoneNumberString, deviceType;
+    private LoginPresenter mLoginPresenter;
+    private ProgressDialog pd;
+    private Context mContext;
+    private Activity mActivity;
 
     @SuppressWarnings("deprecation")
     public static Spanned fromHtml(String html) {
@@ -55,7 +69,14 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        mContext=getApplicationContext();
+        mActivity=this;
         myUtility = new Utility();
+        pd = new ProgressDialog(this);
+        pd.setCancelable(false);
+
+
         toolbar = (Toolbar) findViewById(R.id.loginToolBar);
         tittleTV = toolbar.findViewById(R.id.toolbar_title);
 
@@ -86,9 +107,9 @@ public class LoginActivity extends AppCompatActivity {
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                finish();
-                //phoneLogin();
+                //startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                //finish();
+                phoneLogin();
                 /*AccessToken accessToken = AccountKit.getCurrentAccessToken();
 
                 if(accessToken !=null)
@@ -105,6 +126,8 @@ public class LoginActivity extends AppCompatActivity {
 */
             }
         });
+
+        mLoginPresenter=new LoginPresenter(mContext,this,mActivity);
     }
 
     public void phoneLogin() {
@@ -203,6 +226,7 @@ public class LoginActivity extends AppCompatActivity {
      */
     private void getAccount() {
         AccountKit.getCurrentAccount(new AccountKitCallback<Account>() {
+            @SuppressLint("HardwareIds")
             @Override
             public void onSuccess(final Account account) {
                 // Get Account Kit ID
@@ -211,15 +235,19 @@ public class LoginActivity extends AppCompatActivity {
                 // Get phone number
                 PhoneNumber phoneNumber = account.getPhoneNumber();
                 myUtility.printLogcat("FB ID::::" + account.getId());
-                String phoneNumberString = phoneNumber.toString();
                 myUtility.printLogcat("Phone Number::" + phoneNumberString);
                 myUtility.printLogcat("Email:::" + account.getEmail());
-                Intent verifyIntent = new Intent(LoginActivity.this, VerificationActivity.class);
-                verifyIntent.putExtra(AppConstants.FB_ID_KEY, account.getId());
-                verifyIntent.putExtra(AppConstants.USER_EMAIL_ID_KEY, account.getEmail()==null ? "" : account.getEmail().trim());
-                verifyIntent.putExtra(AppConstants.USER_MOBILE_KEY, phoneNumberString);
-                startActivity(verifyIntent);
-                finish();
+
+                phoneNumberString = phoneNumber.toString();
+                accountId = account.getId();
+                versionCode = String.valueOf(BuildConfig.VERSION_CODE);
+                deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+                deviceType = Build.DEVICE;
+                pd.setMessage(AppConstants.LOGIN_API_CALL_DIALOG_MSG);
+                pd.show();
+                mLoginPresenter.callLoginAPI(AppConstants.LOGIN_API, versionCode, accountId, phoneNumberString, AppConstants.LOGIN_TYPE_VALUE, deviceId,
+                        AppConstants.OS_NAME_VALUE, deviceType);
+
             }
 
             @Override
@@ -228,5 +256,32 @@ public class LoginActivity extends AppCompatActivity {
                 // Handle Error
             }
         });
+    }
+
+    /*private void callNextActivity() {
+        Intent verifyIntent = new Intent(LoginActivity.this, VerificationActivity.class);
+        verifyIntent.putExtra(AppConstants.FB_ID_KEY, accountId);
+        verifyIntent.putExtra(AppConstants.USER_EMAIL_ID_KEY, account.getEmail() == null ? "" : account.getEmail().trim());
+        verifyIntent.putExtra(AppConstants.USER_MOBILE_KEY, phoneNumberString);
+        startActivity(verifyIntent);
+        finish();
+    }*/
+
+    @Override
+    public void showSuccess(String message) {
+        closeProgressDialog();
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showError(int code, String errorMsg) {
+        closeProgressDialog();
+        Toast.makeText(this, errorMsg, Toast.LENGTH_SHORT).show();
+    }
+
+    private void closeProgressDialog() {
+        if (pd != null && pd.isShowing()) {
+            pd.dismiss();
+        }
     }
 }

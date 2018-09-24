@@ -49,6 +49,7 @@ public class HomeFragment extends BaseFragment {
     private Utility myUtility;
     private List<String> menuData;
     private List<String> hintData;
+    private List<String> selectData;
     private HomeMenuAdapter menuAdapter;
     private List<Integer> menuIcons;
     private int[] iconsArray = new int[]{R.drawable.ic_online_payment, /*R.drawable.ic_bus_ticket,
@@ -118,11 +119,13 @@ public class HomeFragment extends BaseFragment {
         myUtility = new Utility();
         menuData = new ArrayList<>();
         hintData = new ArrayList<>();
+        selectData = new ArrayList<>();
         menuIcons = new ArrayList<>();
         String[] menuArray = getResources().getStringArray(R.array.menuArray);
         String[] hintArray = getResources().getStringArray(R.array.hintArray);
         menuData.addAll(Arrays.asList(menuArray));
         hintData.addAll(Arrays.asList(hintArray));
+        selectData.addAll(Arrays.asList(getResources().getStringArray(R.array.selectArray)));
         for (int i = 0; i < iconsArray.length; i++) {
             menuIcons.add(iconsArray[i]);
         }
@@ -179,10 +182,11 @@ public class HomeFragment extends BaseFragment {
 
        }*/
 
-        Intent rechargeIntent = new Intent(mActivity, position <= 3 ? RechargeActivity.class : BillPayActivity.class);
+        Intent rechargeIntent = new Intent(mActivity, position <=2 ? RechargeActivity.class : BillPayActivity.class);
         rechargeIntent.putExtra(AppConstants.TITLE_INTENT_KEY, selectedStr);
         rechargeIntent.putExtra(AppConstants.HINT_INTENT_KEY, hintData.get(position));
         rechargeIntent.putExtra(AppConstants.ICON_INTENT_KEY, iconsArray[position]);
+        rechargeIntent.putExtra(AppConstants.SELECTED_INTENT_KEY, selectData.get(position));
         startActivity(rechargeIntent);
     }
 }

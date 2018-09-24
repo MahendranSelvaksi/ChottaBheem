@@ -1,15 +1,22 @@
 package com.unsullied.chottabheem.fragment;
 
+import android.app.Activity;
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.text.InputFilter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.unsullied.chottabheem.R;
 import com.unsullied.chottabheem.utils.BaseFragment;
+import com.unsullied.chottabheem.utils.CustomEditText;
+import com.unsullied.chottabheem.utils.CustomTextView;
+import com.unsullied.chottabheem.utils.SmileyRemover;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -19,7 +26,7 @@ import com.unsullied.chottabheem.utils.BaseFragment;
  * Use the {@link ProfileFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ProfileFragment extends BaseFragment {
+public class ProfileFragment extends BaseFragment implements View.OnClickListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -28,6 +35,16 @@ public class ProfileFragment extends BaseFragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    private CustomEditText etName, etEmailId, etMobileNumber, etReferralCount, etParent;
+    private CustomTextView nodataTV;
+    private RecyclerView mRecyclerView;
+    private Button btnSubmit;
+
+    private View rootView;
+    private SmileyRemover smileyRemover;
+    private Activity mActivity;
+    private Context mContext;
 
     private OnFragmentInteractionListener mListener;
 
@@ -66,10 +83,32 @@ public class ProfileFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_profile, container, false);
+        rootView = inflater.inflate(R.layout.fragment_profile, container, false);
+
+        mActivity = getActivity();
+        mContext = getContext();
+        smileyRemover = new SmileyRemover();
+
+        etName = rootView.findViewById(R.id.etName);
+        etEmailId = rootView.findViewById(R.id.etEmailId);
+        etMobileNumber = rootView.findViewById(R.id.etMobileNumber);
+        etParent = rootView.findViewById(R.id.etParent);
+        etReferralCount = rootView.findViewById(R.id.etReferralCount);
+        btnSubmit = rootView.findViewById(R.id.btnSubmit);
+
+        nodataTV = rootView.findViewById(R.id.commonNoDataTV);
+        mRecyclerView = rootView.findViewById(R.id.commonRecyclerView);
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
+
+        etName.setFilters(new InputFilter[]{smileyRemover});
+        etEmailId.setFilters(new InputFilter[]{smileyRemover});
+
+        btnSubmit.setOnClickListener(this);
+
+        return rootView;
     }
 
-   
 
     @Override
     public void onAttach(Context context) {
@@ -88,6 +127,13 @@ public class ProfileFragment extends BaseFragment {
         mListener = null;
     }
 
+    @Override
+    public void onClick(View v) {
+        if (v == btnSubmit) {
+
+        }
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -100,6 +146,6 @@ public class ProfileFragment extends BaseFragment {
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onProfileFragmentInteraction(BaseFragment mFragment,String parameter);
+        void onProfileFragmentInteraction(BaseFragment mFragment, String parameter);
     }
 }

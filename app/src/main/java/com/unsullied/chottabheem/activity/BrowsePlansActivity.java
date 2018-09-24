@@ -29,7 +29,8 @@ import java.util.List;
 
 public class BrowsePlansActivity extends AppCompatActivity {
 
-    public static int operatorId=0;
+    public static int operatorId = 0, selectedCircleId = 0;
+    public static String emailIdStr, selectedMobileNumber;
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
      * fragments for each of the sections. We use a
@@ -55,19 +56,22 @@ public class BrowsePlansActivity extends AppCompatActivity {
         setContentView(R.layout.activity_browse_plans);
 
         titleData = new ArrayList<>();
-        operatorId=getIntent().getIntExtra(AppConstants.JSON_OPERATOR_ID_KEY,0);
-//        hintData = new ArrayList<>();
+        operatorId = getIntent().getIntExtra(AppConstants.JSON_OPERATOR_ID_KEY, 0);
+        selectedMobileNumber = getIntent().getStringExtra(AppConstants.USER_MOBILE_KEY);
+        selectedCircleId = getIntent().getIntExtra(AppConstants.JSON_CIRCLE_ID_KEY, 0);
+        emailIdStr = getIntent().getStringExtra(AppConstants.USER_EMAIL_ID_KEY);
 
         String[] titleArray = getResources().getStringArray(R.array.browse_plans_titles);
         String[] hintArray = getResources().getStringArray(R.array.browse_plans_key);
         titleData.addAll(Arrays.asList(titleArray));
-  //      hintData.addAll(Arrays.asList(hintArray));
+        //      hintData.addAll(Arrays.asList(hintArray));
 
         toolbar = (Toolbar) findViewById(R.id.plansToolbar);
-       // setSupportActionBar(toolbar);
-        tittleTV=toolbar.findViewById(R.id.toolbar_title);
-        tittleTV.setText("Best Plans");
-
+        // setSupportActionBar(toolbar);
+          tittleTV = findViewById(R.id.toolbar_title);
+         tittleTV.setText("Best Plans");
+       // tittleTV.setGravity(Gravity.LEFT);
+       // toolbar.setTitle("Best Plans");
         toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_arrow_back));
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -105,7 +109,9 @@ public class BrowsePlansActivity extends AppCompatActivity {
         public PlaceholderFragment() {
         }
 
-        *//**
+        */
+
+    /**
      * Returns a new instance of this fragment for the given section
      * number.
      *//*
@@ -126,8 +132,7 @@ public class BrowsePlansActivity extends AppCompatActivity {
             return rootView;
         }
     }*/
-
-    private void setupTab(){
+    private void setupTab() {
         TextView tabOne = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
         tabOne.setText(titleData.get(0));
         tabOne.setGravity(Gravity.CENTER);

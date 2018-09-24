@@ -2,14 +2,12 @@ package com.unsullied.chottabheem.activity;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
@@ -17,6 +15,7 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
+import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -32,8 +31,6 @@ import com.androidnetworking.common.ANRequest;
 import com.androidnetworking.common.Priority;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.JSONObjectRequestListener;
-import com.payumoney.core.PayUmoneyConfig;
-import com.payumoney.core.PayUmoneyConstants;
 import com.payumoney.core.PayUmoneySdkInitializer;
 import com.payumoney.core.entity.TransactionResponse;
 import com.payumoney.sdkui.ui.utils.PayUmoneyFlowManager;
@@ -47,27 +44,22 @@ import com.unsullied.chottabheem.utils.CustomEditText;
 import com.unsullied.chottabheem.utils.CustomTextView;
 import com.unsullied.chottabheem.utils.SessionManager;
 import com.unsullied.chottabheem.utils.SmileyRemover;
+import com.unsullied.chottabheem.utils.SymbolsRemover;
 import com.unsullied.chottabheem.utils.Utility;
-import com.unsullied.chottabheem.utils.paymentgateway.AppEnvironment;
+import com.unsullied.chottabheem.utils.mvp.PaymentGatewayMVP;
+import com.unsullied.chottabheem.utils.mvp.PaymentGatewayPresenter;
+import com.unsullied.chottabheem.utils.mvp.RechargeMVP;
+import com.unsullied.chottabheem.utils.mvp.RechargePresenter;
 import com.unsullied.chottabheem.utils.paymentgateway.AppPreference;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
-import java.net.URL;
 import java.net.URLEncoder;
-import java.util.HashMap;
-import java.util.Iterator;
 
 import static com.unsullied.chottabheem.utils.AppConstants.PICK_CONTACT;
 
-public class RechargeActivity extends AppCompatActivity implements View.OnClickListener {
+public class RechargeActivity extends AppCompatActivity implements View.OnClickListener, RechargeMVP.RechargeView, PaymentGatewayMVP.View {
 
     Toolbar toolbar;
     private TextView tittleTV;
@@ -78,7 +70,7 @@ public class RechargeActivity extends AppCompatActivity implements View.OnClickL
     private TextInputLayout mobileNumberTIL;
     private ImageView rechargeIconIV;
 
-    private String intentTitleStr, intentHintStr, cNumber;
+    private String intentTitleStr, intentHintStr, intentSelectStr, cNumber, optionValue1 = "", optionValue2 = "", optionValue3 = "", optionValue4 = "";
     private int pageIcon;
     private Utility myUtility;
 
@@ -86,14 +78,17 @@ public class RechargeActivity extends AppCompatActivity implements View.OnClickL
     private String selectedLocation, selectedServiceProvider, selectedMobileNumber;
     private boolean selectedCircleIdFromApi = false;
     private SmileyRemover smileyRemover;
+    private SymbolsRemover symbolsRemover;
     private Activity mActivity;
     private Context mContext;
 
     private AppPreference mAppPreference;
-    private PayUmoneySdkInitializer.PaymentParam mPaymentParams;
+    //private PayUmoneySdkInitializer.PaymentParam mPaymentParams;
     private String nameStr, emailIdStr;
     private SessionManager mSessionManager;
     private AppPermissions mRuntimePermission;
+    private RechargePresenter mRechargePresenter;
+    private PaymentGatewayPresenter mPaymentGatewayPresenter;
 
 
     @Override
@@ -103,14 +98,21 @@ public class RechargeActivity extends AppCompatActivity implements View.OnClickL
 
         mActivity = this;
         mContext = getApplicationContext();
+
         myUtility = new Utility();
         smileyRemover = new SmileyRemover();
+        symbolsRemover = new SymbolsRemover();
         mAppPreference = new AppPreference();
         mSessionManager = new SessionManager();
+        mRechargePresenter = new RechargePresenter(mContext, this);
+        mRuntimePermission = new AppPermissions(mActivity);
+        mPaymentGatewayPresenter = new PaymentGatewayPresenter(mContext, mActivity, this);
+
         intentTitleStr = getIntent().getStringExtra(AppConstants.TITLE_INTENT_KEY);
         intentHintStr = getIntent().getStringExtra(AppConstants.HINT_INTENT_KEY);
         pageIcon = getIntent().getIntExtra(AppConstants.ICON_INTENT_KEY, 0);
-        mRuntimePermission = new AppPermissions(mActivity);
+        intentSelectStr = getIntent().getStringExtra(AppConstants.SELECTED_INTENT_KEY);
+
         toolbar = (Toolbar) findViewById(R.id.rechargeToolbar);
         tittleTV = toolbar.findViewById(R.id.toolbar_title);
 
@@ -138,12 +140,18 @@ public class RechargeActivity extends AppCompatActivity implements View.OnClickL
         browsePlansTV = findViewById(R.id.browsePlansTV);
         rechargeIconIV = findViewById(R.id.rechargeIconIV);
 
+
+
         myUtility.printLogcat("Image ::::" + pageIcon);
         setHintForEditText(intentHintStr);
         rechargeTitleTV.setText(intentTitleStr.trim());
         rechargeIconIV.setImageResource(pageIcon);
 
         operatorET.setFocusableInTouchMode(false);
+
+        mobileNumberET.setFilters(new InputFilter[]{smileyRemover, symbolsRemover});
+        operatorET.setFilters(new InputFilter[]{smileyRemover, symbolsRemover});
+        amountET.setFilters(new InputFilter[]{smileyRemover, symbolsRemover});
 
         nameStr = mSessionManager.getValueFromSessionByKey(mContext, AppConstants.USER_SESSION_NAME, AppConstants.USER_NAME_KEY);
         emailIdStr = mSessionManager.getValueFromSessionByKey(mContext, AppConstants.USER_SESSION_NAME, AppConstants.USER_EMAIL_ID_KEY);
@@ -215,10 +223,12 @@ public class RechargeActivity extends AppCompatActivity implements View.OnClickL
                 return false;
             }
         });
-
+        contactBtn.setVisibility(intentSelectStr.equalsIgnoreCase(AppConstants.PREPAID_VALIE) ? View.VISIBLE : View.GONE);
         rechargeBtn.setOnClickListener(this);
         browsePlansTV.setOnClickListener(this);
         operatorET.setOnClickListener(this);
+        operatorSelectBtn.setOnClickListener(this);
+        operatorLayout.setOnClickListener(this);
         contactBtn.setOnClickListener(this);
 
     }
@@ -232,7 +242,7 @@ public class RechargeActivity extends AppCompatActivity implements View.OnClickL
 
     private void getOperatorBackground(String mobileNumber) {
         if (ConnectivityReceiver.isConnected()) {
-            String url = AppConstants.LIVE_URL + AppConstants.OPERATOR_CHECK_API + AppConstants.FORMAT_KEY + AppConstants.FORMAT_JSON_VALUE +
+            String url = AppConstants.RECHARGE_LIVE_URL + AppConstants.OPERATOR_CHECK_API + AppConstants.FORMAT_KEY + AppConstants.FORMAT_JSON_VALUE +
                     AppConstants.TOKEN_KEY + AppConstants.TOKEN_VALUE + AppConstants.MOBILE_KEY + mobileNumber;
             myUtility.printLogcat("API NAME::::" + url);
             AppController.getInstance().clearAllQueue();
@@ -312,18 +322,24 @@ public class RechargeActivity extends AppCompatActivity implements View.OnClickL
                     Toast.makeText(this, "Please enter recharge amount...", Toast.LENGTH_SHORT).show();
                 }
             } else {
-                launchPayUMoneyFlow(String.valueOf(rechargeAmount));
+                mPaymentGatewayPresenter.launchPayUMoneyFlow(String.valueOf(rechargeAmount), selectedMobileNumber, emailIdStr);
             }
         } else if (v == browsePlansTV) {
             if (selectedOperatorId > 0) {
                 Intent browsePlansIntent = new Intent(mActivity, BrowsePlansActivity.class);
                 browsePlansIntent.putExtra(AppConstants.JSON_OPERATOR_ID_KEY, selectedOperatorId);
+                browsePlansIntent.putExtra(AppConstants.USER_MOBILE_KEY, selectedMobileNumber);
+                browsePlansIntent.putExtra(AppConstants.JSON_CIRCLE_ID_KEY, selectedCircleId);
+                browsePlansIntent.putExtra(AppConstants.USER_EMAIL_ID_KEY, emailIdStr);
                 startActivity(browsePlansIntent);
             } else {
                 Toast.makeText(this, "Please choose operator..", Toast.LENGTH_SHORT).show();
             }
-        } else if (v == operatorET) {
+        } else if (v == operatorET || v == operatorLayout || v == operatorSelectBtn) {
             myUtility.hideKeyboard(mActivity, operatorET);
+            Intent operatorsIntent = new Intent(mActivity, SelectOperatorActivity.class);
+            operatorsIntent.putExtra(AppConstants.SELECTED_INTENT_KEY, intentSelectStr);
+            startActivityForResult(operatorsIntent, AppConstants.OPERATOR_INTENT_REQUEST_CODE);
         } else if (v == contactBtn) {
             if (mRuntimePermission.hasPermission(AppConstants.READ_CONTACTS_PERMISSIONS)) {
                 callContactIntent();
@@ -331,188 +347,6 @@ public class RechargeActivity extends AppCompatActivity implements View.OnClickL
                 mRuntimePermission.requestPermission(AppConstants.READ_CONTACTS_PERMISSIONS, AppConstants.READ_CONTACTS_REQUEST_CODE);
             }
         }
-    }
-
-
-    private void callRechargeAPI(String url) {
-        if (ConnectivityReceiver.isConnected()) {
-            ANRequest request = AndroidNetworking.get(url)
-                    .setTag(AppConstants.APP_NAME)
-                    .setPriority(Priority.HIGH)
-                    .build();
-
-            request.getAsJSONObject(new JSONObjectRequestListener() {
-                @Override
-                public void onResponse(JSONObject response) {
-                    try {
-                        if (response.has(AppConstants.RESPONSE_JSON_OBJECT_KEY)) {
-                            JSONObject responseJSON = response.getJSONObject(AppConstants.RESPONSE_JSON_OBJECT_KEY);
-                            if (responseJSON.getInt(AppConstants.RES_CODE_KEY) == AppConstants.RES_CODE_VALUE) {
-
-                            } else {
-                                selectedCircleIdFromApi = false;
-                                Toast.makeText(RechargeActivity.this, "" + responseJSON.getString(AppConstants.RES_TEXT_KEY).trim(), Toast.LENGTH_SHORT).show();
-                            }
-
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                @Override
-                public void onError(ANError error) {
-                    if (error.getErrorCode() != 0) {
-                        // received error from server
-                        // error.getErrorCode() - the error code from server
-                        // error.getErrorBody() - the error body from server
-                        // error.getErrorDetail() - just an error detail
-                        myUtility.printLogcat("onError errorCode : " + error.getErrorCode());
-                        myUtility.printLogcat("onError errorBody : " + error.getErrorBody());
-                        myUtility.printLogcat("onError errorDetail : " + error.getErrorDetail());
-                        // get parsed error object (If ApiError is your class)
-
-                    } else {
-                        // error.getErrorDetail() : connectionError, parseError, requestCancelledError
-                        myUtility.printLogcat("onError errorDetail : " + error.getErrorDetail());
-
-                    }
-                    error.printStackTrace();
-                }
-
-            });
-        } else {
-            Toast.makeText(this, "" + AppConstants.NO_CONNECTION_ERROR, Toast.LENGTH_SHORT).show();
-        }
-    }
-
-
-    /**
-     * This function prepares the data for payment and launches payumoney plug n play sdk
-     */
-    private void launchPayUMoneyFlow(String rechargeAmount) {
-
-        PayUmoneyConfig payUmoneyConfig = PayUmoneyConfig.getInstance();
-
-        //Use this to set your custom text on result screen button
-        payUmoneyConfig.setDoneButtonText("Pay now");
-
-        //Use this to set your custom title for the activity
-        payUmoneyConfig.setPayUmoneyActivityTitle("Subscription");
-
-        payUmoneyConfig.disableExitConfirmation(true);
-
-        PayUmoneySdkInitializer.PaymentParam.Builder builder = new PayUmoneySdkInitializer.PaymentParam.Builder();
-
-        double amount = 0;
-        try {
-            amount = Double.parseDouble(rechargeAmount);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        String txnId = System.currentTimeMillis() + "";
-        String phone = selectedMobileNumber;
-        String productName = mAppPreference.getProductInfo();
-        String firstName = mAppPreference.getFirstName();
-        String email = emailIdStr;
-        String udf1 = "";
-        String udf2 = "";
-        String udf3 = "";
-        String udf4 = "";
-        String udf5 = "";
-        String udf6 = "";
-        String udf7 = "";
-        String udf8 = "";
-        String udf9 = "";
-        String udf10 = "";
-
-        AppEnvironment appEnvironment = ((AppController) getApplication()).getAppEnvironment();
-        builder.setAmount(amount)
-                .setTxnId(txnId)
-                .setPhone(phone)
-                .setProductName(productName)
-                .setFirstName(firstName)
-                .setEmail(email)
-                .setsUrl(appEnvironment.surl())
-                .setfUrl(appEnvironment.furl())
-                .setUdf1(udf1)
-                .setUdf2(udf2)
-                .setUdf3(udf3)
-                .setUdf4(udf4)
-                .setUdf5(udf5)
-                .setUdf6(udf6)
-                .setUdf7(udf7)
-                .setUdf8(udf8)
-                .setUdf9(udf9)
-                .setUdf10(udf10)
-                .setIsDebug(appEnvironment.debug())
-                .setKey(appEnvironment.merchant_Key())
-                .setMerchantId(appEnvironment.merchant_ID());
-
-        try {
-            mPaymentParams = builder.build();
-
-            /*
-             * Hash should always be generated from your server side.
-             * */
-            generateHashFromServer(mPaymentParams);
-
-            /*            *//**
-             * Do not use below code when going live
-             * Below code is provided to generate hash from sdk.
-             * It is recommended to generate hash from server side only.
-             * */
-           /* mPaymentParams = calculateServerSideHashAndInitiatePayment1(mPaymentParams);
-
-           if (AppPreference.selectedTheme != -1) {
-                PayUmoneyFlowManager.startPayUMoneyFlow(mPaymentParams,mActivity, AppPreference.selectedTheme,mAppPreference.isOverrideResultScreen());
-            } else {
-                PayUmoneyFlowManager.startPayUMoneyFlow(mPaymentParams,mActivity, R.style.AppTheme_default, mAppPreference.isOverrideResultScreen());
-            }*/
-
-        } catch (Exception e) {
-            // some exception occurred
-            Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
-            //   payNowButton.setEnabled(true);
-        }
-    }
-
-
-    /**
-     * This method generates hash from server.
-     *
-     * @param paymentParam payments params used for hash generation
-     */
-    public void generateHashFromServer(PayUmoneySdkInitializer.PaymentParam paymentParam) {
-        //nextButton.setEnabled(false); // lets not allow the user to click the button again and again.
-
-        HashMap<String, String> params = paymentParam.getParams();
-
-        // lets create the post params
-        StringBuffer postParamsBuffer = new StringBuffer();
-        postParamsBuffer.append(concatParams(PayUmoneyConstants.KEY, params.get(PayUmoneyConstants.KEY)));
-        postParamsBuffer.append(concatParams(PayUmoneyConstants.AMOUNT, params.get(PayUmoneyConstants.AMOUNT)));
-        postParamsBuffer.append(concatParams(PayUmoneyConstants.TXNID, params.get(PayUmoneyConstants.TXNID)));
-        postParamsBuffer.append(concatParams(PayUmoneyConstants.EMAIL, params.get(PayUmoneyConstants.EMAIL)));
-        postParamsBuffer.append(concatParams("productinfo", params.get(PayUmoneyConstants.PRODUCT_INFO)));
-        postParamsBuffer.append(concatParams("firstname", params.get(PayUmoneyConstants.FIRSTNAME)));
-        postParamsBuffer.append(concatParams(PayUmoneyConstants.UDF1, params.get(PayUmoneyConstants.UDF1)));
-        postParamsBuffer.append(concatParams(PayUmoneyConstants.UDF2, params.get(PayUmoneyConstants.UDF2)));
-        postParamsBuffer.append(concatParams(PayUmoneyConstants.UDF3, params.get(PayUmoneyConstants.UDF3)));
-        postParamsBuffer.append(concatParams(PayUmoneyConstants.UDF4, params.get(PayUmoneyConstants.UDF4)));
-        postParamsBuffer.append(concatParams(PayUmoneyConstants.UDF5, params.get(PayUmoneyConstants.UDF5)));
-
-        String postParams = postParamsBuffer.charAt(postParamsBuffer.length() - 1) == '&' ? postParamsBuffer.substring(0, postParamsBuffer.length() - 1).toString() : postParamsBuffer.toString();
-
-        // lets make an api call
-        GetHashesFromServerTask getHashesFromServerTask = new GetHashesFromServerTask();
-        getHashesFromServerTask.execute(postParams);
-    }
-
-
-    protected String concatParams(String key, String value) {
-        return key + "=" + value + "&";
     }
 
     @Override
@@ -550,12 +384,14 @@ public class RechargeActivity extends AppCompatActivity implements View.OnClickL
                             public void onClick(DialogInterface dialog, int whichButton) {
                                 long time = System.currentTimeMillis();
                                 try {
-                                    String url = AppConstants.LIVE_URL + AppConstants.RECHARGE_API + AppConstants.FORMAT_KEY + AppConstants.FORMAT_JSON_VALUE +
+                                    String url = AppConstants.RECHARGE_LIVE_URL + AppConstants.RECHARGE_API + AppConstants.FORMAT_KEY + AppConstants.FORMAT_JSON_VALUE +
                                             AppConstants.TOKEN_KEY + AppConstants.TOKEN_VALUE + AppConstants.MOBILE_KEY + selectedMobileNumber +
                                             AppConstants.AMOUNT_KEY + rechargeAmount + AppConstants.OPERATOR_ID_KEY + selectedOperatorId +
                                             AppConstants.UNIQUE_ID_KEY + time + AppConstants.OPIONAL_VALUE1_KEY + URLEncoder.encode(intentTitleStr, "utf-8") +
                                             AppConstants.OPIONAL_VALUE2_KEY + URLEncoder.encode("Recharge", "utf-8");
                                     myUtility.printLogcat("API::::" + url);
+
+                                    //mRechargePresenter.callRechargeAPI(url);
                                 } catch (UnsupportedEncodingException e) {
                                     e.printStackTrace();
                                 }
@@ -596,13 +432,53 @@ public class RechargeActivity extends AppCompatActivity implements View.OnClickL
 
                 }
             }
+        } else if (requestCode == AppConstants.OPERATOR_INTENT_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                if (data != null) {
+                    intentHintStr = data.getStringExtra(AppConstants.HINT_INTENT_KEY);
+                    optionValue1 = data.getStringExtra(AppConstants.OPTION_VALUE_1_INTENT_KEY);
+                    optionValue2 = data.getStringExtra(AppConstants.OPTION_VALUE_2_INTENT_KEY);
+                    optionValue3 = data.getStringExtra(AppConstants.OPTION_VALUE_3_INTENT_KEY);
+                    optionValue4 = data.getStringExtra(AppConstants.OPTION_VALUE_4_INTENT_KEY);
+                    selectedServiceProvider = data.getStringExtra(AppConstants.JSON_OPERATOR_NAME_KEY);
+                    selectedOperatorId = data.getIntExtra(AppConstants.JSON_OPERATORID_KEY, 0);
+
+                    myUtility.printLogcat("Hint::" + intentHintStr);
+                    myUtility.printLogcat("optionValue1::" + optionValue1);
+                    myUtility.printLogcat("optionValue2::" + optionValue2);
+                    myUtility.printLogcat("optionValue3::" + optionValue3);
+                    myUtility.printLogcat("optionValue4::" + optionValue4);
+                    amountLayout.setVisibility(View.VISIBLE);
+                    operatorET.setText(selectedServiceProvider.trim());
+                    contactBtn.setVisibility(intentSelectStr.equalsIgnoreCase(AppConstants.POSTPAID_VALUE) ? View.VISIBLE : View.GONE);
+                }
+            }
         }
+    }
+
+    @Override
+    public void getSuccessfulHash(PayUmoneySdkInitializer.PaymentParam mPaymentParam) {
+        if (AppPreference.selectedTheme != -1) {
+            PayUmoneyFlowManager.startPayUMoneyFlow(mPaymentParam, mActivity, AppPreference.selectedTheme, mAppPreference.isOverrideResultScreen());
+        } else {
+            PayUmoneyFlowManager.startPayUMoneyFlow(mPaymentParam, mActivity, R.style.AppTheme_default, mAppPreference.isOverrideResultScreen());
+        }
+    }
+
+    @Override
+    public void showError(String errorMsg) {
+        Toast.makeText(mActivity, errorMsg, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showSuccess(JSONObject successJSON) {
+
     }
 
     /**
      * This AsyncTask generates hash from server.
      */
-    private class GetHashesFromServerTask extends AsyncTask<String, String, String> {
+   /* private class GetHashesFromServerTask extends AsyncTask<String, String, String> {
         private ProgressDialog progressDialog;
 
         @Override
@@ -645,10 +521,11 @@ public class RechargeActivity extends AppCompatActivity implements View.OnClickL
                 while (payuHashIterator.hasNext()) {
                     String key = payuHashIterator.next();
                     switch (key) {
-                        /**
-                         * This hash is mandatory and needs to be generated from merchant's server side
-                         *
-                         */
+                        */
+
+    /**
+     * This hash is mandatory and needs to be generated from merchant's server side
+     *//*
                         case "payment_hash":
                             merchantHash = response.getString(key);
                             break;
@@ -688,8 +565,7 @@ public class RechargeActivity extends AppCompatActivity implements View.OnClickL
                 }
             }
         }
-    }
-
+    }*/
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -727,4 +603,6 @@ public class RechargeActivity extends AppCompatActivity implements View.OnClickL
         getOperatorBackground(phoneNumberWithoutCountryCode.substring(0, 4));
 
     }
+
+
 }
