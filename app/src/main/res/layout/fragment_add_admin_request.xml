@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:background="@color/auto_load_update_bg_color"
     android:layout_height="match_parent"
     tools:context=".fragment.ProfileFragment">
 
@@ -16,22 +17,19 @@
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
             android:orientation="vertical"
+            android:background="@color/white"
             android:padding="5dp">
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="2.5dp"
                 android:layout_marginTop="5dp">
 
                 <com.unsullied.chottabheem.utils.CustomEditText
-                    android:id="@+id/reg_username_et"
+                    android:id="@+id/etPoints"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:cursorVisible="true"
-                    android:focusable="false"
-                    android:focusableInTouchMode="false"
-                    android:focusedByDefault="false"
                     android:gravity="center_vertical"
                     android:hint="Points Earned"
                     android:imeOptions="actionNext"
@@ -46,21 +44,20 @@
 
 
             <android.support.design.widget.TextInputLayout
+
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="2.5dp"
                 android:layout_marginTop="5dp">
 
                 <com.unsullied.chottabheem.utils.CustomEditText
-                    android:id="@+id/reg_mobile_et"
+                    android:id="@+id/etMobile"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="1dp"
                     android:cursorVisible="true"
                     android:gravity="center_vertical"
-                    android:hint="Phone no"
+                    android:hint="Mobile number"
                     android:imeOptions="actionNext"
-                    android:inputType="phone"
+                    android:inputType="number"
                     android:maxLength="10"
                     android:maxLines="1"
                     android:padding="05dp"

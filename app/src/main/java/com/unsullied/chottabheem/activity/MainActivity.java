@@ -18,6 +18,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.unsullied.chottabheem.R;
@@ -45,7 +46,8 @@ public class MainActivity extends AppCompatActivity
         AddAdminRequestFragment.OnFragmentInteractionListener {
     DrawerLayout drawer;
     Toolbar toolbar;
-    private CustomTextView titleTV, logoutTV, userNameTV, userMobileTV;
+    private CustomTextView titleTV, logoutTV, userNameTV, userMobileTV, referralCodeTV, overallTV, progressTV;
+    private ProgressBar pbId;
     private Utility mUtility;
     private LinearLayout pointsLayout;
     private SessionManager mSessionManager;
@@ -74,10 +76,12 @@ public class MainActivity extends AppCompatActivity
         View hView = navigationView.getHeaderView(0);
         logoutTV = (CustomTextView) hView.findViewById(R.id.logoutTV);
         userNameTV = (CustomTextView) hView.findViewById(R.id.userNameTV);
+        referralCodeTV = (CustomTextView) hView.findViewById(R.id.referralCodeTV);
         userMobileTV = (CustomTextView) hView.findViewById(R.id.userMobileTV);
-
-        userNameTV.setText(mSessionManager.getValueFromSessionByKey(mContext,AppConstants.USER_SESSION_NAME,AppConstants.USER_NAME_KEY));
-        userMobileTV.setText(mSessionManager.getValueFromSessionByKey(mContext,AppConstants.USER_SESSION_NAME,AppConstants.USER_MOBILE_KEY));
+        progressTV = (CustomTextView) hView.findViewById(R.id.progressTV);
+        overallTV = (CustomTextView) hView.findViewById(R.id.overallTV);
+        pbId = hView.findViewById(R.id.pbId);
+        updateHeaderViewValue();
 
         logoutTV.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -432,5 +436,15 @@ public class MainActivity extends AppCompatActivity
     public void onAddAdminRequestFragmentInteraction(BaseFragment mFragment, String parameter) {
         updateToolbarTitle(getString(R.string.add_admin_request_Title));
         replaceFragment(mFragment, parameter);
+    }
+
+    public void updateHeaderViewValue() {
+        pbId.setMax(Integer.parseInt(mSessionManager.getValueFromSessionByKey(mContext, AppConstants.USER_SESSION_NAME, AppConstants.API_OVERALL_REFERRAL_KEY)));
+        pbId.setProgress(Integer.parseInt(mSessionManager.getValueFromSessionByKey(mContext, AppConstants.USER_SESSION_NAME, AppConstants.API_REDEEM_PROGRESS_KEY)));
+        userNameTV.setText(mSessionManager.getValueFromSessionByKey(mContext, AppConstants.USER_SESSION_NAME, AppConstants.USER_NAME_KEY));
+        userMobileTV.setText(mSessionManager.getValueFromSessionByKey(mContext, AppConstants.USER_SESSION_NAME, AppConstants.USER_MOBILE_KEY));
+        referralCodeTV.setText(mSessionManager.getValueFromSessionByKey(mContext, AppConstants.USER_SESSION_NAME, AppConstants.API_REFERRAL_CODE_KEY));
+        progressTV.setText(String.valueOf(pbId.getProgress()).concat("/").concat(String.valueOf(pbId.getMax())));
+        // overallTV.setText(mSessionManager.getValueFromSessionByKey(mContext, AppConstants.USER_SESSION_NAME, AppConstants.API_REDEEM_PROGRESS_KEY));
     }
 }

@@ -109,7 +109,7 @@ public class SplashActivity extends AppCompatActivity {
             @Override
             public void run() {
                 //Do something after 100ms
-                if (new SessionManager().isLogged(getApplicationContext())) {
+                if (new SessionManager().isLogged(getApplicationContext()) > 0) {
                     Intent nextIntent = new Intent(SplashActivity.this, MainActivity.class);
                     startActivity(nextIntent);
                     finishAffinity();

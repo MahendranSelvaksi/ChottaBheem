@@ -1,11 +1,15 @@
 package com.unsullied.chottabheem.activity;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -24,6 +28,7 @@ import com.payumoney.core.PayUmoneySdkInitializer;
 import com.payumoney.core.entity.TransactionResponse;
 import com.payumoney.sdkui.ui.utils.PayUmoneyFlowManager;
 import com.payumoney.sdkui.ui.utils.ResultModel;
+import com.unsullied.chottabheem.BuildConfig;
 import com.unsullied.chottabheem.R;
 import com.unsullied.chottabheem.utils.AppConstants;
 import com.unsullied.chottabheem.utils.AppController;
@@ -31,6 +36,8 @@ import com.unsullied.chottabheem.utils.CustomEditText;
 import com.unsullied.chottabheem.utils.CustomTextView;
 import com.unsullied.chottabheem.utils.SessionManager;
 import com.unsullied.chottabheem.utils.Utility;
+import com.unsullied.chottabheem.utils.mvp.LoginMVP;
+import com.unsullied.chottabheem.utils.mvp.LoginPresenter;
 import com.unsullied.chottabheem.utils.paymentgateway.AppEnvironment;
 import com.unsullied.chottabheem.utils.paymentgateway.AppPreference;
 
@@ -46,7 +53,7 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Iterator;
 
-public class VerificationActivity extends AppCompatActivity implements View.OnClickListener {
+public class VerificationActivity extends AppCompatActivity implements View.OnClickListener, LoginMVP.View {
 
     Toolbar toolbar;
     private Button submitBtn;
@@ -58,8 +65,14 @@ public class VerificationActivity extends AppCompatActivity implements View.OnCl
     private AppPreference mAppPreference;
     private PayUmoneySdkInitializer.PaymentParam mPaymentParams;
     private Utility myUtility;
-    private String nameStr, mobileNumberStr, emailIdStr, fbIdStr;
+    private String nameStr, mobileNumberStr, emailIdStr, accountId;
     private SessionManager mSessionManager;
+    private int userId;
+    private Context mContext;
+    private Activity mActivity;
+    private ProgressDialog pd;
+    private LoginPresenter mLoginPresenter;
+    private String paymentId="",paymentMessage="";
 
 
     @Override
@@ -67,13 +80,21 @@ public class VerificationActivity extends AppCompatActivity implements View.OnCl
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_verification);
 
+        mContext = getApplicationContext();
+        mActivity = this;
         mAppPreference = new AppPreference();
         myUtility = new Utility();
         mSessionManager = new SessionManager();
+        pd = new ProgressDialog(mActivity);
+        pd.setCancelable(false);
+        mLoginPresenter = new LoginPresenter(mContext, this, mActivity);
 
-        fbIdStr = getIntent().getStringExtra(AppConstants.FB_ID_KEY);
-        mobileNumberStr = getIntent().getStringExtra(AppConstants.USER_MOBILE_KEY);
-        emailIdStr = getIntent().getStringExtra(AppConstants.USER_EMAIL_ID_KEY);
+
+        accountId = getIntent().getStringExtra(AppConstants.ACCOUNT_ID_KEY);
+        userId = mSessionManager.isLogged(mContext);
+        nameStr = mSessionManager.getValueFromSessionByKey(mContext, AppConstants.USER_SESSION_NAME, AppConstants.USER_NAME_KEY);
+        mobileNumberStr = mSessionManager.getValueFromSessionByKey(mContext, AppConstants.USER_SESSION_NAME, AppConstants.USER_MOBILE_KEY);
+        emailIdStr = mSessionManager.getValueFromSessionByKey(mContext, AppConstants.USER_SESSION_NAME, AppConstants.USER_EMAIL_ID_KEY);
 
         toolbar = (Toolbar) findViewById(R.id.verificationToolbar);
         tittleTV = toolbar.findViewById(R.id.toolbar_title);
@@ -293,14 +314,23 @@ public class VerificationActivity extends AppCompatActivity implements View.OnCl
                 // Response from SURl and FURL
                 String merchantResponse = transactionResponse.getTransactionDetails();
 
+                myUtility.printLogcat("Payu's Data : " + payuResponse);
+                myUtility.printLogcat("Merchant's Data: " + merchantResponse);
+                try {
+                    JSONObject payResponse=new JSONObject(payuResponse);
+                    JSONObject resultObject=payResponse.getJSONObject("result");
+                  paymentId= String.valueOf(resultObject.getInt("txnid"));
+                   paymentMessage= resultObject.getString("error_Message");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
                 new AlertDialog.Builder(VerificationActivity.this)
                         .setCancelable(false)
                         .setTitle("Payment Status")
                         .setMessage("You are successfully subscribed!!!")
                         .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
-                                mSessionManager.addValueToSession(getApplicationContext(), AppConstants.USER_SESSION_NAME,
-                                        AppConstants.FB_ID_KEY, fbIdStr);
                                 mSessionManager.addValueToSession(getApplicationContext(), AppConstants.USER_SESSION_NAME,
                                         AppConstants.USER_NAME_KEY, nameStr);
                                 mSessionManager.addValueToSession(getApplicationContext(), AppConstants.USER_SESSION_NAME,
@@ -309,6 +339,13 @@ public class VerificationActivity extends AppCompatActivity implements View.OnCl
                                         AppConstants.USER_EMAIL_ID_KEY, emailIdStr);
                                 startActivity(new Intent(VerificationActivity.this, MainActivity.class));
                                 finish();
+                                String versionCode = String.valueOf(BuildConfig.VERSION_CODE);
+                                String deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+                                String deviceType = Build.DEVICE;
+                                pd.setMessage(AppConstants.LOGIN_API_CALL_DIALOG_MSG);
+                                pd.show();
+                                mLoginPresenter.callUpdateLoginAPI(AppConstants.REGISTER_LOGIN_API, accountId, mobileNumberStr, versionCode, paymentId,
+                                        nameStr, emailIdStr, "99", AppConstants.OS_NAME_VALUE, deviceId, deviceType, referralCodeET.getText().toString().trim());
                                 dialog.dismiss();
                             }
                         }).show();
@@ -318,6 +355,26 @@ public class VerificationActivity extends AppCompatActivity implements View.OnCl
             } else {
                 myUtility.printLogcat("Both objects are null!");
             }
+        }
+    }
+
+    @Override
+    public void showSuccess(int code, String message) {
+        closeProgressDialog();
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+        startActivity(new Intent(VerificationActivity.this, MainActivity.class));
+        finish();
+    }
+
+    @Override
+    public void showError(int code, String errorMsg) {
+        closeProgressDialog();
+        Toast.makeText(this, errorMsg, Toast.LENGTH_SHORT).show();
+    }
+
+    private void closeProgressDialog() {
+        if (pd != null && pd.isShowing()) {
+            pd.dismiss();
         }
     }
 

@@ -20,9 +20,22 @@ public class SessionManager {
         return value;
     }
 
-    public boolean isLogged(Context mContext) {
+    public void addIntValueToSession(Context mContext, String sessionName, String key, int value) {
+        SharedPreferences.Editor editor = mContext.getSharedPreferences(sessionName, MODE_PRIVATE).edit();
+        editor.putInt(key, value);
+        editor.apply();
+    }
+
+    public int getIntValueFromSessionByKey(Context mContext, String sessionName, String key) {
+        int value = 0;
+        SharedPreferences prefs = mContext.getSharedPreferences(sessionName, MODE_PRIVATE);
+        value = prefs.getInt(key, 0);
+        return value;
+    }
+
+    public int isLogged(Context mContext) {
         SharedPreferences prefs = mContext.getSharedPreferences(AppConstants.USER_SESSION_NAME, MODE_PRIVATE);
-        return prefs.getString(AppConstants.FB_ID_KEY, "").length() > 0;
+        return prefs.getInt(AppConstants.USER_ID_KEY, 0);
     }
 
     public void logoutSession(Context mContext, String sessionName) {

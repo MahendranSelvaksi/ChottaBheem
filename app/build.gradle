@@ -1,5 +1,5 @@
 apply plugin: 'com.android.application'
-String APK_NAME = "Chotta Bheem", VERSION_NAME = "v1", SUFFIX = "2209"
+String APK_NAME = "Chotta Bheem", VERSION_NAME = "v1", SUFFIX = "1510"
 repositories {
     jcenter()
 }

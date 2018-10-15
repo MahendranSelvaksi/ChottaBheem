@@ -59,6 +59,7 @@
                 app:customFont="nova.ttf" />
 
             <com.unsullied.chottabheem.utils.CustomTextView
+                android:id="@+id/referralCodeTV"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="3dp"
@@ -113,6 +114,7 @@
             android:orientation="horizontal">
 
             <com.unsullied.chottabheem.utils.CustomTextView
+                android:id="@+id/overallTV"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="3dp"
@@ -128,6 +130,7 @@
                 app:customFont="novabold.ttf" />
 
             <com.unsullied.chottabheem.utils.CustomTextView
+                android:id="@+id/progressTV"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right|center"

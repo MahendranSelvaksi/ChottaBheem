@@ -70,8 +70,8 @@ public class LoginActivity extends AppCompatActivity implements LoginMVP.View {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        mContext=getApplicationContext();
-        mActivity=this;
+        mContext = getApplicationContext();
+        mActivity = this;
         myUtility = new Utility();
         pd = new ProgressDialog(this);
         pd.setCancelable(false);
@@ -107,8 +107,8 @@ public class LoginActivity extends AppCompatActivity implements LoginMVP.View {
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                //finish();
+               /* startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                finish();*/
                 phoneLogin();
                 /*AccessToken accessToken = AccountKit.getCurrentAccessToken();
 
@@ -127,7 +127,7 @@ public class LoginActivity extends AppCompatActivity implements LoginMVP.View {
             }
         });
 
-        mLoginPresenter=new LoginPresenter(mContext,this,mActivity);
+        mLoginPresenter = new LoginPresenter(mContext, this, mActivity);
     }
 
     public void phoneLogin() {
@@ -258,19 +258,18 @@ public class LoginActivity extends AppCompatActivity implements LoginMVP.View {
         });
     }
 
-    /*private void callNextActivity() {
-        Intent verifyIntent = new Intent(LoginActivity.this, VerificationActivity.class);
-        verifyIntent.putExtra(AppConstants.FB_ID_KEY, accountId);
-        verifyIntent.putExtra(AppConstants.USER_EMAIL_ID_KEY, account.getEmail() == null ? "" : account.getEmail().trim());
-        verifyIntent.putExtra(AppConstants.USER_MOBILE_KEY, phoneNumberString);
+    private void callNextActivity(boolean navigateToHome) {
+        Intent verifyIntent = new Intent(LoginActivity.this, navigateToHome ? MainActivity.class : VerificationActivity.class);
+        verifyIntent.putExtra(AppConstants.ACCOUNT_ID_KEY, accountId);
         startActivity(verifyIntent);
         finish();
-    }*/
+    }
 
     @Override
-    public void showSuccess(String message) {
+    public void showSuccess(int code, String message) {
         closeProgressDialog();
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+        callNextActivity(code == 1);
     }
 
     @Override

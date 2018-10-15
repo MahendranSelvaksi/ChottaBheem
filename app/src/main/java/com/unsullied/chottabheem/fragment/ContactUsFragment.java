@@ -1,15 +1,32 @@
 package com.unsullied.chottabheem.fragment;
 
+import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.InputFilter;
+import android.text.TextWatcher;
+import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import com.unsullied.chottabheem.BuildConfig;
 import com.unsullied.chottabheem.R;
+import com.unsullied.chottabheem.utils.AppConstants;
 import com.unsullied.chottabheem.utils.BaseFragment;
+import com.unsullied.chottabheem.utils.CustomEditText;
+import com.unsullied.chottabheem.utils.CustomTextView;
+import com.unsullied.chottabheem.utils.SessionManager;
+import com.unsullied.chottabheem.utils.SmileyRemover;
+import com.unsullied.chottabheem.utils.mvp.ProfileMVP;
+import com.unsullied.chottabheem.utils.mvp.ProfilePresenter;
+
+import org.json.JSONObject;
 
 
 /**
@@ -20,7 +37,7 @@ import com.unsullied.chottabheem.utils.BaseFragment;
  * Use the {@link ContactUsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ContactUsFragment extends BaseFragment {
+public class ContactUsFragment extends BaseFragment implements View.OnClickListener, ProfileMVP.View {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -29,8 +46,19 @@ public class ContactUsFragment extends BaseFragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-
+    int userId;
+    private CustomEditText etName, etEmailId, etMobileNumber, etComments;
+    private TextInputLayout nameTIL, emailTIL, mobileNumberTIL, commentsTIL;
+    private CustomTextView btnSend;
+    private View rootView;
+    private SmileyRemover smileyRemover;
+    private Activity mActivity;
+    private Context mContext;
+    private ProgressDialog pd;
     private OnFragmentInteractionListener mListener;
+    private SessionManager sessionManager;
+    private ProfilePresenter mPresenter;
+    private String accessToken;
 
     public ContactUsFragment() {
         // Required empty public constructor
@@ -67,9 +95,37 @@ public class ContactUsFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_contact_us, container, false);
-    }
+        rootView = inflater.inflate(R.layout.fragment_contact_us, container, false);
 
+        mActivity = getActivity();
+        mContext = getContext();
+        sessionManager = new SessionManager();
+        smileyRemover = new SmileyRemover();
+        pd = new ProgressDialog(mActivity);
+        pd.setCancelable(false);
+        pd.setMessage(AppConstants.CONTACT_US_API_CALL_DIALOG_MSG);
+        mPresenter = new ProfilePresenter(mContext, this);
+        accessToken = sessionManager.getValueFromSessionByKey(mContext, AppConstants.USER_SESSION_NAME, AppConstants.ACCESS_TOKEN_KEY);
+        userId = sessionManager.getIntValueFromSessionByKey(mContext, AppConstants.USER_SESSION_NAME, AppConstants.USER_ID_KEY);
+
+        etName = rootView.findViewById(R.id.etName);
+        etEmailId = rootView.findViewById(R.id.etEmailId);
+        etMobileNumber = rootView.findViewById(R.id.etMobileNumber);
+        etComments = rootView.findViewById(R.id.etComments);
+        btnSend = rootView.findViewById(R.id.btnSend);
+        nameTIL = rootView.findViewById(R.id.nameTIL);
+        emailTIL = rootView.findViewById(R.id.emailTIL);
+        mobileNumberTIL = rootView.findViewById(R.id.mobileNumberTIL);
+        commentsTIL = rootView.findViewById(R.id.commentsTIL);
+
+        etName.setFilters(new InputFilter[]{smileyRemover});
+        etEmailId.setFilters(new InputFilter[]{smileyRemover});
+
+        btnSend.setOnClickListener(this);
+
+
+        return rootView;
+    }
 
 
     @Override
@@ -87,6 +143,145 @@ public class ContactUsFragment extends BaseFragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (v == btnSend) {
+            if (etName.getText().toString().trim().length() == 0 || etEmailId.getText().toString().trim().length() == 0 ||
+                    etMobileNumber.getText().toString().trim().length() == 0 || etComments.getText().toString().trim().length() == 0) {
+
+                if (etName.getText().toString().trim().length() == 0 && etEmailId.getText().toString().trim().length() == 0 &&
+                        etMobileNumber.getText().toString().trim().length() == 0 && etComments.getText().toString().trim().length() == 0) {
+                    nameTIL.setError("Enter your name");
+                    emailTIL.setError("Enter your email id");
+                    mobileNumberTIL.setError("Enter your mobile number");
+                    commentsTIL.setError("Enter your comments");
+
+                } else if (etName.getText().toString().trim().length() == 0) {
+                    nameTIL.setError("Enter your name");
+                } else if (etEmailId.getText().toString().trim().length() == 0) {
+                    emailTIL.setError("Enter your email id");
+                } else if (etMobileNumber.getText().toString().trim().length() == 0) {
+                    mobileNumberTIL.setError("Enter your mobile number");
+                } else if (etComments.getText().toString().trim().length() == 0) {
+                    commentsTIL.setError("Enter your comments");
+                }
+            } else {
+                if (!Patterns.EMAIL_ADDRESS.matcher(etEmailId.getText().toString().trim()).matches()) {
+                    emailTIL.setError("Enter your valid email id");
+                } /*else if (!AppConstants.MOBILE_NUMBER_REX.matches(etMobileNumber.getText().toString().trim())) {
+                    mobileNumberTIL.setError("Please give valid mobile number with country code (+91)");
+                }*/ else {
+                    //Call api
+                    pd.show();
+                    mPresenter.callContactUsAPI(AppConstants.CONTACT_US_API, userId, accessToken, etName.getText().toString().trim(),
+                            etEmailId.getText().toString().trim(), AppConstants.OS_NAME_VALUE, BuildConfig.VERSION_NAME,
+                            etMobileNumber.getText().toString().trim(), etComments.getText().toString().trim());
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        etName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s.length() > 0) {
+                    nameTIL.setError(null);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+        etEmailId.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s.length() > 0) {
+                    emailTIL.setError(null);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+        etMobileNumber.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s.length() > 0) {
+                    mobileNumberTIL.setError(null);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+        etComments.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s.length() > 0) {
+                    commentsTIL.setError(null);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+    }
+
+    @Override
+    public void updateProfile(JSONObject profileJSON) {
+        if (pd != null && pd.isShowing())
+            pd.dismiss();
+    }
+
+    @Override
+    public void showError(int code, String errorMsg) {
+        if (pd != null && pd.isShowing())
+            pd.dismiss();
+        Toast.makeText(mActivity, errorMsg, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showSuccess(int code, String message) {
+        if (pd != null && pd.isShowing())
+            pd.dismiss();
+        etName.setText("");
+        etEmailId.setText("");
+        etMobileNumber.setText("");
+        etComments.setText("");
+        Toast.makeText(mActivity, message, Toast.LENGTH_SHORT).show();
     }
 
     /**

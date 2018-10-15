@@ -17,8 +17,11 @@ public class AppConstants {
     public static final String API_LIVE_URL = "http://itagtechies.com/dev/CB_api/api/";
     public static final String RECHARGE_LIVE_URL = "http://api.rechapi.com/";
     public static final String LOGIN_API = "login";
-    public static final String UPDATE_LOGIN_API = "login/update_login";
-
+    public static final String REGISTER_LOGIN_API = "login/register";
+    public static final String GET_PROFILE_API = "profile";
+    public static final String CONTACT_US_API = "contact";
+    public static final String GET_REDEEM_LIST_API="redeem/getRedeem";
+    public static final String ADD_REDEEM_API="redeem";
     //.addHeaders("Authorization", Credentials.basic(AppConstants.APP_USER_NAME_VALUE,AppConstants.APP_PASSWORD_VALUE))
 
     public static final String APP_USER_NAME_VALUE = "CB_App";
@@ -58,6 +61,7 @@ public class AppConstants {
     public static final String ACCOUNT_ID_KEY = "accountid";
     public static final String PHONE_KEY = "phone";
     public static final String LOGIN_TYPE_KEY = "login_type";
+    public static final String REG_TYPE_KEY = "reg_type";
     public static final String DEVICE_ID_KEY = "device_id";
     public static final String OS_NAME_KEY = "osname";
     public static final String DEVICE_TYPE_KEY = "device_type";
@@ -68,13 +72,28 @@ public class AppConstants {
     public static final String EMAIL_KEY = "email";
     public static final String PAYMENT_ID_KEY = "paymentid";
     public static final String PAYMENT_AMOUNT_KEY = "paymentAmount";
+    public static final String PAYMENT_VIA_KEY = "paymentvia";
     public static final String DEVICE_OS_KEY = "device_os";
     public static final String LOGIN_TYPE_VALUE = "accountkitlogin";
     public static final String API_STATUS_CODE_KEY = "status_code";
     public static final int API_STATUS_CODE_VALUE = 200;
+    public static final String API_MESSAGE_KEY = "message";
     public static final String API_OVERALL_REFERRAL_KEY = "overall_referal";
+    public static final String API_CURRENT_REFERRAL_KEY = "current_referal";
     public static final String API_REDEEM_PROGRESS_KEY = "redeem_progress";
     public static final String API_REDEEM_POINT_KEY = "redeem_point";
+    public static final String API_PARENT_KEY = "parent";
+    public static final String API_CHILD_REFERRAL_CODE_KEY = "child_referral_code";
+    public static final String API_CHILD_USER_ID_KEY = "childuserid";
+    public static final String API_REFERRAL_CODE_KEY = "referral_code";
+    public static final String API_REDEEM_NAME_KEY = "redeem_name";
+    public static final String API_REDEEM_VALUE_KEY = "redeemvalue";
+    public static final String API_OPERATOR_KEY = "operator";
+
+    public static final String REDEEM_REQUEST_NAME_KEY="redeem_req_name";
+    public static final String REDEEM_REQUEST_ID_KEY="redeem_req_id";
+    public static final String REDEEM_REQUEST_TIME_KEY="redeem_req_time";
+    public static final String REDEEM_REQUEST_STATUS_KEY="redeem_req_status";
 
 
     public static final String FTT_VALUE = "FTT";
@@ -150,12 +169,40 @@ public class AppConstants {
 
 
     public static final String LOGIN_API_CALL_DIALOG_MSG = "Login processing, Please wait...";
+    public static final String PROFILE_API_CALL_DIALOG_MSG = "Getting your profile, Please wait...";
+    public static final String GET_REDEEM_API_CALL_DIALOG_MSG = "Getting your requests, Please wait...";
+    public static final String ADD_REDEEM_API_CALL_DIALOG_MSG = "Adding your request, Please wait...";
+    public static final String CONTACT_US_API_CALL_DIALOG_MSG = "Adding your comments, Please wait...";
+    public static final String UPDATE_PROFILE_API_CALL_DIALOG_MSG = "Updading your profile details, Please wait...";
 
     /*App Update Dialoge*/
     public static final String UPDATE_CONTENT = "A new version of " + AppConstants.APP_NAME + " is available.Please update to the version " + BuildConfig.VERSION_CODE + " now.";
     public static final String PLAY_STORE_URL = "https://play.google.com/store/apps/details?id=com.mindmade.graspclothings";
     //public static final String PLAY_STORE_URL = "https://play.google.com/store/apps/details?id=";
 
+    public static final String MOBILE_NUMBER_REX = "^(?:(?:\\+|0{0,2})91(\\s*[\\ -]\\s*)?|[0]?)?[789]\\d{9}|(\\d[ -]?){10}\\d$";
+        /*Possible Combination of mobile number rex
+        * +91-9819882936
+        9883443344
+        09883443344
+        919883443344
+        0919883443344
+        +919883443344
+        +91-9883443344
+        0091-9883443344
+        +91 -9883443344
+        +91- 9883443344
+        +91 - 9883443344
+        0091 - 9883443344
+        7856128945
+        9998564723
+        022-24131840
+        080 25478965
+        0416-2565478
+        08172-268032
+        04512-895612
+        02162-245127
+        +91 9883443344*/
 
     /*Marshmallow Permissions*/
     public static final int READ_CONTACTS_REQUEST_CODE = 501;

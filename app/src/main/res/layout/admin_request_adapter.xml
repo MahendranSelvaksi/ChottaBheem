@@ -14,6 +14,7 @@
         android:orientation="vertical">
 
         <com.unsullied.chottabheem.utils.CustomTextView
+            android:id="@+id/requestNameTV"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
@@ -24,6 +25,7 @@
             app:customFont="nova.ttf" />
 
         <com.unsullied.chottabheem.utils.CustomTextView
+            android:id="@+id/requestTimeTV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right|end"
@@ -56,6 +58,7 @@
                 android:textColor="@color/SecondaryText" />
 
             <com.unsullied.chottabheem.utils.CustomTextView
+                android:id="@+id/requestStatusTV"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
