@@ -148,7 +148,7 @@ public class ProfilePresenter implements ProfileMVP.Presenter {
             String loginInfo = AppConstants.APP_USER_NAME_VALUE + ":" + AppConstants.APP_PASSWORD_VALUE;
             byte[] encodingByte = Base64.encode(loginInfo.getBytes(), Base64.NO_WRAP);
             String encoding = new String(encodingByte);
-            ANRequest request = AndroidNetworking.post(AppConstants.API_LIVE_URL + AppConstants.GET_PROFILE_API)
+            ANRequest request = AndroidNetworking.post(AppConstants.API_LIVE_URL + AppConstants.UPDATE_PROFILE_API)
                     .addHeaders(AppConstants.HEADER_API_KEY, AppConstants.HEADER_API_KEY_VALUE)
                     .addHeaders("Authorization", "Basic " + encoding)
                     .setTag(AppConstants.APP_NAME)
@@ -168,7 +168,7 @@ public class ProfilePresenter implements ProfileMVP.Presenter {
                     try {
                         myUtility.printLogcat("Login API Response:::" + response.toString());
                         if (response.getInt(AppConstants.API_STATUS_CODE_KEY) == AppConstants.API_STATUS_CODE_VALUE) {
-                            mView.showSuccess(0, "Thank you!!");
+                            mView.showSuccess(0, response.getString("data"));
                         } else {
                             mView.showError(1, AppConstants.COMMON_EXCEPTION);
                         }

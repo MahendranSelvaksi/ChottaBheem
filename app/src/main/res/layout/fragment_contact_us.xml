@@ -46,18 +46,20 @@
                             android:id="@+id/etName"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_marginTop="0dp"
                             android:cursorVisible="true"
+                            android:defaultFocusHighlightEnabled="true"
+                            android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
                             android:gravity="center_vertical"
                             android:hint="Name"
-                            android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
                             android:imeOptions="actionNext"
                             android:inputType="text|textNoSuggestions|textPersonName|textCapSentences"
                             android:maxLines="1"
-                            android:padding="05dp"
+                            android:singleLine="true"
                             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                             android:textColor="@color/PrimaryText"
                             android:textColorHint="@color/SecondaryText"
-                            app:customFont="novalight.ttf"/>
+                            app:customFont="novalight.ttf" />
                     </android.support.design.widget.TextInputLayout>
 
                     <android.support.design.widget.TextInputLayout
@@ -75,11 +77,10 @@
                             android:imeOptions="actionNext"
                             android:inputType="textEmailAddress"
                             android:maxLines="1"
-                            android:padding="05dp"
                             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                             android:textColor="@color/PrimaryText"
                             android:textColorHint="@color/SecondaryText"
-                            app:customFont="novalight.ttf"/>
+                            app:customFont="novalight.ttf" />
                     </android.support.design.widget.TextInputLayout>
 
                     <android.support.design.widget.TextInputLayout
@@ -92,18 +93,18 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:cursorVisible="true"
-                            android:gravity="center_vertical"
-                            android:hint="Phone number"
-                            android:imeOptions="actionNext"
                             android:digits="0123456789+- "
+                            android:gravity="center_vertical"
+                            android:hint="Referral Code"
+                            android:imeOptions="actionNext"
+                            android:inputType="text"
                             android:maxLines="1"
-                            android:padding="05dp"
-                            android:inputType="phone"
                             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                             android:textColor="@color/PrimaryText"
                             android:textColorHint="@color/SecondaryText"
                             app:customFont="novalight.ttf" />
                     </android.support.design.widget.TextInputLayout>
+
                     <android.support.design.widget.TextInputLayout
                         android:id="@+id/commentsTIL"
                         android:layout_width="match_parent"
@@ -117,9 +118,9 @@
                             android:gravity="top"
                             android:hint="Comments"
                             android:imeOptions="actionDone"
+                            android:inputType="text"
                             android:lines="3"
                             android:maxLines="5"
-                            android:padding="05dp"
                             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                             android:textColor="@color/PrimaryText"
                             android:textColorHint="@color/SecondaryText"
@@ -131,13 +132,13 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="right"
+                        android:layout_marginBottom="2dp"
                         android:layout_marginLeft="0dp"
                         android:layout_marginRight="0dp"
                         android:layout_marginTop="5dp"
-                        android:layout_marginBottom="2dp"
-                        android:padding="15dp"
                         android:background="@drawable/custom_button"
                         android:gravity="center"
+                        android:padding="15dp"
                         android:text="Send"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                         android:textColor="@color/tabTextColor" />

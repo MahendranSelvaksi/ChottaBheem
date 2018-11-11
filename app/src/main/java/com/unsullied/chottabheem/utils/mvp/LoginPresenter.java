@@ -9,6 +9,7 @@ import com.androidnetworking.common.ANRequest;
 import com.androidnetworking.common.Priority;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.JSONObjectRequestListener;
+import com.unsullied.chottabheem.BuildConfig;
 import com.unsullied.chottabheem.utils.AppConstants;
 import com.unsullied.chottabheem.utils.ConnectivityReceiver;
 import com.unsullied.chottabheem.utils.SessionManager;
@@ -49,7 +50,7 @@ public class LoginPresenter implements LoginMVP.Presenter {
                     .addHeaders(AppConstants.HEADER_API_KEY, AppConstants.HEADER_API_KEY_VALUE)
                     .addHeaders("Authorization", "Basic " + encoding)
                     .setTag(AppConstants.APP_NAME)
-                    .addBodyParameter(AppConstants.VERSIONCODE_KEY, versioncode)
+                    .addBodyParameter(AppConstants.VERSIONCODE_KEY, BuildConfig.VERSION_NAME)
                     .addBodyParameter(AppConstants.ACCOUNT_ID_KEY, accountid)
                     .addBodyParameter(AppConstants.PHONE_KEY, phone)
                     .addBodyParameter(AppConstants.LOGIN_TYPE_KEY, loginType)
@@ -126,7 +127,7 @@ public class LoginPresenter implements LoginMVP.Presenter {
                                 sessionManager.addValueToSession(mContext, AppConstants.USER_SESSION_NAME, AppConstants.API_REDEEM_POINT_KEY, userJsonObject.getString(AppConstants.API_REDEEM_POINT_KEY));
                                 sessionManager.addValueToSession(mContext, AppConstants.USER_SESSION_NAME, AppConstants.API_REDEEM_PROGRESS_KEY, userJsonObject.getString(AppConstants.API_REDEEM_PROGRESS_KEY));
                                 sessionManager.addValueToSession(mContext, AppConstants.USER_SESSION_NAME, AppConstants.API_OVERALL_REFERRAL_KEY, userJsonObject.getString(AppConstants.API_OVERALL_REFERRAL_KEY));
-                             //   sessionManager.addValueToSession(mContext, AppConstants.USER_SESSION_NAME, AppConstants.API_CURRENT_REFERRAL_KEY, userJsonObject.getString(AppConstants.API_CURRENT_REFERRAL_KEY));
+                                //   sessionManager.addValueToSession(mContext, AppConstants.USER_SESSION_NAME, AppConstants.API_CURRENT_REFERRAL_KEY, userJsonObject.getString(AppConstants.API_CURRENT_REFERRAL_KEY));
                                 sessionManager.addValueToSession(mContext, AppConstants.USER_SESSION_NAME, AppConstants.ACCOUNT_ID_KEY, accountid);
                                 mView.showSuccess(1, "Login Successfully!!");
                             } else if (response.getInt(AppConstants.API_STATUS_CODE_KEY) == 201) {
@@ -140,6 +141,7 @@ public class LoginPresenter implements LoginMVP.Presenter {
                                 sessionManager.addValueToSession(mContext, AppConstants.USER_SESSION_NAME, AppConstants.API_REDEEM_PROGRESS_KEY, userJsonObject.getString(AppConstants.API_REDEEM_PROGRESS_KEY));
                                 sessionManager.addValueToSession(mContext, AppConstants.USER_SESSION_NAME, AppConstants.API_OVERALL_REFERRAL_KEY, userJsonObject.getString(AppConstants.API_OVERALL_REFERRAL_KEY));
                                 sessionManager.addValueToSession(mContext, AppConstants.USER_SESSION_NAME, AppConstants.API_CURRENT_REFERRAL_KEY, userJsonObject.getString(AppConstants.API_CURRENT_REFERRAL_KEY));*/
+                               //Call VerificationActivity and register api
                                 mView.showSuccess(0, "Login Successfully!!");
                             }
                         } else {

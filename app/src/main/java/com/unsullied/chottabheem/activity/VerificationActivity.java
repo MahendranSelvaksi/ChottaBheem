@@ -72,7 +72,7 @@ public class VerificationActivity extends AppCompatActivity implements View.OnCl
     private Activity mActivity;
     private ProgressDialog pd;
     private LoginPresenter mLoginPresenter;
-    private String paymentId="",paymentMessage="";
+    private String paymentId = "", paymentMessage = "";
 
 
     @Override
@@ -93,7 +93,8 @@ public class VerificationActivity extends AppCompatActivity implements View.OnCl
         accountId = getIntent().getStringExtra(AppConstants.ACCOUNT_ID_KEY);
         userId = mSessionManager.isLogged(mContext);
         nameStr = mSessionManager.getValueFromSessionByKey(mContext, AppConstants.USER_SESSION_NAME, AppConstants.USER_NAME_KEY);
-        mobileNumberStr = mSessionManager.getValueFromSessionByKey(mContext, AppConstants.USER_SESSION_NAME, AppConstants.USER_MOBILE_KEY);
+        //mobileNumberStr = mSessionManager.getValueFromSessionByKey(mContext, AppConstants.USER_SESSION_NAME, AppConstants.USER_MOBILE_KEY);
+        mobileNumberStr = getIntent().getStringExtra(AppConstants.USER_MOBILE_KEY);
         emailIdStr = mSessionManager.getValueFromSessionByKey(mContext, AppConstants.USER_SESSION_NAME, AppConstants.USER_EMAIL_ID_KEY);
 
         toolbar = (Toolbar) findViewById(R.id.verificationToolbar);
@@ -183,7 +184,7 @@ public class VerificationActivity extends AppCompatActivity implements View.OnCl
         } catch (Exception e) {
             e.printStackTrace();
         }
-        String txnId = System.currentTimeMillis() + "";
+        String txnId = "CB-" + System.currentTimeMillis();
         String phone = mobileNumberStr;
         String productName = mAppPreference.getProductInfo();
         String firstName = mAppPreference.getFirstName();
@@ -317,10 +318,10 @@ public class VerificationActivity extends AppCompatActivity implements View.OnCl
                 myUtility.printLogcat("Payu's Data : " + payuResponse);
                 myUtility.printLogcat("Merchant's Data: " + merchantResponse);
                 try {
-                    JSONObject payResponse=new JSONObject(payuResponse);
-                    JSONObject resultObject=payResponse.getJSONObject("result");
-                  paymentId= String.valueOf(resultObject.getInt("txnid"));
-                   paymentMessage= resultObject.getString("error_Message");
+                    JSONObject payResponse = new JSONObject(payuResponse);
+                    JSONObject resultObject = payResponse.getJSONObject("result");
+                    paymentId = String.valueOf(resultObject.getString("txnid"));
+                    paymentMessage = resultObject.getString("error_Message");
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

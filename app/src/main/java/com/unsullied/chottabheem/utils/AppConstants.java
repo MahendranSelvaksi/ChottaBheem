@@ -20,8 +20,9 @@ public class AppConstants {
     public static final String REGISTER_LOGIN_API = "login/register";
     public static final String GET_PROFILE_API = "profile";
     public static final String CONTACT_US_API = "contact";
-    public static final String GET_REDEEM_LIST_API="redeem/getRedeem";
-    public static final String ADD_REDEEM_API="redeem";
+    public static final String GET_REDEEM_LIST_API = "redeem/getRedeem";
+    public static final String ADD_REDEEM_API = "redeem";
+    public static final String UPDATE_PROFILE_API = "profile/update";
     //.addHeaders("Authorization", Credentials.basic(AppConstants.APP_USER_NAME_VALUE,AppConstants.APP_PASSWORD_VALUE))
 
     public static final String APP_USER_NAME_VALUE = "CB_App";
@@ -87,13 +88,13 @@ public class AppConstants {
     public static final String API_CHILD_USER_ID_KEY = "childuserid";
     public static final String API_REFERRAL_CODE_KEY = "referral_code";
     public static final String API_REDEEM_NAME_KEY = "redeem_name";
-    public static final String API_REDEEM_VALUE_KEY = "redeemvalue";
+    public static final String API_REDEEM_VALUE_KEY = "redeem_value";
     public static final String API_OPERATOR_KEY = "operator";
 
-    public static final String REDEEM_REQUEST_NAME_KEY="redeem_req_name";
-    public static final String REDEEM_REQUEST_ID_KEY="redeem_req_id";
-    public static final String REDEEM_REQUEST_TIME_KEY="redeem_req_time";
-    public static final String REDEEM_REQUEST_STATUS_KEY="redeem_req_status";
+    public static final String REDEEM_REQUEST_NAME_KEY = "redeem_req_name";
+    public static final String REDEEM_REQUEST_ID_KEY = "redeem_req_id";
+    public static final String REDEEM_REQUEST_TIME_KEY = "redeem_req_time";
+    public static final String REDEEM_REQUEST_STATUS_KEY = "redeem_req_status";
 
 
     public static final String FTT_VALUE = "FTT";
@@ -180,7 +181,7 @@ public class AppConstants {
     public static final String PLAY_STORE_URL = "https://play.google.com/store/apps/details?id=com.mindmade.graspclothings";
     //public static final String PLAY_STORE_URL = "https://play.google.com/store/apps/details?id=";
 
-    public static final String MOBILE_NUMBER_REX = "^(?:(?:\\+|0{0,2})91(\\s*[\\ -]\\s*)?|[0]?)?[789]\\d{9}|(\\d[ -]?){10}\\d$";
+    public static final String MOBILE_NUMBER_REX = "^[7-9][0-9]{9}$";//"^(?:(?:\\+|0{0,2})91?|[0]?)?^[7-9][0-9]{9}$";
         /*Possible Combination of mobile number rex
         * +91-9819882936
         9883443344

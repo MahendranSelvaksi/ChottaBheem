@@ -234,11 +234,12 @@ public class LoginActivity extends AppCompatActivity implements LoginMVP.View {
 
                 // Get phone number
                 PhoneNumber phoneNumber = account.getPhoneNumber();
+
+
+                phoneNumberString = phoneNumber.toString().substring(3, 13);
                 myUtility.printLogcat("FB ID::::" + account.getId());
                 myUtility.printLogcat("Phone Number::" + phoneNumberString);
                 myUtility.printLogcat("Email:::" + account.getEmail());
-
-                phoneNumberString = phoneNumber.toString();
                 accountId = account.getId();
                 versionCode = String.valueOf(BuildConfig.VERSION_CODE);
                 deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
@@ -259,8 +260,10 @@ public class LoginActivity extends AppCompatActivity implements LoginMVP.View {
     }
 
     private void callNextActivity(boolean navigateToHome) {
+        myUtility.printLogcat("NavigateToHome:::" + navigateToHome);
         Intent verifyIntent = new Intent(LoginActivity.this, navigateToHome ? MainActivity.class : VerificationActivity.class);
         verifyIntent.putExtra(AppConstants.ACCOUNT_ID_KEY, accountId);
+        verifyIntent.putExtra(AppConstants.USER_MOBILE_KEY, phoneNumberString);
         startActivity(verifyIntent);
         finish();
     }
@@ -268,6 +271,7 @@ public class LoginActivity extends AppCompatActivity implements LoginMVP.View {
     @Override
     public void showSuccess(int code, String message) {
         closeProgressDialog();
+        myUtility.printLogcat("Code:::" + code);
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
         callNextActivity(code == 1);
     }

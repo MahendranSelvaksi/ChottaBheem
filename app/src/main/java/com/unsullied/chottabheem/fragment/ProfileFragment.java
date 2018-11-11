@@ -189,13 +189,13 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
             } else {
                 if (!Patterns.EMAIL_ADDRESS.matcher(etEmailId.getText().toString().trim()).matches()) {
                     emailTIL.setError("Enter your valid email id");
-                } else if (!AppConstants.MOBILE_NUMBER_REX.matches(etMobileNumber.getText().toString().trim())) {
-                    mobileNumberTIL.setError("Please give valid mobile number with country code (+91)");
+                } else if (etMobileNumber.getText().toString().trim().length() != 10) {
+                    mobileNumberTIL.setError("Please give valid mobile number");
                 } else {
                     //Call api
                     pd.setMessage(AppConstants.UPDATE_PROFILE_API_CALL_DIALOG_MSG);
-                    //   pd.show();
-                    // mProfilePresenter.updateProfile(userId, accessToken, etName.getText().toString().trim(), etEmailId.getText().toString().trim(), etMobileNumber.getText().toString().trim());
+                    pd.show();
+                    mProfilePresenter.updateProfile(userId, accessToken, etName.getText().toString().trim(), etEmailId.getText().toString().trim(), etMobileNumber.getText().toString().trim());
                 }
             }
         }
