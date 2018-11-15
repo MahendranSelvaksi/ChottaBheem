@@ -232,7 +232,11 @@ public class BillPayActivity extends AppCompatActivity implements View.OnClickLi
                     Toast.makeText(this, "Please enter recharge amount...", Toast.LENGTH_SHORT).show();
                 }
             } else {
-                mPaymentGatewayPresenter.launchPayUMoneyFlow(String.valueOf(rechargeAmount), selectedMobileNumber, emailIdStr);
+                //mPaymentGatewayPresenter.launchPayUMoneyFlow(String.valueOf(rechargeAmount), selectedMobileNumber, emailIdStr);
+                mPaymentGatewayPresenter.generateHashFromServer(selectedMobileNumber,
+                        mSessionManager.getValueFromSessionByKey(mContext,AppConstants.USER_SESSION_NAME,AppConstants.FB_ID_KEY),
+                        nameStr,emailIdStr, String.valueOf(rechargeAmount),
+                        "Recharge","Pay Now","Recharge");
             }
         } else if (v == operatorET || v == operatorLayout || v == operatorSelectBtn) {
             Intent operatorsIntent = new Intent(mActivity, SelectOperatorActivity.class);

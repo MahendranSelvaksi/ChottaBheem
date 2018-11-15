@@ -9,6 +9,8 @@ public interface PaymentGatewayMVP {
     }
 
     public interface Presenter{
-        void launchPayUMoneyFlow(String payableAmount,String mobileNumber,String emailId);
+      //  void launchPayUMoneyFlow(String payableAmount,String mobileNumber,String emailId);
+        void generateHashFromServer(String mobileNumber,String accountId,String name,String email,String payableAmount,String productInfo,String buttonText,
+                                    String pageTitle);
     }
 }

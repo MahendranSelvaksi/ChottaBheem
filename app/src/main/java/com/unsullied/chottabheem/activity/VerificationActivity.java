@@ -6,13 +6,11 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
@@ -22,8 +20,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.payumoney.core.PayUmoneyConfig;
-import com.payumoney.core.PayUmoneyConstants;
 import com.payumoney.core.PayUmoneySdkInitializer;
 import com.payumoney.core.entity.TransactionResponse;
 import com.payumoney.sdkui.ui.utils.PayUmoneyFlowManager;
@@ -31,29 +27,20 @@ import com.payumoney.sdkui.ui.utils.ResultModel;
 import com.unsullied.chottabheem.BuildConfig;
 import com.unsullied.chottabheem.R;
 import com.unsullied.chottabheem.utils.AppConstants;
-import com.unsullied.chottabheem.utils.AppController;
 import com.unsullied.chottabheem.utils.CustomEditText;
 import com.unsullied.chottabheem.utils.CustomTextView;
 import com.unsullied.chottabheem.utils.SessionManager;
 import com.unsullied.chottabheem.utils.Utility;
 import com.unsullied.chottabheem.utils.mvp.LoginMVP;
 import com.unsullied.chottabheem.utils.mvp.LoginPresenter;
-import com.unsullied.chottabheem.utils.paymentgateway.AppEnvironment;
+import com.unsullied.chottabheem.utils.mvp.PaymentGatewayMVP;
+import com.unsullied.chottabheem.utils.mvp.PaymentGatewayPresenter;
 import com.unsullied.chottabheem.utils.paymentgateway.AppPreference;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
-import java.net.URL;
-import java.util.HashMap;
-import java.util.Iterator;
-
-public class VerificationActivity extends AppCompatActivity implements View.OnClickListener, LoginMVP.View {
+public class VerificationActivity extends AppCompatActivity implements View.OnClickListener, LoginMVP.View, PaymentGatewayMVP.View {
 
     Toolbar toolbar;
     private Button submitBtn;
@@ -73,6 +60,7 @@ public class VerificationActivity extends AppCompatActivity implements View.OnCl
     private ProgressDialog pd;
     private LoginPresenter mLoginPresenter;
     private String paymentId = "", paymentMessage = "";
+    private PaymentGatewayPresenter mPaymentGatewayPresenter;
 
 
     @Override
@@ -88,7 +76,7 @@ public class VerificationActivity extends AppCompatActivity implements View.OnCl
         pd = new ProgressDialog(mActivity);
         pd.setCancelable(false);
         mLoginPresenter = new LoginPresenter(mContext, this, mActivity);
-
+        mPaymentGatewayPresenter = new PaymentGatewayPresenter(mContext, mActivity, this);
 
         accountId = getIntent().getStringExtra(AppConstants.ACCOUNT_ID_KEY);
         userId = mSessionManager.isLogged(mContext);
@@ -149,7 +137,9 @@ public class VerificationActivity extends AppCompatActivity implements View.OnCl
                     if (!agreeCB.isChecked()) {
                         Toast.makeText(this, "Please accept terms and conditions...", Toast.LENGTH_SHORT).show();
                     } else {
-                        launchPayUMoneyFlow();
+                        //launchPayUMoneyFlow();
+                        mPaymentGatewayPresenter.generateHashFromServer(mobileNumberStr,accountId, nameStr, emailIdStr, "99",
+                                "Subscription", "Pay Now", "Subscription");
                     }
                 } else {
                     Toast.makeText(this, "Give valid email address...", Toast.LENGTH_SHORT).show();
@@ -160,130 +150,6 @@ public class VerificationActivity extends AppCompatActivity implements View.OnCl
         }
     }
 
-    /**
-     * This function prepares the data for payment and launches payumoney plug n play sdk
-     */
-    private void launchPayUMoneyFlow() {
-
-        PayUmoneyConfig payUmoneyConfig = PayUmoneyConfig.getInstance();
-
-        //Use this to set your custom text on result screen button
-        payUmoneyConfig.setDoneButtonText("Pay now");
-
-        //Use this to set your custom title for the activity
-        payUmoneyConfig.setPayUmoneyActivityTitle("Subscription");
-
-        payUmoneyConfig.disableExitConfirmation(true);
-
-        PayUmoneySdkInitializer.PaymentParam.Builder builder = new PayUmoneySdkInitializer.PaymentParam.Builder();
-
-        double amount = 0;
-        try {
-            amount = 99;
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        String txnId = "CB-" + System.currentTimeMillis();
-        String phone = mobileNumberStr;
-        String productName = mAppPreference.getProductInfo();
-        String firstName = mAppPreference.getFirstName();
-        String email = emailIdStr;
-        String udf1 = "";
-        String udf2 = "";
-        String udf3 = "";
-        String udf4 = "";
-        String udf5 = "";
-        String udf6 = "";
-        String udf7 = "";
-        String udf8 = "";
-        String udf9 = "";
-        String udf10 = "";
-
-        AppEnvironment appEnvironment = ((AppController) getApplication()).getAppEnvironment();
-        builder.setAmount(amount)
-                .setTxnId(txnId)
-                .setPhone(phone)
-                .setProductName(productName)
-                .setFirstName(firstName)
-                .setEmail(email)
-                .setsUrl(appEnvironment.surl())
-                .setfUrl(appEnvironment.furl())
-                .setUdf1(udf1)
-                .setUdf2(udf2)
-                .setUdf3(udf3)
-                .setUdf4(udf4)
-                .setUdf5(udf5)
-                .setUdf6(udf6)
-                .setUdf7(udf7)
-                .setUdf8(udf8)
-                .setUdf9(udf9)
-                .setUdf10(udf10)
-                .setIsDebug(appEnvironment.debug())
-                .setKey(appEnvironment.merchant_Key())
-                .setMerchantId(appEnvironment.merchant_ID());
-
-        try {
-            mPaymentParams = builder.build();
-
-            /*
-             * Hash should always be generated from your server side.
-             * */
-            generateHashFromServer(mPaymentParams);
-
-            /*            *//**
-             * Do not use below code when going live
-             * Below code is provided to generate hash from sdk.
-             * It is recommended to generate hash from server side only.
-             * */
-           /* mPaymentParams = calculateServerSideHashAndInitiatePayment1(mPaymentParams);
-
-           if (AppPreference.selectedTheme != -1) {
-                PayUmoneyFlowManager.startPayUMoneyFlow(mPaymentParams,VerificationActivity.this, AppPreference.selectedTheme,mAppPreference.isOverrideResultScreen());
-            } else {
-                PayUmoneyFlowManager.startPayUMoneyFlow(mPaymentParams,VerificationActivity.this, R.style.AppTheme_default, mAppPreference.isOverrideResultScreen());
-            }*/
-
-        } catch (Exception e) {
-            // some exception occurred
-            Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
-            //   payNowButton.setEnabled(true);
-        }
-    }
-
-
-    /**
-     * This method generates hash from server.
-     *
-     * @param paymentParam payments params used for hash generation
-     */
-    public void generateHashFromServer(PayUmoneySdkInitializer.PaymentParam paymentParam) {
-        //nextButton.setEnabled(false); // lets not allow the user to click the button again and again.
-
-        HashMap<String, String> params = paymentParam.getParams();
-
-        // lets create the post params
-        StringBuffer postParamsBuffer = new StringBuffer();
-        postParamsBuffer.append(concatParams(PayUmoneyConstants.KEY, params.get(PayUmoneyConstants.KEY)));
-        postParamsBuffer.append(concatParams(PayUmoneyConstants.AMOUNT, params.get(PayUmoneyConstants.AMOUNT)));
-        postParamsBuffer.append(concatParams(PayUmoneyConstants.TXNID, params.get(PayUmoneyConstants.TXNID)));
-        postParamsBuffer.append(concatParams(PayUmoneyConstants.EMAIL, params.get(PayUmoneyConstants.EMAIL)));
-        postParamsBuffer.append(concatParams("productinfo", params.get(PayUmoneyConstants.PRODUCT_INFO)));
-        postParamsBuffer.append(concatParams("firstname", params.get(PayUmoneyConstants.FIRSTNAME)));
-        postParamsBuffer.append(concatParams(PayUmoneyConstants.UDF1, params.get(PayUmoneyConstants.UDF1)));
-        postParamsBuffer.append(concatParams(PayUmoneyConstants.UDF2, params.get(PayUmoneyConstants.UDF2)));
-        postParamsBuffer.append(concatParams(PayUmoneyConstants.UDF3, params.get(PayUmoneyConstants.UDF3)));
-        postParamsBuffer.append(concatParams(PayUmoneyConstants.UDF4, params.get(PayUmoneyConstants.UDF4)));
-        postParamsBuffer.append(concatParams(PayUmoneyConstants.UDF5, params.get(PayUmoneyConstants.UDF5)));
-
-        String postParams = postParamsBuffer.charAt(postParamsBuffer.length() - 1) == '&' ? postParamsBuffer.substring(0, postParamsBuffer.length() - 1).toString() : postParamsBuffer.toString();
-
-        // lets make an api call
-        GetHashesFromServerTask getHashesFromServerTask = new GetHashesFromServerTask();
-        getHashesFromServerTask.execute(postParams);
-    }
-
-
     protected String concatParams(String key, String value) {
         return key + "=" + value + "&";
     }
@@ -293,7 +159,8 @@ public class VerificationActivity extends AppCompatActivity implements View.OnCl
         super.onActivityResult(requestCode, resultCode, data);
 
         // Result Code is -1 send from Payumoney activity
-        Log.d("MainActivity", "request code " + requestCode + " resultcode " + resultCode);
+        myUtility.printLogcat("MainActivity"+ "request code " + requestCode + " resultcode " + resultCode);
+       // myUtility.printLogcat("Data:::"+data.toString());
         if (requestCode == PayUmoneyFlowManager.REQUEST_CODE_PAYMENT && resultCode == RESULT_OK && data !=
                 null) {
             TransactionResponse transactionResponse = data.getParcelableExtra(PayUmoneyFlowManager
@@ -338,6 +205,8 @@ public class VerificationActivity extends AppCompatActivity implements View.OnCl
                                         AppConstants.USER_MOBILE_KEY, mobileNumberStr);
                                 mSessionManager.addValueToSession(getApplicationContext(), AppConstants.USER_SESSION_NAME,
                                         AppConstants.USER_EMAIL_ID_KEY, emailIdStr);
+mSessionManager.addValueToSession(getApplicationContext(), AppConstants.USER_SESSION_NAME,
+                                        AppConstants.FB_ID_KEY, accountId);
                                 startActivity(new Intent(VerificationActivity.this, MainActivity.class));
                                 finish();
                                 String versionCode = String.valueOf(BuildConfig.VERSION_CODE);
@@ -379,9 +248,23 @@ public class VerificationActivity extends AppCompatActivity implements View.OnCl
         }
     }
 
+    @Override
+    public void getSuccessfulHash(PayUmoneySdkInitializer.PaymentParam mPaymentParam) {
+      //  if (AppPreference.selectedTheme != -1) {
+          //  PayUmoneyFlowManager.startPayUMoneyFlow(mPaymentParam, mActivity, AppPreference.selectedTheme, mAppPreference.isOverrideResultScreen());
+        //} else {
+            PayUmoneyFlowManager.startPayUMoneyFlow(mPaymentParam, mActivity, R.style.AppTheme_default, mAppPreference.isOverrideResultScreen());
+        //}
+    }
+
+    @Override
+    public void showError(String errorMsg) {
+
+    }
+
     /**
      * This AsyncTask generates hash from server.
-     */
+     *//*
     private class GetHashesFromServerTask extends AsyncTask<String, String, String> {
         private ProgressDialog progressDialog;
 
@@ -425,10 +308,10 @@ public class VerificationActivity extends AppCompatActivity implements View.OnCl
                 while (payuHashIterator.hasNext()) {
                     String key = payuHashIterator.next();
                     switch (key) {
-                        /**
+                        *//**
                          * This hash is mandatory and needs to be generated from merchant's server side
                          *
-                         */
+                         *//*
                         case "payment_hash":
                             merchantHash = response.getString(key);
                             break;
@@ -468,5 +351,5 @@ public class VerificationActivity extends AppCompatActivity implements View.OnCl
                 }
             }
         }
-    }
+    }*/
 }

@@ -29,6 +29,7 @@ import com.unsullied.chottabheem.utils.AppConstants;
 import com.unsullied.chottabheem.utils.ClickListener;
 import com.unsullied.chottabheem.utils.CustomTextView;
 import com.unsullied.chottabheem.utils.RecyclerTouchListener;
+import com.unsullied.chottabheem.utils.SessionManager;
 import com.unsullied.chottabheem.utils.Utility;
 import com.unsullied.chottabheem.utils.dataModel.BrowsePlansChildModel;
 import com.unsullied.chottabheem.utils.mvp.BrowsPlansPresenter;
@@ -62,6 +63,7 @@ public class TopupFragment extends Fragment implements PlansMVP.PlansView,Paymen
     private PaymentGatewayPresenter mPaymentGatewayPresenter;
     private String rechargeAmount;
     private AppPreference mAppPreference;
+    private SessionManager sessionManager;
 
 
     public TopupFragment() {
@@ -104,8 +106,13 @@ public class TopupFragment extends Fragment implements PlansMVP.PlansView,Paymen
             @Override
             public void onClick(View view, int position) {
                 rechargeAmount = mPlansData.get(position).getAmount();
-                mPaymentGatewayPresenter.launchPayUMoneyFlow(rechargeAmount, BrowsePlansActivity.selectedMobileNumber,
-                        BrowsePlansActivity.emailIdStr);
+               /* mPaymentGatewayPresenter.launchPayUMoneyFlow(rechargeAmount, BrowsePlansActivity.selectedMobileNumber,
+                        BrowsePlansActivity.emailIdStr);*/
+                mPaymentGatewayPresenter.generateHashFromServer(sessionManager.getValueFromSessionByKey(mContext,AppConstants.USER_SESSION_NAME,AppConstants.USER_MOBILE_KEY),
+                        sessionManager.getValueFromSessionByKey(mContext,AppConstants.USER_SESSION_NAME,AppConstants.FB_ID_KEY),
+                        sessionManager.getValueFromSessionByKey(mContext,AppConstants.USER_SESSION_NAME,AppConstants.USER_NAME_KEY),
+                        sessionManager.getValueFromSessionByKey(mContext,AppConstants.USER_SESSION_NAME,AppConstants.USER_EMAIL_ID_KEY),
+                        String.valueOf(rechargeAmount), "Recharge","Pay Now","Recharge");
             }
 
             @Override
