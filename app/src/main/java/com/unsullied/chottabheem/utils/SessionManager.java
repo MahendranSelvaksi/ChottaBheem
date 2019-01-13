@@ -43,5 +43,11 @@ public class SessionManager {
         prefs.edit().clear().apply();
     }
 
+    public void saveFCMToken(Context mContext,String token){
+        SharedPreferences.Editor editor = mContext.getSharedPreferences("FCM", MODE_PRIVATE).edit();
+        editor.putString(AppConstants.DEVICE_ID_KEY, token.trim());
+        editor.apply();
+    }
+
 
 }

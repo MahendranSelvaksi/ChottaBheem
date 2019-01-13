@@ -14,7 +14,8 @@ public class AppConstants {
     public static final boolean DEBUG = true;
     public static final String TAG = "Chotta Bheem";
 
-    public static final String API_LIVE_URL = "http://itagtechies.com/dev/CB_api/api/";
+    //public static final String API_LIVE_URL = "http://itagtechies.com/CB_api/api/";
+    public static final String API_LIVE_URL = "http://adhavanassociates.com/CB_api/api/";
     public static final String RECHARGE_LIVE_URL = "http://api.rechapi.com/";
     public static final String LOGIN_API = "login";
     public static final String REGISTER_LOGIN_API = "login/register";
@@ -73,7 +74,7 @@ public class AppConstants {
     public static final String NAME_KEY = "name";
     public static final String EMAIL_KEY = "email";
     public static final String PAYMENT_ID_KEY = "paymentid";
-    public static final String PAYMENT_AMOUNT_KEY = "paymentAmount";
+    public static final String PAYMENT_AMOUNT_KEY = "payment_amount";
     public static final String PAYMENT_VIA_KEY = "paymentvia";
     public static final String DEVICE_OS_KEY = "device_os";
     public static final String LOGIN_TYPE_VALUE = "accountkitlogin";

@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
+import com.crashlytics.android.Crashlytics;
 import com.unsullied.chottabheem.R;
 import com.unsullied.chottabheem.fragment.DataPlansFragment;
 import com.unsullied.chottabheem.fragment.FTTFragment;
@@ -26,6 +27,8 @@ import com.unsullied.chottabheem.utils.CustomTextView;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import io.fabric.sdk.android.Fabric;
 
 public class BrowsePlansActivity extends AppCompatActivity {
 
@@ -53,6 +56,7 @@ public class BrowsePlansActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Fabric.with(this, new Crashlytics());
         setContentView(R.layout.activity_browse_plans);
 
         titleData = new ArrayList<>();

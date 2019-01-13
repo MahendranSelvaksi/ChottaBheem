@@ -17,6 +17,7 @@ import com.payumoney.core.PayUmoneySdkInitializer;
 import com.unsullied.chottabheem.BuildConfig;
 import com.unsullied.chottabheem.utils.AppConstants;
 import com.unsullied.chottabheem.utils.ConnectivityReceiver;
+import com.unsullied.chottabheem.utils.SessionManager;
 import com.unsullied.chottabheem.utils.Utility;
 import com.unsullied.chottabheem.utils.paymentgateway.AppPreference;
 
@@ -159,7 +160,7 @@ customer_email:test@test.com"*//*
                     .addBodyParameter(AppConstants.ACCOUNT_ID_KEY, accountId)
                     .addBodyParameter("mobile_number", mobileNumber)
                     .addBodyParameter("login_type", "accountkitlogin")
-                    .addBodyParameter(AppConstants.DEVICE_ID_KEY, deviceId)
+                    .addBodyParameter(AppConstants.DEVICE_ID_KEY,new SessionManager().getValueFromSessionByKey(mContext,"FCM",AppConstants.DEVICE_ID_KEY))
                     .addBodyParameter(AppConstants.DEVICE_TYPE_KEY, deviceType)
                     .addBodyParameter(AppConstants.OS_NAME_KEY, AppConstants.OS_NAME_VALUE)
                     .addBodyParameter("payable_amount", payableAmount)

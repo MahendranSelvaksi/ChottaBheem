@@ -21,6 +21,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.unsullied.chottabheem.R;
 import com.unsullied.chottabheem.fragment.AboutUsFragment;
 import com.unsullied.chottabheem.fragment.AddAdminRequestFragment;
@@ -36,6 +37,8 @@ import com.unsullied.chottabheem.utils.BaseFragment;
 import com.unsullied.chottabheem.utils.CustomTextView;
 import com.unsullied.chottabheem.utils.SessionManager;
 import com.unsullied.chottabheem.utils.Utility;
+
+import io.fabric.sdk.android.Fabric;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -57,6 +60,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Fabric.with(this, new Crashlytics());
         setContentView(R.layout.activity_main);
         toolbar = (Toolbar) findViewById(R.id.mainToolbar);
         titleTV = toolbar.findViewById(R.id.toolbar_title);

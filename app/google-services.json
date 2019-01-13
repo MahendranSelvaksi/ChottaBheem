@@ -1,21 +1,21 @@
 {
   "project_info": {
-    "project_number": "494773973039",
-    "firebase_url": "https://chotta-bheem.firebaseio.com",
-    "project_id": "chotta-bheem",
-    "storage_bucket": "chotta-bheem.appspot.com"
+    "project_number": "853595956231",
+    "firebase_url": "https://chotta-bheem-10399.firebaseio.com",
+    "project_id": "chotta-bheem-10399",
+    "storage_bucket": "chotta-bheem-10399.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:494773973039:android:206ecb10bd3e28e1",
+        "mobilesdk_app_id": "1:853595956231:android:206ecb10bd3e28e1",
         "android_client_info": {
           "package_name": "com.unsullied.chottabheem"
         }
       },
       "oauth_client": [
         {
-          "client_id": "494773973039-14usem6nbv548ena71lr46n7m227k7d1.apps.googleusercontent.com",
+          "client_id": "853595956231-f0h99keacas9ba63pjh7ipojmvnpuqlj.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.unsullied.chottabheem",
@@ -23,13 +23,13 @@
           }
         },
         {
-          "client_id": "494773973039-116erd9lv18nlitopnd8dj784sj52o28.apps.googleusercontent.com",
+          "client_id": "853595956231-kqo2sc2c54qc4ugfflrrcpkutrrcfcqc.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCyxKHjRD1ZnaLLIaNcLujHM71tLDmO7PE"
+          "current_key": "AIzaSyBeoPjXhXEHKzTNCLVBAa0yJVjYSuEm-pg"
         }
       ],
       "services": {
@@ -40,7 +40,7 @@
           "status": 2,
           "other_platform_oauth_client": [
             {
-              "client_id": "494773973039-116erd9lv18nlitopnd8dj784sj52o28.apps.googleusercontent.com",
+              "client_id": "853595956231-kqo2sc2c54qc4ugfflrrcpkutrrcfcqc.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

@@ -26,6 +26,7 @@ import com.androidnetworking.common.ANRequest;
 import com.androidnetworking.common.Priority;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.JSONObjectRequestListener;
+import com.crashlytics.android.Crashlytics;
 import com.payumoney.core.PayUmoneySdkInitializer;
 import com.payumoney.core.entity.TransactionResponse;
 import com.payumoney.sdkui.ui.utils.PayUmoneyFlowManager;
@@ -51,6 +52,8 @@ import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+
+import io.fabric.sdk.android.Fabric;
 
 import static com.unsullied.chottabheem.utils.AppConstants.PICK_CONTACT;
 
@@ -88,6 +91,7 @@ public class BillPayActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Fabric.with(this, new Crashlytics());
         setContentView(R.layout.activity_bill_pay);
 
         mActivity = this;

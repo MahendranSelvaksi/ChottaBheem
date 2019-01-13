@@ -7,7 +7,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
 
+import com.crashlytics.android.Crashlytics;
 import com.unsullied.chottabheem.R;
+
+import io.fabric.sdk.android.Fabric;
 
 /**
  * Created by Value Stream Technologies on 14-08-2018.
@@ -18,6 +21,7 @@ public class PrivatePolicyActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Fabric.with(this, new Crashlytics());
         setContentView(R.layout.fragment_terms_and_conditions);
 
         toolbar = (Toolbar) findViewById(R.id.termsAndConditionToolbar);

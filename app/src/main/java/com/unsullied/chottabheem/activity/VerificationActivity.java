@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Patterns;
@@ -20,6 +21,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.payumoney.core.PayUmoneySdkInitializer;
 import com.payumoney.core.entity.TransactionResponse;
 import com.payumoney.sdkui.ui.utils.PayUmoneyFlowManager;
@@ -31,6 +33,8 @@ import com.unsullied.chottabheem.utils.CustomEditText;
 import com.unsullied.chottabheem.utils.CustomTextView;
 import com.unsullied.chottabheem.utils.SessionManager;
 import com.unsullied.chottabheem.utils.Utility;
+import com.unsullied.chottabheem.utils.material_spinnar.MaterialSpinner;
+import com.unsullied.chottabheem.utils.material_spinnar.MaterialSpinnerAdapter;
 import com.unsullied.chottabheem.utils.mvp.LoginMVP;
 import com.unsullied.chottabheem.utils.mvp.LoginPresenter;
 import com.unsullied.chottabheem.utils.mvp.PaymentGatewayMVP;
@@ -39,6 +43,10 @@ import com.unsullied.chottabheem.utils.paymentgateway.AppPreference;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.List;
+
+import io.fabric.sdk.android.Fabric;
 
 public class VerificationActivity extends AppCompatActivity implements View.OnClickListener, LoginMVP.View, PaymentGatewayMVP.View {
 
@@ -49,6 +57,8 @@ public class VerificationActivity extends AppCompatActivity implements View.OnCl
     private CustomTextView agreeCBTV, subscriptionCBTV;
     private TextView tittleTV;
     private CustomEditText userNameET, emailET, referralCodeET;
+    private TextInputLayout referralCodeTIL;
+    private MaterialSpinner materialSpinner;
     private AppPreference mAppPreference;
     private PayUmoneySdkInitializer.PaymentParam mPaymentParams;
     private Utility myUtility;
@@ -59,13 +69,15 @@ public class VerificationActivity extends AppCompatActivity implements View.OnCl
     private Activity mActivity;
     private ProgressDialog pd;
     private LoginPresenter mLoginPresenter;
-    private String paymentId = "", paymentMessage = "";
+    private String paymentId = "jbfkdf", paymentMessage = "";
     private PaymentGatewayPresenter mPaymentGatewayPresenter;
+    private String referralCodePass = "";
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Fabric.with(this, new Crashlytics());
         setContentView(R.layout.activity_verification);
 
         mContext = getApplicationContext();
@@ -100,6 +112,8 @@ public class VerificationActivity extends AppCompatActivity implements View.OnCl
         userNameET = findViewById(R.id.verify_username_et);
         emailET = findViewById(R.id.verify_email_et);
         referralCodeET = findViewById(R.id.verify_referral_code_et);
+        materialSpinner = findViewById(R.id.referralCodeSP);
+        referralCodeTIL = findViewById(R.id.referralCodeTIL);
         submitBtn.setOnClickListener(this);
         agreeCBTV.setOnClickListener(this);
         agreeCBLayout.setOnClickListener(this);
@@ -138,8 +152,30 @@ public class VerificationActivity extends AppCompatActivity implements View.OnCl
                         Toast.makeText(this, "Please accept terms and conditions...", Toast.LENGTH_SHORT).show();
                     } else {
                         //launchPayUMoneyFlow();
-                        mPaymentGatewayPresenter.generateHashFromServer(mobileNumberStr,accountId, nameStr, emailIdStr, "99",
-                                "Subscription", "Pay Now", "Subscription");
+                       /* mPaymentGatewayPresenter.generateHashFromServer(mobileNumberStr, accountId, nameStr, emailIdStr, "99",
+                                "Subscription", "Pay Now", "Subscription");*/
+                        String versionCode = String.valueOf(BuildConfig.VERSION_CODE);
+                        String deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+                        String deviceType = Build.DEVICE;
+                        referralCodePass = referralCodeET.getVisibility() == View.VISIBLE ? referralCodeET.getText().toString().trim() : referralCodePass;
+                        myUtility.printLogcat("Referral:::"+referralCodePass);
+                        mLoginPresenter.callUpdateLoginAPI(AppConstants.REGISTER_LOGIN_API, accountId, mobileNumberStr, versionCode, paymentId,
+                                nameStr, emailIdStr, "99", AppConstants.OS_NAME_VALUE, deviceId, deviceType, referralCodePass);
+
+                      /*  mSessionManager.addValueToSession(getApplicationContext(), AppConstants.USER_SESSION_NAME,
+                                AppConstants.USER_NAME_KEY, nameStr);
+                        mSessionManager.addValueToSession(getApplicationContext(), AppConstants.USER_SESSION_NAME,
+                                AppConstants.USER_MOBILE_KEY, mobileNumberStr);
+                        mSessionManager.addValueToSession(getApplicationContext(), AppConstants.USER_SESSION_NAME,
+                                AppConstants.USER_EMAIL_ID_KEY, emailIdStr);
+                        mSessionManager.addValueToSession(getApplicationContext(), AppConstants.USER_SESSION_NAME,
+                                AppConstants.FB_ID_KEY, accountId);
+                        mSessionManager.addValueToSession(mContext, AppConstants.USER_SESSION_NAME, AppConstants.ACCESS_TOKEN_KEY, "1bc44c8b644fa15e7e519957f8f32d64");
+                        mSessionManager.addValueToSession(mContext, AppConstants.USER_SESSION_NAME, AppConstants.API_REDEEM_POINT_KEY, "100");
+                        mSessionManager.addValueToSession(mContext, AppConstants.USER_SESSION_NAME, AppConstants.API_REDEEM_PROGRESS_KEY, "9");
+                        mSessionManager.addValueToSession(mContext, AppConstants.USER_SESSION_NAME, AppConstants.API_OVERALL_REFERRAL_KEY, "10");
+                        startActivity(new Intent(VerificationActivity.this, MainActivity.class));
+                        finish();*/
                     }
                 } else {
                     Toast.makeText(this, "Give valid email address...", Toast.LENGTH_SHORT).show();
@@ -159,8 +195,8 @@ public class VerificationActivity extends AppCompatActivity implements View.OnCl
         super.onActivityResult(requestCode, resultCode, data);
 
         // Result Code is -1 send from Payumoney activity
-        myUtility.printLogcat("MainActivity"+ "request code " + requestCode + " resultcode " + resultCode);
-       // myUtility.printLogcat("Data:::"+data.toString());
+        myUtility.printLogcat("MainActivity" + "request code " + requestCode + " resultcode " + resultCode);
+        // myUtility.printLogcat("Data:::"+data.toString());
         if (requestCode == PayUmoneyFlowManager.REQUEST_CODE_PAYMENT && resultCode == RESULT_OK && data !=
                 null) {
             TransactionResponse transactionResponse = data.getParcelableExtra(PayUmoneyFlowManager
@@ -205,17 +241,19 @@ public class VerificationActivity extends AppCompatActivity implements View.OnCl
                                         AppConstants.USER_MOBILE_KEY, mobileNumberStr);
                                 mSessionManager.addValueToSession(getApplicationContext(), AppConstants.USER_SESSION_NAME,
                                         AppConstants.USER_EMAIL_ID_KEY, emailIdStr);
-mSessionManager.addValueToSession(getApplicationContext(), AppConstants.USER_SESSION_NAME,
+                                mSessionManager.addValueToSession(getApplicationContext(), AppConstants.USER_SESSION_NAME,
                                         AppConstants.FB_ID_KEY, accountId);
                                 startActivity(new Intent(VerificationActivity.this, MainActivity.class));
                                 finish();
                                 String versionCode = String.valueOf(BuildConfig.VERSION_CODE);
                                 String deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
                                 String deviceType = Build.DEVICE;
+                                referralCodePass = referralCodeET.getVisibility() == View.VISIBLE ? referralCodeET.getText().toString().trim() : referralCodePass;
+                                myUtility.printLogcat("Referral:::"+referralCodePass);
                                 pd.setMessage(AppConstants.LOGIN_API_CALL_DIALOG_MSG);
                                 pd.show();
                                 mLoginPresenter.callUpdateLoginAPI(AppConstants.REGISTER_LOGIN_API, accountId, mobileNumberStr, versionCode, paymentId,
-                                        nameStr, emailIdStr, "99", AppConstants.OS_NAME_VALUE, deviceId, deviceType, referralCodeET.getText().toString().trim());
+                                        nameStr, emailIdStr, "99", AppConstants.OS_NAME_VALUE, deviceId, deviceType, referralCodePass);
                                 dialog.dismiss();
                             }
                         }).show();
@@ -242,6 +280,23 @@ mSessionManager.addValueToSession(getApplicationContext(), AppConstants.USER_SES
         Toast.makeText(this, errorMsg, Toast.LENGTH_SHORT).show();
     }
 
+    @Override
+    public void showListOfReferralCode(List<Object> referralList) {
+        referralCodeET.setVisibility(View.GONE);
+        referralCodeTIL.setVisibility(View.GONE);
+        materialSpinner.setVisibility(View.VISIBLE);
+        materialSpinner.setAdapter(new MaterialSpinnerAdapter<Object>(mContext, referralList));
+        materialSpinner.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(MaterialSpinner view, int position, long id, Object item) {
+                String selected = String.valueOf(item);
+                myUtility.printLogcat("Selected Referral::::" + selected);
+                referralCodePass = selected.split("-")[1];
+                myUtility.printLogcat("After split::::" + referralCodePass);
+            }
+        });
+    }
+
     private void closeProgressDialog() {
         if (pd != null && pd.isShowing()) {
             pd.dismiss();
@@ -250,10 +305,10 @@ mSessionManager.addValueToSession(getApplicationContext(), AppConstants.USER_SES
 
     @Override
     public void getSuccessfulHash(PayUmoneySdkInitializer.PaymentParam mPaymentParam) {
-      //  if (AppPreference.selectedTheme != -1) {
-          //  PayUmoneyFlowManager.startPayUMoneyFlow(mPaymentParam, mActivity, AppPreference.selectedTheme, mAppPreference.isOverrideResultScreen());
+        //  if (AppPreference.selectedTheme != -1) {
+        //  PayUmoneyFlowManager.startPayUMoneyFlow(mPaymentParam, mActivity, AppPreference.selectedTheme, mAppPreference.isOverrideResultScreen());
         //} else {
-            PayUmoneyFlowManager.startPayUMoneyFlow(mPaymentParam, mActivity, R.style.AppTheme_default, mAppPreference.isOverrideResultScreen());
+        PayUmoneyFlowManager.startPayUMoneyFlow(mPaymentParam, mActivity, R.style.AppTheme_default, mAppPreference.isOverrideResultScreen());
         //}
     }
 
@@ -309,9 +364,9 @@ mSessionManager.addValueToSession(getApplicationContext(), AppConstants.USER_SES
                     String key = payuHashIterator.next();
                     switch (key) {
                         *//**
-                         * This hash is mandatory and needs to be generated from merchant's server side
-                         *
-                         *//*
+     * This hash is mandatory and needs to be generated from merchant's server side
+     *
+     *//*
                         case "payment_hash":
                             merchantHash = response.getString(key);
                             break;

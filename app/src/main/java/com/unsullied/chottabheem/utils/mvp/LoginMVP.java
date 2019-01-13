@@ -1,10 +1,13 @@
 package com.unsullied.chottabheem.utils.mvp;
 
+import java.util.List;
+
 public interface LoginMVP {
 
     interface View{
         void showSuccess(int code ,String message);
         void showError(int code,String errorMsg);
+        void showListOfReferralCode(List<Object> referralList);
     }
 
     interface Presenter{

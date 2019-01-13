@@ -23,6 +23,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.facebook.accountkit.Account;
 import com.facebook.accountkit.AccountKit;
 import com.facebook.accountkit.AccountKitCallback;
@@ -42,7 +43,10 @@ import com.unsullied.chottabheem.utils.mvp.LoginPresenter;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 import java.util.regex.Pattern;
+
+import io.fabric.sdk.android.Fabric;
 
 public class LoginActivity extends AppCompatActivity implements LoginMVP.View {
     Button loginBtn;
@@ -68,6 +72,7 @@ public class LoginActivity extends AppCompatActivity implements LoginMVP.View {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Fabric.with(this, new Crashlytics());
         setContentView(R.layout.activity_login);
 
         mContext = getApplicationContext();
@@ -280,6 +285,11 @@ public class LoginActivity extends AppCompatActivity implements LoginMVP.View {
     public void showError(int code, String errorMsg) {
         closeProgressDialog();
         Toast.makeText(this, errorMsg, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showListOfReferralCode(List<Object> referralList) {
+
     }
 
     private void closeProgressDialog() {

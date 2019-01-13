@@ -6,6 +6,7 @@ import android.util.Log;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
+import com.unsullied.chottabheem.utils.SessionManager;
 
 import java.net.URLEncoder;
 
@@ -35,6 +36,7 @@ public class RegistrationIntentService extends FirebaseInstanceIdService {
         super.onTokenRefresh();
         regId_str = FirebaseInstanceId.getInstance().getToken();
         Log.d(TAG, "Refreshed token: " + regId_str);
+        new SessionManager().saveFCMToken(getApplicationContext(),regId_str);
         /*networkCheck = new ConnectionManager(this);
         session=this.getSharedPreferences(SESSION_NAME, Context.MODE_PRIVATE);
         queue = Appcontroller.getInstance(getApplicationContext()).getRequestQueue();

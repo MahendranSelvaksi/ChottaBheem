@@ -98,6 +98,7 @@
                     android:layout_margin="2dp">
 
                     <android.support.design.widget.TextInputLayout
+                        android:id="@+id/referralCodeTIL"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
 
@@ -117,6 +118,20 @@
                             android:textColorHint="@color/SecondaryText"
                             app:customFont="novalight.ttf" />
                     </android.support.design.widget.TextInputLayout>
+                    <com.unsullied.chottabheem.utils.material_spinnar.MaterialSpinner
+                        android:id="@+id/referralCodeSP"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginTop="5dp"
+                        android:visibility="gone"
+                        app:customFont="nova.ttf"
+                        app:ms_arrow_tint="@color/colorPrimaryDark"
+                        app:ms_background_color="@android:color/white"
+                        app:ms_dropdown_height="wrap_content"
+                        app:ms_dropdown_max_height="100dp"
+                        app:ms_hide_arrow="false"
+                        app:ms_text_color="@color/PrimaryText"/>
                 </FrameLayout>
 
                 <LinearLayout
