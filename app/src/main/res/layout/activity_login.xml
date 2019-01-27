@@ -52,13 +52,13 @@
         android:id="@+id/loginContentTV"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="fill"
+        android:gravity="center"
         android:layout_marginBottom="10dp"
         android:layout_marginLeft="20dp"
         android:textColor="@color/black_overlay"
         android:layout_marginRight="20dp"
         android:lineSpacingExtra="1dp"
-        android:text="ஆப் install பன்னு!!\n life i easiya பன்னு!!!!\n உன 10 நண்பர்களுக்கு \nshare &amp; install பன்னு*!!\n மாதம் rs 143 க்கு 12 மாதமும் free ரீசார்ச் பன்னு!!!!!!."
+        android:text="@string/loginContent"
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         app:customFont="nova.ttf"/>
@@ -74,14 +74,13 @@
         android:id="@+id/loginBtn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Login"
+        android:text="@string/loginStr"
         android:layout_gravity="center_horizontal"
         android:textColor="@android:color/white"
         android:layout_centerInParent="true"
         android:layout_marginBottom="0dp"
         android:layout_marginLeft="40dp"
         android:layout_marginRight="40dp"
-
         android:layout_marginTop="0dp"
         android:background="@drawable/custom_button"/>
     <com.unsullied.chottabheem.utils.CustomTextView

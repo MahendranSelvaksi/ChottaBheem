@@ -1,5 +1,6 @@
 package com.unsullied.chottabheem.utils;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -14,7 +15,7 @@ import android.widget.TextView;
 
 public class BaseActivity extends AppCompatActivity implements ConnectivityReceiver.ConnectivityReceiverListener {
     View parentLayout;
-
+    private final String TAG = "App";
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -22,7 +23,11 @@ public class BaseActivity extends AppCompatActivity implements ConnectivityRecei
         showFirstSnack(ConnectivityReceiver.isConnected());
     }
 
-
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(AppController.localeManager.setLocale(base));
+        Log.d(TAG, "attachBaseContext");
+    }
 
     @Override
     public void onNetworkConnectionChanged(boolean isConnected) {

@@ -3,6 +3,7 @@ package com.unsullied.chottabheem.utils;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.util.Log;
 
 import com.androidnetworking.AndroidNetworking;
@@ -20,6 +21,8 @@ public class AppController extends Application {
 
     private static AppController mInstance;
     AppEnvironment appEnvironment;
+    public static LocaleManager localeManager;
+    private final String TAG = "App";
 
     @Override
     public void onCreate() {
@@ -39,7 +42,8 @@ public class AppController extends Application {
 
     @Override
     protected void attachBaseContext(Context base) {
-        super.attachBaseContext(base);
+        localeManager = new LocaleManager(base);
+        super.attachBaseContext(localeManager.setLocale(base));
         //MultiDex.install(this);
 
     }
@@ -76,5 +80,10 @@ public class AppController extends Application {
     public void setAppEnvironment(AppEnvironment appEnvironment) {
         this.appEnvironment = appEnvironment;
     }
-
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        localeManager.setLocale(this);
+        Log.w(TAG, "onConfigurationChanged: " + newConfig.locale.getLanguage());
+    }
 }

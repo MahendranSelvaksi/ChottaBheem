@@ -1,14 +1,21 @@
 package com.unsullied.chottabheem.fragment;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.SwitchCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.unsullied.chottabheem.R;
+import com.unsullied.chottabheem.activity.MainActivity;
+import com.unsullied.chottabheem.utils.AppController;
 import com.unsullied.chottabheem.utils.BaseFragment;
+import com.unsullied.chottabheem.utils.LocaleManager;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -29,6 +36,8 @@ public class SettingsFragment extends BaseFragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+    private SwitchCompat languageSW;
+    private View rootView;
 
     public SettingsFragment() {
         // Required empty public constructor
@@ -61,13 +70,42 @@ public class SettingsFragment extends BaseFragment {
         }
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_share_refferal, container, false);
-    }
+        rootView = inflater.inflate(R.layout.fragment_share_refferal, container, false);
 
+        languageSW = rootView.findViewById(R.id.languageSW);
+//languageSW.setOnCheckedChangeListener(this);
+        /*languageSW.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                Log.w("Success","isChecked:::"+isChecked+(isChecked ? LocaleManager.LANGUAGE_ENGLISH : LocaleManager.LANGUAGE_TAMIL));
+            //    setNewLocale(isChecked ? LocaleManager.LANGUAGE_ENGLISH : LocaleManager.LANGUAGE_TAMIL, true);
+            }
+        });*/
+
+       /*languageSW.setOnTouchListener(new View.OnTouchListener() {
+           @Override
+           public boolean onTouch(View v, MotionEvent event) {
+               setNewLocale(AppController.localeManager.getLanguage().equalsIgnoreCase(LocaleManager.LANGUAGE_ENGLISH) ?
+                       LocaleManager.LANGUAGE_TAMIL : LocaleManager.LANGUAGE_ENGLISH, false);
+               return false;
+           }
+       });*/
+
+       languageSW.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View v) {
+               setNewLocale(AppController.localeManager.getLanguage().equalsIgnoreCase(LocaleManager.LANGUAGE_ENGLISH) ?
+                       LocaleManager.LANGUAGE_TAMIL : LocaleManager.LANGUAGE_ENGLISH, true);
+           }
+       });
+        return rootView;
+    }
 
 
     @Override
@@ -82,9 +120,35 @@ public class SettingsFragment extends BaseFragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+         Log.w("Success","AppController.localeManager.getLanguage():::"+AppController.localeManager.getLanguage());
+        languageSW.setChecked(AppController.localeManager.getLanguage().equalsIgnoreCase(LocaleManager.LANGUAGE_ENGLISH));
+    }
+
+    @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+   /* @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        Log.w("Success","isChecked:::"+isChecked+(isChecked ? LocaleManager.LANGUAGE_ENGLISH : LocaleManager.LANGUAGE_TAMIL));
+    }*/
+
+    private boolean setNewLocale(String language, boolean restartProcess) {
+        AppController.localeManager.setNewLocale(getContext(), language);
+
+        Intent i = new Intent(getActivity(), MainActivity.class);
+        startActivity(i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK));
+
+        if (restartProcess) {
+            System.exit(0);
+        } else {
+            //Toast.makeText(getActivity(), "Activity restarted", Toast.LENGTH_SHORT).show();
+        }
+        return true;
     }
 
     /**
@@ -99,6 +163,6 @@ public class SettingsFragment extends BaseFragment {
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onShareReferralFragmentInteraction(BaseFragment mFragment,String parameter);
+        void onShareReferralFragmentInteraction(BaseFragment mFragment, String parameter);
     }
 }

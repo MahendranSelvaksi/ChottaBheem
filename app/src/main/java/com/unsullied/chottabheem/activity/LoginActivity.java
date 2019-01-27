@@ -94,13 +94,13 @@ public class LoginActivity extends AppCompatActivity implements LoginMVP.View {
         termsTV = (TextView) findViewById(R.id.loginTermsTV);
         termsTV.setText(getString(R.string.termsCondition));
         new PatternEditableBuilder().
-                addPattern(Pattern.compile("Terms & Conditions"), ContextCompat.getColor(this, R.color.black_overlay), new PatternEditableBuilder.SpannableClickedListener() {
+                addPattern(Pattern.compile(getString(R.string.terms_and_conditionsTitle)), ContextCompat.getColor(this, R.color.black_overlay), new PatternEditableBuilder.SpannableClickedListener() {
                     @Override
                     public void onSpanClicked(String text) {
                         startActivity(new Intent(LoginActivity.this, TermsAndConditionActivity.class));
                     }
                 }).
-                addPattern(Pattern.compile("Privacy policy"), ContextCompat.getColor(this, R.color.black_overlay), new PatternEditableBuilder.SpannableClickedListener() {
+                addPattern(Pattern.compile(getString(R.string.privacy_policyTitle)), ContextCompat.getColor(this, R.color.black_overlay), new PatternEditableBuilder.SpannableClickedListener() {
                     @Override
                     public void onSpanClicked(String text) {
                         startActivity(new Intent(LoginActivity.this, PrivatePolicyActivity.class));
@@ -129,6 +129,17 @@ public class LoginActivity extends AppCompatActivity implements LoginMVP.View {
 
                 }
 */
+                /*Intent intent = new Intent(LoginActivity.this,WebViewActivity.class);
+                intent.putExtra(AvenuesParams.ACCESS_CODE, "AVFZ82FL33BI74ZFIB");
+                intent.putExtra(AvenuesParams.MERCHANT_ID,"201889");
+                intent.putExtra(AvenuesParams.ORDER_ID, "10001");
+                intent.putExtra(AvenuesParams.CURRENCY, "INR");
+                intent.putExtra(AvenuesParams.AMOUNT, "1.0");
+                intent.putExtra(AvenuesParams.REDIRECT_URL, "http://122.182.6.216/merchant/ccavResponseHandler.jsp");
+                intent.putExtra(AvenuesParams.CANCEL_URL, "http://122.182.6.216/merchant/ccavResponseHandler.jsp");
+                intent.putExtra(AvenuesParams.RSA_KEY_URL, "http://adhavanassociates.com/CB_api/api/getRSA");
+
+                startActivity(intent);*/
             }
         });
 

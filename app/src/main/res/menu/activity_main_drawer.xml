@@ -35,6 +35,10 @@
             android:icon="@drawable/ic_outline_settings_input_antenna_24px"
             android:title="@string/about_usTitle"/>
         <item
+            android:id="@+id/navNotification"
+            android:icon="@drawable/ic_notifications_none_black_24dp"
+            android:title="@string/notificationTitle"/>
+        <item
             android:id="@+id/navShareReferral"
             android:icon="@drawable/ic_outline_share_24px"
             android:title="@string/share_referral_codeTitle"/>

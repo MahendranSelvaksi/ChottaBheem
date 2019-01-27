@@ -2,9 +2,11 @@ package com.unsullied.chottabheem.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.unsullied.chottabheem.R;
 import com.unsullied.chottabheem.utils.RedeemModel;
@@ -12,15 +14,15 @@ import com.unsullied.chottabheem.utils.holderClass.AdminRequestHolder;
 
 import java.util.List;
 
-public class AdminRequestAdapter extends RecyclerView.Adapter {
+public class NotificationAdapter extends RecyclerView.Adapter {
+
+    List<RedeemModel> mList;
     private Context mContext;
-    private List<RedeemModel> mList;
 
-    public AdminRequestAdapter(Context mContext, List<RedeemModel> mList) {
+    public NotificationAdapter(Context mContext, List<RedeemModel> childList) {
         this.mContext = mContext;
-        this.mList = mList;
+        this.mList = childList;
     }
-
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(mContext);
@@ -31,8 +33,14 @@ public class AdminRequestAdapter extends RecyclerView.Adapter {
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof AdminRequestHolder) {
-            ((AdminRequestHolder) holder).requestNameTV.setText(mList.get(position).getRequestName().trim());
-            ((AdminRequestHolder) holder).requestStatusTV.setText(mList.get(position).getRequestStatus().trim());
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            params.setMargins(10,0,0,0);
+            ((AdminRequestHolder) holder).requestNameTV.setGravity(Gravity.LEFT);
+            ((AdminRequestHolder) holder).requestNameTV.setLayoutParams(params);
+
+            ((AdminRequestHolder) holder).requestNameTV.setText(mList.get(position).getMessage().trim());
+            ((AdminRequestHolder) holder).requestStatusTV.setVisibility(View.GONE);
+            ((AdminRequestHolder) holder).requestStatusKeyTV.setVisibility(View.GONE);
             ((AdminRequestHolder) holder).requestTimeTV.setText(mList.get(position).getRequestTime().trim());
         }
     }
@@ -41,6 +49,4 @@ public class AdminRequestAdapter extends RecyclerView.Adapter {
     public int getItemCount() {
         return mList.size();
     }
-
-
 }

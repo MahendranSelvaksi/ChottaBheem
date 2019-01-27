@@ -1,11 +1,141 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="loginContent">ஆ� இ��டா� ப��!!
+    <string name="app_name">Chotta Bheem</string>
+    <string name="FACEBOOK_APP_ID">580483265681896</string>
+    <string name="ACCOUNT_KIT_CLIENT_TOKEN">35be1302d0f03ddbb16102e547fa1f25</string>
+
+
+    // if your Facebook App ID is 1234567, you should use ak1234567
+    <string name="ak_login_protocol_scheme">ak35be1302d0f03ddbb16102e547fa1f25</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="title_activity_splash">SplashActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+
+    <!--<string name="loginContent">ஆ� இ��டா� ப��!!
 ைல� ஈசி ப��!!!!
 உ� 10 ந�ப�க���
 ேஷ� ம��� இ��டா�
 ப��***!! மாத� Rs. 143
 �� 12 மாத�� பிாீ
-ாீசா�� ப��!!!!!!</string>
+ாீசா�� ப��!!!!!!</string> -->
+    <string name="loginContent">ஆப் install பண்ணு!!\n life i easiya பண்ணு!!!!\n உன் 10 நண்பர்களுக்கு \nshare &amp; install பண்ணு*!!\n மாதம் rs 143 க்கு 12 மாதமும் free ரீசார்ச் பண்ணு!!!!!!.</string>
+
+    <string name="homeTitle">ஹோம்</string>
+    <string name="profileTitle">சுயவிவரம்</string>
+    <string name="admin_requestTitle">அட்மீன் வேண்டுகோள்</string>
+    <string name="terms_and_conditionsTitle">விதிகளும் கட்டுப்பாடுகளும்</string>
+    <string name="privacy_policyTitle">இரகசிய கொள்கைகள்</string>
+    <string name="contact_usTitle">தொடர்பு கொள்</string>
+    <string name="about_usTitle">என்னைப் பற்றி</string>
+    <string name="share_referral_codeTitle">பரிந்துரை குறியீட்டை பகிரிந்துக்கொள்</string>
+    <string name="setting_Title">அமைப்பு</string>
+    <string name="add_admin_request_Title">Add Request</string>
+    <string name="exit">வெளியேறு</string>
+    <string name="notificationTitle">அறிவிப்புகள்</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="copyRightsStr">&#169; Copyrights Aadhavan Associates, Pvt ltd</string>
+
+    <array name="menuArray">
+        <item>ப்ரீபெய்டு \n ரிச்சார்ஜ்</item>
+        <!-- <item>Bus \n Booking</item>
+        <item>Movie \n Ticket</item>-->
+        <item>டிட்டிஏச் \n ரிச்சார்ஜ்</item>
+        <item>டேட்டா கார்டு \n ரிச்சார்ஜ்</item>
+        <item>போஸ்ட்பெய்டு \n ரிச்சார்ஜ்</item>
+        <item>எலக்ட்ரிசிட்டி \n பில்</item>
+        <item>காஸ் பில்</item>
+        <item>இன்சூரன்ஸ்</item>
+        <item>லேண்ட்லைன்</item>
+        <item>ப்ராடுபேண்ட்</item>
+    </array>
+
+
+    <array name="selectArray">
+        <item>Prepaid</item>
+        <item>DTH</item>
+        <item>Data card</item>
+        <item>Postpaid</item>
+        <item>Electricity</item>
+        <item>Gas</item>
+        <item>Insurance</item>
+        <item>Landline</item>
+        <item>Broadband</item>
+    </array>
+
+
+    <array name="hintArray">
+        <item>Enter phone number</item>
+        <!-- <item>Bus \n Booking</item>
+        <item>Movie \n Ticket</item>-->
+        <item>டிட்டிஏச் எண்ணை பதிவுசெய்யவும்</item>
+        <item>எண்ணை பதிவுசெய்யவும்</item>
+        <item>கைப்பேசி எண்ணை பதிவுசெய்யவும்</item>
+        <item>கணக்கு எண்</item>
+        <item>கன்ஸ்யுமர் எண்</item>
+        <item>பாலிசி எண்</item>
+        <item>லேண்ட்லைன் எண்</item>
+        <item>டிரெக்டரி எண்</item>
+    </array>
+    <array name="operatorArry">
+        <item>----</item>
+        <item>AirTel</item>
+        <item>Vodafone</item>
+        <item>BSNL</item>
+        <item>Jio</item>
+        <item>Idea</item>
+    </array>
+    <string name="title_activity_main2">Main2Activity</string>
+    <string name="termsCondition">உள்நுழைவதன் மூலம், நீங்கள் Chotta Bheem\'s விதிகளும் கட்டுப்பாடுகளும் மற்றும் இரகசிய கொள்கைகள் ஏற்கிறீர்கள்</string>
+    <string name="agreeCheckBoxStr">நான் விதிமுறைகள் மற்றும் நிபந்தனைகளை ஏற்கிறேன்</string>
+    <string name="subscriptionCheckBoxStr">ரூ .99 சந்தா மாற்றங்களை நான் ஏற்கிறேன்</string>
+    <string-array name="browse_plans_key">
+        <item>SPL</item>
+        <item>DATA</item>
+        <item>FTT</item>
+        <item>TUP</item>
+        <item>RMG</item>
+    </string-array>
+
+    <string-array name="browse_plans_titles">
+        <item>சிறப்பு சலுகைகள்</item>
+        <item>டேட்டா ப்ளான்ஸ்</item>
+        <item>முழு  டால்க் டைம்</item>
+        <item>டாப் அப்</item>
+        <item>ரோமிங்</item>
+    </string-array>
+
+    <string name="Rs">\u20B9</string> <!--//rupee symbol:-->
+    <string name="loginStr">உள்நுழை</string>
+    <string name="sendStr">அனுப்பு</string>
+    <string name="referralCodeStr">பரிந்துரை குறியீடு</string>
+    <string name="emailIDStr">மின்னஞ்சல்</string>
+    <string name="nameStr">பெயர்</string>
+    <string name="submitStr">சமர்ப்பிக்கவும்</string>
+    <string name="referralCountStr">பரிந்துரை எண்ணிக்கை</string>
+    <string name="commentsStr">கருத்துக்கள்</string>
+    <string name="pointStr">புள்ளி (கள்)</string>
+    <string name="languageStr">மொழி</string>
+    <string name="phoneNumberStr">கைப்பேசி எண்</string>
+    <string name="referralProgressStr">பரிந்துரை முன்னேற்றம்</string>
+    <string name="logoutStr">வெளியேறு</string>
+
+    <string name="enterNameStr">உங்கள் பெயரை பதிவுசெய்யவும்</string>
+    <string name="enterEmailIdStr">மின்னஞ்சலை பதிவுசெய்யவும்</string>
+    <string name="enterValidEmailIdStr">சரியான மின்னஞ்சலை பதிவுசெய்யவும்</string>
+    <string name="enterMobileNumberStr">கைப்பேசி எண்ணை பதிவுசெய்யவும்</string>
+    <string name="enterValidMobileNumberStr">சரியான கைப்பேசி எண்ணை பதிவுசெய்யவும்</string>
+    <string name="enterCommentsStr">உங்கள் கருத்துக்களை பதிவுசெய்யவும்</string>
+    <string name="noDataFoundStr">உங்களுக்கான தகவல்கள் இல்லை</string>
 </resources>

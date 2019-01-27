@@ -28,6 +28,7 @@ import com.unsullied.chottabheem.fragment.AddAdminRequestFragment;
 import com.unsullied.chottabheem.fragment.AdminRequestFragment;
 import com.unsullied.chottabheem.fragment.ContactUsFragment;
 import com.unsullied.chottabheem.fragment.HomeFragment;
+import com.unsullied.chottabheem.fragment.NotificationFragment;
 import com.unsullied.chottabheem.fragment.PrivatePolicyFragment;
 import com.unsullied.chottabheem.fragment.ProfileFragment;
 import com.unsullied.chottabheem.fragment.SettingsFragment;
@@ -46,10 +47,10 @@ public class MainActivity extends AppCompatActivity
         ProfileFragment.OnFragmentInteractionListener, AdminRequestFragment.OnFragmentInteractionListener,
         TermsAndConditionsFragment.OnFragmentInteractionListener, PrivatePolicyFragment.OnFragmentInteractionListener,
         AboutUsFragment.OnFragmentInteractionListener, SettingsFragment.OnFragmentInteractionListener,
-        AddAdminRequestFragment.OnFragmentInteractionListener {
+        AddAdminRequestFragment.OnFragmentInteractionListener,NotificationFragment.OnFragmentInteractionListener {
     DrawerLayout drawer;
     Toolbar toolbar;
-    private CustomTextView titleTV, logoutTV, userNameTV, userMobileTV, referralCodeTV, overallTV, progressTV;
+    private CustomTextView titleTV, logoutTV, userNameTV, userMobileTV, referralCodeTV, overallTV, progressTV, pointsTV;
     private ProgressBar pbId;
     private Utility mUtility;
     private LinearLayout pointsLayout;
@@ -65,6 +66,7 @@ public class MainActivity extends AppCompatActivity
         toolbar = (Toolbar) findViewById(R.id.mainToolbar);
         titleTV = toolbar.findViewById(R.id.toolbar_title);
         pointsLayout = toolbar.findViewById(R.id.pointsLayout);
+        pointsTV = toolbar.findViewById(R.id.pointsTV);
         mUtility = new Utility();
         mSessionManager = new SessionManager();
         mContext = getApplicationContext();
@@ -73,7 +75,7 @@ public class MainActivity extends AppCompatActivity
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
-
+        pointsTV.setText("100 ".concat(getString(R.string.pointStr)));
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
@@ -234,6 +236,12 @@ public class MainActivity extends AppCompatActivity
                     replaceFragment(new AboutUsFragment(), "");
                 }
                 break;
+            case R.id.navNotification:
+                if (!(getCurrentFragment() instanceof NotificationFragment)) {
+                    updateToolbarTitle(getString(R.string.notificationTitle));
+                    replaceFragment(new NotificationFragment(), "");
+                }
+                break;
             case R.id.navShareReferral:
                 /* */
                 shareIt();
@@ -370,6 +378,9 @@ public class MainActivity extends AppCompatActivity
             case "com.unsullied.chottabheem.fragment.AddAdminRequestFragment":
                 title = getString(R.string.add_admin_request_Title);
                 break;
+            case "com.unsullied.chottabheem.fragment.NotificationFragment":
+                title = getString(R.string.notificationTitle);
+                break;
         }
         updateToolbarTitle(title);
     }
@@ -450,5 +461,10 @@ public class MainActivity extends AppCompatActivity
         referralCodeTV.setText(mSessionManager.getValueFromSessionByKey(mContext, AppConstants.USER_SESSION_NAME, AppConstants.API_REFERRAL_CODE_KEY));
         progressTV.setText(String.valueOf(pbId.getProgress()).concat("/").concat(String.valueOf(pbId.getMax())));
         // overallTV.setText(mSessionManager.getValueFromSessionByKey(mContext, AppConstants.USER_SESSION_NAME, AppConstants.API_REDEEM_PROGRESS_KEY));
+    }
+
+    @Override
+    public void onNotificationFragmentInteraction(BaseFragment mFragment, String parameter) {
+        replaceFragment(mFragment,parameter);
     }
 }

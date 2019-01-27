@@ -153,23 +153,23 @@ public class ContactUsFragment extends BaseFragment implements View.OnClickListe
 
                 if (etName.getText().toString().trim().length() == 0 && etEmailId.getText().toString().trim().length() == 0 &&
                         etMobileNumber.getText().toString().trim().length() == 0 && etComments.getText().toString().trim().length() == 0) {
-                    nameTIL.setError("Enter your name");
-                    emailTIL.setError("Enter your email id");
-                    mobileNumberTIL.setError("Enter your mobile number");
-                    commentsTIL.setError("Enter your comments");
+                    nameTIL.setError(getString(R.string.enterNameStr));
+                    emailTIL.setError(getString(R.string.enterEmailIdStr));
+                    mobileNumberTIL.setError(getString(R.string.enterMobileNumberStr));
+                    commentsTIL.setError(getString(R.string.enterCommentsStr));
 
                 } else if (etName.getText().toString().trim().length() == 0) {
-                    nameTIL.setError("Enter your name");
+                    nameTIL.setError(getString(R.string.enterNameStr));
                 } else if (etEmailId.getText().toString().trim().length() == 0) {
-                    emailTIL.setError("Enter your email id");
+                    emailTIL.setError(getString(R.string.enterEmailIdStr));
                 } else if (etMobileNumber.getText().toString().trim().length() == 0) {
-                    mobileNumberTIL.setError("Enter your mobile number");
+                    mobileNumberTIL.setError(getString(R.string.enterMobileNumberStr));
                 } else if (etComments.getText().toString().trim().length() == 0) {
-                    commentsTIL.setError("Enter your comments");
+                    commentsTIL.setError(getString(R.string.enterCommentsStr));
                 }
             } else {
                 if (!Patterns.EMAIL_ADDRESS.matcher(etEmailId.getText().toString().trim()).matches()) {
-                    emailTIL.setError("Enter your valid email id");
+                    emailTIL.setError(getString(R.string.enterValidEmailIdStr));
                 } /*else if (!AppConstants.MOBILE_NUMBER_REX.matches(etMobileNumber.getText().toString().trim())) {
                     mobileNumberTIL.setError("Please give valid mobile number with country code (+91)");
                 }*/ else {

@@ -25,6 +25,7 @@ public class AppConstants {
     public static final String ADD_REDEEM_API = "redeem";
     public static final String UPDATE_PROFILE_API = "profile/update";
     public static final String GENERATE_CHECKSUM_API="payment/hash_generator";
+    public static final String NOTIFICATION_API="announcement";
     //.addHeaders("Authorization", Credentials.basic(AppConstants.APP_USER_NAME_VALUE,AppConstants.APP_PASSWORD_VALUE))
 
     public static final String APP_USER_NAME_VALUE = "CB_App";

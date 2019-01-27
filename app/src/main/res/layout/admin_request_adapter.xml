@@ -47,6 +47,7 @@
             android:gravity="center">
 
             <com.unsullied.chottabheem.utils.CustomTextView
+                android:id="@+id/requestStatusKeyTV"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"

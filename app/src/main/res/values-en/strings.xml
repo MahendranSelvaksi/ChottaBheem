@@ -22,7 +22,7 @@
     <string name="homeTitle">Home</string>
     <string name="profileTitle">Profile</string>
     <string name="admin_requestTitle">Admin Request</string>
-    <string name="terms_and_conditionsTitle">Terms and Conditions</string>
+    <string name="terms_and_conditionsTitle">Terms &amp; Conditions</string>
     <string name="privacy_policyTitle">Privacy Policy</string>
     <string name="contact_usTitle">Contact Us</string>
     <string name="about_usTitle">About Us</string>
@@ -30,6 +30,7 @@
     <string name="setting_Title">Setting</string>
     <string name="add_admin_request_Title">Add Request</string>
     <string name="exit">Exit</string>
+    <string name="notificationTitle">Notification</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -86,7 +87,7 @@
         <item>Idea</item>
     </array>
     <string name="title_activity_main2">Main2Activity</string>
-    <string name="termsCondition">By Signing up, you agree to Chotta Bheem\'s Terms &amp; Conditions and Privacy policy</string>
+    <string name="termsCondition">By Signing up, you agree to Chotta Bheem\'s Terms &amp; Conditions and Privacy Policy</string>
     <string name="agreeCheckBoxStr">I Agree the Terms and Conditions</string>
     <string name="subscriptionCheckBoxStr">I Agree to pay subscription changes of Rs.99</string>
     <string-array name="browse_plans_key">
@@ -106,4 +107,27 @@
     </string-array>
 
     <string name="Rs">\u20B9</string> <!--//rupee symbol:-->
+    <string name="loginStr">Login</string>
+    <string name="sendStr">Send</string>
+    <string name="referralCodeStr">Referral Code</string>
+    <string name="emailIDStr">Email ID</string>
+    <string name="nameStr">Name</string>
+    <string name="submitStr">Submit</string>
+    <string name="referralCountStr">Referral Count</string>
+    <string name="commentsStr">Comments</string>
+    <string name="pointStr">point(s)</string>
+    <string name="languageStr">Language</string>
+    <string name="phoneNumberStr">Phone number</string>
+    <string name="referralProgressStr">Referral Progress</string>
+    <string name="logoutStr">Logout</string>
+    
+    <string name="enterNameStr">Enter your name</string>
+    <string name="enterEmailIdStr">Enter your email id</string>
+    <string name="enterValidEmailIdStr">Enter your valid email id</string>
+    <string name="enterMobileNumberStr">Enter your mobile number</string>
+    <string name="enterValidMobileNumberStr">Please give valid mobile number</string>
+    <string name="enterCommentsStr">Enter your comments</string>
+
+<string name="noDataFoundStr">No more data found</string>
+
 </resources>

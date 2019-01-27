@@ -1,6 +1,7 @@
 package com.unsullied.chottabheem.utils.mvp;
 
 import android.content.Context;
+import android.widget.Toast;
 
 import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.common.ANRequest;
@@ -37,13 +38,15 @@ public class RechargePresenter implements RechargeMVP.Presenter {
                 @Override
                 public void onResponse(JSONObject response) {
                     try {
+                        myUtility.printLogcat(response.toString());
                         if (response.has(AppConstants.RESPONSE_JSON_OBJECT_KEY)) {
                             JSONObject responseJSON = response.getJSONObject(AppConstants.RESPONSE_JSON_OBJECT_KEY);
-                            if (responseJSON.getInt(AppConstants.RES_CODE_KEY) == AppConstants.RES_CODE_VALUE) {
-
+                            if (responseJSON.getInt(AppConstants.RES_CODE_KEY) == AppConstants.RES_CODE_VALUE || responseJSON.getInt(AppConstants.RES_CODE_KEY)==201) {
+                                Toast.makeText(mContext, "Recharge successfully", Toast.LENGTH_SHORT).show();
+                                mRechargeView.clearView();
                             } else {
-                           //     selectedCircleIdFromApi = false;
-                           //     Toast.makeText(RechargeActivity.this, "" + responseJSON.getString(AppConstants.RES_TEXT_KEY).trim(), Toast.LENGTH_SHORT).show();
+                               // selectedCircleIdFromApi = false;
+                                Toast.makeText(mContext, "" + responseJSON.getString(AppConstants.RES_TEXT_KEY).trim(), Toast.LENGTH_SHORT).show();
                             }
 
                         }

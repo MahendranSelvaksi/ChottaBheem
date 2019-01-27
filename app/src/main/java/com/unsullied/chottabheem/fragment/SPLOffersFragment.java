@@ -108,11 +108,25 @@ public class SPLOffersFragment extends Fragment implements PlansMVP.PlansView,Pa
                 rechargeAmount = mPlansData.get(position).getAmount();
                 /*mPaymentGatewayPresenter.launchPayUMoneyFlow(rechargeAmount, BrowsePlansActivity.selectedMobileNumber,
                         BrowsePlansActivity.emailIdStr);*/
-                mPaymentGatewayPresenter.generateHashFromServer(sessionManager.getValueFromSessionByKey(mContext,AppConstants.USER_SESSION_NAME,AppConstants.USER_MOBILE_KEY),
+              /*  mPaymentGatewayPresenter.generateHashFromServer(sessionManager.getValueFromSessionByKey(mContext,AppConstants.USER_SESSION_NAME,AppConstants.USER_MOBILE_KEY),
                         sessionManager.getValueFromSessionByKey(mContext,AppConstants.USER_SESSION_NAME,AppConstants.FB_ID_KEY),
                         sessionManager.getValueFromSessionByKey(mContext,AppConstants.USER_SESSION_NAME,AppConstants.USER_NAME_KEY),
                         sessionManager.getValueFromSessionByKey(mContext,AppConstants.USER_SESSION_NAME,AppConstants.USER_EMAIL_ID_KEY),
-                        String.valueOf(rechargeAmount), "Recharge","Pay Now","Recharge");
+                        String.valueOf(rechargeAmount), "Recharge","Pay Now","Recharge");*/
+
+                long time = System.currentTimeMillis();
+                try {
+                    String url = AppConstants.RECHARGE_LIVE_URL + AppConstants.RECHARGE_API + AppConstants.FORMAT_KEY + AppConstants.FORMAT_JSON_VALUE +
+                            AppConstants.TOKEN_KEY + AppConstants.TOKEN_VALUE + AppConstants.MOBILE_KEY + BrowsePlansActivity.selectedMobileNumber +
+                            AppConstants.AMOUNT_KEY + rechargeAmount + AppConstants.OPERATOR_ID_KEY + BrowsePlansActivity.operatorId +
+                            AppConstants.UNIQUE_ID_KEY + time + AppConstants.OPIONAL_VALUE1_KEY + URLEncoder.encode("Recharge", "utf-8") +
+                            AppConstants.OPIONAL_VALUE2_KEY + URLEncoder.encode("Recharge", "utf-8");
+                    myUtility.printLogcat("API::::" + url);
+
+                    //mRechargePresenter.callRechargeAPI(url);
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
             }
 
             @Override

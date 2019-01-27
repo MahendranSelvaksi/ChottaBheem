@@ -175,22 +175,22 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 
                 if (etName.getText().toString().trim().length() == 0 && etEmailId.getText().toString().trim().length() == 0 &&
                         etMobileNumber.getText().toString().trim().length() == 0) {
-                    nameTIL.setError("Enter your name");
-                    emailTIL.setError("Enter your email id");
-                    mobileNumberTIL.setError("Enter your mobile number");
+                    nameTIL.setError(getString(R.string.enterNameStr));
+                    emailTIL.setError(getString(R.string.enterEmailIdStr));
+                    mobileNumberTIL.setError(getString(R.string.enterMobileNumberStr));
 
                 } else if (etName.getText().toString().trim().length() == 0) {
-                    nameTIL.setError("Enter your name");
+                    nameTIL.setError(getString(R.string.enterNameStr));
                 } else if (etEmailId.getText().toString().trim().length() == 0) {
-                    emailTIL.setError("Enter your email id");
+                    emailTIL.setError(getString(R.string.enterEmailIdStr));
                 } else if (etMobileNumber.getText().toString().trim().length() == 0) {
-                    mobileNumberTIL.setError("Enter your mobile number");
+                    mobileNumberTIL.setError(getString(R.string.enterMobileNumberStr));
                 }
             } else {
                 if (!Patterns.EMAIL_ADDRESS.matcher(etEmailId.getText().toString().trim()).matches()) {
-                    emailTIL.setError("Enter your valid email id");
+                    emailTIL.setError(getString(R.string.enterValidEmailIdStr));
                 } else if (etMobileNumber.getText().toString().trim().length() != 10) {
-                    mobileNumberTIL.setError("Please give valid mobile number");
+                    mobileNumberTIL.setError(getString(R.string.enterValidMobileNumberStr));
                 } else {
                     //Call api
                     pd.setMessage(AppConstants.UPDATE_PROFILE_API_CALL_DIALOG_MSG);

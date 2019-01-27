@@ -327,10 +327,23 @@ public class RechargeActivity extends AppCompatActivity implements View.OnClickL
                 }
             } else {
                // mPaymentGatewayPresenter.launchPayUMoneyFlow(String.valueOf(rechargeAmount), selectedMobileNumber, emailIdStr);
-                mPaymentGatewayPresenter.generateHashFromServer(selectedMobileNumber,
+               /* mPaymentGatewayPresenter.generateHashFromServer(selectedMobileNumber,
                         mSessionManager.getValueFromSessionByKey(mContext,AppConstants.USER_SESSION_NAME,AppConstants.FB_ID_KEY),
                         nameStr,emailIdStr, String.valueOf(rechargeAmount),
-                        "Recharge","Pay Now","Recharge");
+                        "Recharge","Pay Now","Recharge");*/
+                long time = System.currentTimeMillis();
+                try {
+                    String url = AppConstants.RECHARGE_LIVE_URL + AppConstants.RECHARGE_API + AppConstants.FORMAT_KEY + AppConstants.FORMAT_JSON_VALUE +
+                            AppConstants.TOKEN_KEY + AppConstants.TOKEN_VALUE + AppConstants.MOBILE_KEY + selectedMobileNumber +
+                            AppConstants.AMOUNT_KEY + rechargeAmount + AppConstants.OPERATOR_ID_KEY + selectedOperatorId +
+                            AppConstants.UNIQUE_ID_KEY + time + AppConstants.OPIONAL_VALUE1_KEY + "Recharge" +
+                            AppConstants.OPIONAL_VALUE2_KEY + URLEncoder.encode("Recharge", "utf-8");
+                    myUtility.printLogcat("API::::" + url);
+
+                    mRechargePresenter.callRechargeAPI(url);
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
             }
         } else if (v == browsePlansTV) {
             if (selectedOperatorId > 0) {
@@ -394,12 +407,12 @@ public class RechargeActivity extends AppCompatActivity implements View.OnClickL
                                 try {
                                     String url = AppConstants.RECHARGE_LIVE_URL + AppConstants.RECHARGE_API + AppConstants.FORMAT_KEY + AppConstants.FORMAT_JSON_VALUE +
                                             AppConstants.TOKEN_KEY + AppConstants.TOKEN_VALUE + AppConstants.MOBILE_KEY + selectedMobileNumber +
-                                            AppConstants.AMOUNT_KEY + rechargeAmount + AppConstants.OPERATOR_ID_KEY + selectedOperatorId +
+                                            AppConstants.AMOUNT_KEY + "10" + AppConstants.OPERATOR_ID_KEY + selectedOperatorId +
                                             AppConstants.UNIQUE_ID_KEY + time + AppConstants.OPIONAL_VALUE1_KEY + URLEncoder.encode(intentTitleStr, "utf-8") +
                                             AppConstants.OPIONAL_VALUE2_KEY + URLEncoder.encode("Recharge", "utf-8");
                                     myUtility.printLogcat("API::::" + url);
 
-                                    //mRechargePresenter.callRechargeAPI(url);
+                                    mRechargePresenter.callRechargeAPI(url);
                                 } catch (UnsupportedEncodingException e) {
                                     e.printStackTrace();
                                 }
@@ -481,6 +494,13 @@ public class RechargeActivity extends AppCompatActivity implements View.OnClickL
     @Override
     public void showSuccess(JSONObject successJSON) {
 
+    }
+
+    @Override
+    public void clearView() {
+        mobileNumberET.setText("");
+        operatorET.setText("");
+        amountET.setText("");
     }
 
     /**

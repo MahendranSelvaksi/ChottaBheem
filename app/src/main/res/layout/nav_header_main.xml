@@ -83,11 +83,11 @@
             android:background="@drawable/custom_button"
             android:gravity="center"
             android:padding="05dp"
-            android:text="Logout"
+            android:text="@string/logoutStr"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="3dp"
-            android:textAppearance="@style/TextAppearance.AppCompat.Small.Inverse"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
             android:textColor="@android:color/white"
             app:customFont="novalight.ttf"/>
 
@@ -124,7 +124,7 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="1.5dp"
                 android:layout_weight="1"
-                android:text="Referral Progress"
+                android:text="@string/referralProgressStr"
                 android:textColor="@color/PrimaryText"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 app:customFont="novabold.ttf" />
