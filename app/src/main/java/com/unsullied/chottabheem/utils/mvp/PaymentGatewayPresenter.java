@@ -14,6 +14,8 @@ import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.JSONObjectRequestListener;
 import com.payumoney.core.PayUmoneyConfig;
 import com.payumoney.core.PayUmoneySdkInitializer;
+import com.razorpay.Checkout;
+import com.razorpay.PaymentResultListener;
 import com.unsullied.chottabheem.BuildConfig;
 import com.unsullied.chottabheem.utils.AppConstants;
 import com.unsullied.chottabheem.utils.ConnectivityReceiver;
@@ -26,7 +28,7 @@ import org.json.JSONObject;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-public class PaymentGatewayPresenter implements PaymentGatewayMVP.Presenter {
+public class PaymentGatewayPresenter implements PaymentGatewayMVP.Presenter, PaymentResultListener {
 
     AppPreference mAppPreference;
     private PayUmoneySdkInitializer.PaymentParam mPaymentParams;
@@ -160,7 +162,7 @@ customer_email:test@test.com"*//*
                     .addBodyParameter(AppConstants.ACCOUNT_ID_KEY, accountId)
                     .addBodyParameter("mobile_number", mobileNumber)
                     .addBodyParameter("login_type", "accountkitlogin")
-                    .addBodyParameter(AppConstants.DEVICE_ID_KEY,new SessionManager().getValueFromSessionByKey(mContext,"FCM",AppConstants.DEVICE_ID_KEY))
+                    .addBodyParameter(AppConstants.DEVICE_ID_KEY, new SessionManager().getValueFromSessionByKey(mContext, "FCM", AppConstants.DEVICE_ID_KEY))
                     .addBodyParameter(AppConstants.DEVICE_TYPE_KEY, deviceType)
                     .addBodyParameter(AppConstants.OS_NAME_KEY, AppConstants.OS_NAME_VALUE)
                     .addBodyParameter("payable_amount", payableAmount)
@@ -257,8 +259,8 @@ customer_email:test@test.com"*//*
                     PayUmoneyFlowManager.startPayUMoneyFlow(mPaymentParams, mActivity, R.style.AppTheme_default, mAppPreference.isOverrideResultScreen());
                 }*/
                                     //   mView.getSuccessfulHash(mPaymentParams);
-                                   // String hashSequence = responseJSON.getString("mkey")+"|"+ responseJSON.getString("tid") +"|"+ amount +"|"+ productInfo +"|"+ name +"|"+ email+" |"+ udf1 +"|"+ udf2 +"|"+ udf3 +"|"+ udf4 +"|"+ udf5 +"||||||"+name;
-                                 //   String serverCalculatedHash = hashCal("SHA-512", hashSequence);
+                                    // String hashSequence = responseJSON.getString("mkey")+"|"+ responseJSON.getString("tid") +"|"+ amount +"|"+ productInfo +"|"+ name +"|"+ email+" |"+ udf1 +"|"+ udf2 +"|"+ udf3 +"|"+ udf4 +"|"+ udf5 +"||||||"+name;
+                                    //   String serverCalculatedHash = hashCal("SHA-512", hashSequence);
              /*                                   *
                                      * Do not use below code when going live
                                      * Below code is provided to generate hash from sdk.
@@ -467,7 +469,8 @@ customer_email:test@test.com"*//*
 
 
     }
-    public String hashCal(String type, String hashString){
+
+    public String hashCal(String type, String hashString) {
         StringBuilder hash = new StringBuilder();
         MessageDigest messageDigest = null;
         try {
@@ -482,4 +485,47 @@ customer_email:test@test.com"*//*
         }
         return hash.toString();
     }
+
+    public void startPayment(Context mContext, Activity mActivity, String description, String amount) {
+        /*
+         To ensure faster loading of the Checkout form,
+          call this method as early as possible in your checkout flow.
+         */
+        Checkout.preload(mContext);
+        /*
+          You need to pass current activity in order to let Razorpay create CheckoutActivity
+         */
+        final Checkout co = new Checkout();
+
+        try {
+            JSONObject options = new JSONObject();
+            options.put("name", AppConstants.APP_NAME);
+            options.put("description", description);
+            options.put("currency", "INR");
+            options.put("amount", amount);
+
+            JSONObject preFill = new JSONObject();
+            preFill.put("email", "ragulcse994@gmail.com");
+            preFill.put("contact", "9944724718");
+
+            options.put("prefill", preFill);
+
+            co.open(mActivity, options);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    @Override
+    public void onPaymentSuccess(String s) {
+        mView.paymentGatewayStatus(0, s);
+    }
+
+    @Override
+    public void onPaymentError(int i, String s) {
+        mView.paymentGatewayStatus(i, s);
+    }
+
+
 }

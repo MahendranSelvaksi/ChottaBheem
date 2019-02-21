@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.unsullied.chottabheem">
 
+    <uses-sdk tools:overrideLibrary="com.razorpay"/>
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -17,6 +19,7 @@
         android:roundIcon="@mipmap/ic_launcher_new"
         android:supportsRtl="false"
         android:theme="@style/AppTheme"
+
         tools:replace="android:allowBackup,supportsRtl">
         <activity
             android:name=".activity.MainActivity"

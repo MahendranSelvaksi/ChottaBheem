@@ -40,6 +40,7 @@ import com.unsullied.chottabheem.utils.PatternEditableBuilder;
 import com.unsullied.chottabheem.utils.Utility;
 import com.unsullied.chottabheem.utils.mvp.LoginMVP;
 import com.unsullied.chottabheem.utils.mvp.LoginPresenter;
+import com.unsullied.chottabheem.utils.paymentgateway.AvenuesParams;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -114,7 +115,7 @@ public class LoginActivity extends AppCompatActivity implements LoginMVP.View {
             public void onClick(View view) {
                /* startActivity(new Intent(LoginActivity.this, MainActivity.class));
                 finish();*/
-                phoneLogin();
+             //   phoneLogin();
                 /*AccessToken accessToken = AccountKit.getCurrentAccessToken();
 
                 if(accessToken !=null)
@@ -129,17 +130,17 @@ public class LoginActivity extends AppCompatActivity implements LoginMVP.View {
 
                 }
 */
-                /*Intent intent = new Intent(LoginActivity.this,WebViewActivity.class);
+                Intent intent = new Intent(LoginActivity.this,WebViewActivity.class);
                 intent.putExtra(AvenuesParams.ACCESS_CODE, "AVFZ82FL33BI74ZFIB");
                 intent.putExtra(AvenuesParams.MERCHANT_ID,"201889");
-                intent.putExtra(AvenuesParams.ORDER_ID, "10001");
+                intent.putExtra(AvenuesParams.ORDER_ID, "100044");
                 intent.putExtra(AvenuesParams.CURRENCY, "INR");
                 intent.putExtra(AvenuesParams.AMOUNT, "1.0");
                 intent.putExtra(AvenuesParams.REDIRECT_URL, "http://122.182.6.216/merchant/ccavResponseHandler.jsp");
                 intent.putExtra(AvenuesParams.CANCEL_URL, "http://122.182.6.216/merchant/ccavResponseHandler.jsp");
                 intent.putExtra(AvenuesParams.RSA_KEY_URL, "http://adhavanassociates.com/CB_api/api/getRSA");
 
-                startActivity(intent);*/
+                startActivity(intent);
             }
         });
 

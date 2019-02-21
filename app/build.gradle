@@ -1,11 +1,12 @@
 apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
-String APK_NAME = "Chotta Bheem", VERSION_NAME = "v1", SUFFIX = "28012019"
+String APK_NAME = "Chotta Bheem", VERSION_NAME = "v1", SUFFIX = "21022019"
 repositories {
     jcenter()
 }
 android {
     compileSdkVersion 26
+    buildToolsVersion '27.0.3'
     defaultConfig {
         applicationId "com.unsullied.chottabheem"
         minSdkVersion 17
@@ -15,16 +16,6 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
-        release {
-            debuggable false
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            android.applicationVariants.all { variant ->
-                variant.outputs.all {
-                    outputFileName = APK_NAME + "_" + VERSION_NAME + "_" + SUFFIX + ".apk"
-                }
-            }
-        }
         debug {
             debuggable true
             minifyEnabled false
@@ -35,6 +26,17 @@ android {
                 }
             }
         }
+        release {
+            debuggable false
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            android.applicationVariants.all { variant ->
+                variant.outputs.all {
+                    outputFileName = APK_NAME + "_" + VERSION_NAME + "_" + SUFFIX + ".apk"
+                }
+            }
+        }
+
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -61,5 +63,6 @@ dependencies {
     implementation 'com.google.firebase:firebase-messaging:11.8.0'
     implementation 'com.payumoney.sdkui:plug-n-play:1.2.0'
     implementation 'com.crashlytics.sdk.android:crashlytics:2.9.8'
+    implementation 'com.razorpay:checkout:1.5.1'
 }
 apply plugin: 'com.google.gms.google-services'

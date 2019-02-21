@@ -159,8 +159,9 @@ public class VerificationActivity extends AppCompatActivity implements View.OnCl
                         String deviceType = Build.DEVICE;
                         referralCodePass = referralCodeET.getVisibility() == View.VISIBLE ? referralCodeET.getText().toString().trim() : referralCodePass;
                         myUtility.printLogcat("Referral:::"+referralCodePass);
-                        mLoginPresenter.callUpdateLoginAPI(AppConstants.REGISTER_LOGIN_API, accountId, mobileNumberStr, versionCode, paymentId,
-                                nameStr, emailIdStr, "99", AppConstants.OS_NAME_VALUE, deviceId, deviceType, referralCodePass);
+                       /* mLoginPresenter.callUpdateLoginAPI(AppConstants.REGISTER_LOGIN_API, accountId, mobileNumberStr, versionCode, paymentId,
+                                nameStr, emailIdStr, "99", AppConstants.OS_NAME_VALUE, deviceId, deviceType, referralCodePass);*/
+                       mPaymentGatewayPresenter.startPayment(mContext,mActivity,"Subscription","9900");
 
                       /*  mSessionManager.addValueToSession(getApplicationContext(), AppConstants.USER_SESSION_NAME,
                                 AppConstants.USER_NAME_KEY, nameStr);
@@ -315,6 +316,30 @@ public class VerificationActivity extends AppCompatActivity implements View.OnCl
     @Override
     public void showError(String errorMsg) {
 
+    }
+
+    @Override
+    public void paymentGatewayStatus(int statusCode, String statusMessage) {
+        mSessionManager.addValueToSession(getApplicationContext(), AppConstants.USER_SESSION_NAME,
+                AppConstants.USER_NAME_KEY, nameStr);
+        mSessionManager.addValueToSession(getApplicationContext(), AppConstants.USER_SESSION_NAME,
+                AppConstants.USER_MOBILE_KEY, mobileNumberStr);
+        mSessionManager.addValueToSession(getApplicationContext(), AppConstants.USER_SESSION_NAME,
+                AppConstants.USER_EMAIL_ID_KEY, emailIdStr);
+        mSessionManager.addValueToSession(getApplicationContext(), AppConstants.USER_SESSION_NAME,
+                AppConstants.FB_ID_KEY, accountId);
+        startActivity(new Intent(VerificationActivity.this, MainActivity.class));
+        finish();
+        String versionCode = String.valueOf(BuildConfig.VERSION_CODE);
+        String deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+        String deviceType = Build.DEVICE;
+        referralCodePass = referralCodeET.getVisibility() == View.VISIBLE ? referralCodeET.getText().toString().trim() : referralCodePass;
+        myUtility.printLogcat("Referral:::"+referralCodePass);
+        pd.setMessage(AppConstants.LOGIN_API_CALL_DIALOG_MSG);
+        pd.show();
+        paymentId=statusMessage;
+        mLoginPresenter.callUpdateLoginAPI(AppConstants.REGISTER_LOGIN_API, accountId, mobileNumberStr, versionCode, paymentId,
+                nameStr, emailIdStr, "99", AppConstants.OS_NAME_VALUE, deviceId, deviceType, referralCodePass);
     }
 
     /**
