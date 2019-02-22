@@ -1,10 +1,8 @@
 package com.unsullied.chottabheem.activity;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -23,9 +21,7 @@ import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.payumoney.core.PayUmoneySdkInitializer;
-import com.payumoney.core.entity.TransactionResponse;
 import com.payumoney.sdkui.ui.utils.PayUmoneyFlowManager;
-import com.payumoney.sdkui.ui.utils.ResultModel;
 import com.razorpay.PaymentResultListener;
 import com.unsullied.chottabheem.BuildConfig;
 import com.unsullied.chottabheem.R;
@@ -41,9 +37,6 @@ import com.unsullied.chottabheem.utils.mvp.LoginPresenter;
 import com.unsullied.chottabheem.utils.mvp.PaymentGatewayMVP;
 import com.unsullied.chottabheem.utils.mvp.PaymentGatewayPresenter;
 import com.unsullied.chottabheem.utils.paymentgateway.AppPreference;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.List;
 
@@ -161,9 +154,9 @@ public class VerificationActivity extends AppCompatActivity implements View.OnCl
                         referralCodePass = referralCodeET.getVisibility() == View.VISIBLE ? referralCodeET.getText().toString().trim() : referralCodePass;
                         myUtility.printLogcat("Referral:::"+referralCodePass);
 
-                       /* mLoginPresenter.callUpdateLoginAPI(AppConstants.REGISTER_LOGIN_API, accountId, mobileNumberStr, versionCode, paymentId,
-                                nameStr, emailIdStr, "99", AppConstants.OS_NAME_VALUE, deviceId, deviceType, referralCodePass);*/
-                       mPaymentGatewayPresenter.startPayment(mContext,mActivity,"Subscription","10000",emailIdStr,mobileNumberStr);
+                        mLoginPresenter.callUpdateLoginAPI(AppConstants.REGISTER_LOGIN_API, accountId, mobileNumberStr, versionCode, paymentId,
+                                nameStr, emailIdStr, "99", AppConstants.OS_NAME_VALUE, deviceId, deviceType, referralCodePass);
+                      // mPaymentGatewayPresenter.startPayment(mContext,mActivity,"Subscription","10000",emailIdStr,mobileNumberStr);
 
                       /*  mSessionManager.addValueToSession(getApplicationContext(), AppConstants.USER_SESSION_NAME,
                                 AppConstants.USER_NAME_KEY, nameStr);

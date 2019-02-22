@@ -117,7 +117,7 @@
     <string name="commentsStr">Comments</string>
     <string name="pointStr">point(s)</string>
     <string name="languageStr">Language</string>
-    <string name="phoneNumberStr">Phone number</string>
+    <string name="phoneNumberStr">Mobile number</string>
     <string name="referralProgressStr">Referral Progress</string>
     <string name="logoutStr">Logout</string>
     
@@ -129,5 +129,14 @@
     <string name="enterCommentsStr">Enter your comments</string>
 
 <string name="noDataFoundStr">No more data found</string>
+
+    <string name="privacyPolicyGeneral"><b><u>Aadhavan Associates</u></b>​ (us,we,or our) operates the Chotta Bheem mobile application.\n\n
+This page informs you of our policies regarding the collection, use, and disclosure of
+personal data when you use our Service and the choices you have associated with that data.\n\n
+We use your data to provide and improve the Service. By using the Service, you agree to the
+collection and use of information in accordance with this policy. Unless otherwise defined in
+this Privacy Policy, terms used in this Privacy Policy have the same meanings as in our
+Terms and Conditions.</string>
+    <string name="infoEmail"><u>info@adhavanassociates.com</u></string>
 
 </resources>

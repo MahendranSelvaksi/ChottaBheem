@@ -1,6 +1,7 @@
 package com.unsullied.chottabheem.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,6 +11,7 @@ import android.view.ViewGroup;
 
 import com.unsullied.chottabheem.R;
 import com.unsullied.chottabheem.utils.BaseFragment;
+import com.unsullied.chottabheem.utils.CustomTextView;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -30,6 +32,7 @@ public class PrivatePolicyFragment extends BaseFragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+    private CustomTextView infoMailTV;
 
     public PrivatePolicyFragment() {
         // Required empty public constructor
@@ -66,7 +69,17 @@ public class PrivatePolicyFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_private_policy, container, false);
+        View rootView=inflater.inflate(R.layout.fragment_private_policy, container, false);
+
+        infoMailTV=rootView.findViewById(R.id.infoMailTV);
+
+        infoMailTV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:info@adhavanassociates.com")));
+            }
+        });
+        return rootView;
     }
 
 
