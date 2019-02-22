@@ -176,6 +176,11 @@ public class FTTFragment extends Fragment implements PlansMVP.PlansView,PaymentG
     }
 
     @Override
+    public void paymentGatewayStatus(int statusCode, String statusMessage) {
+
+    }
+
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 

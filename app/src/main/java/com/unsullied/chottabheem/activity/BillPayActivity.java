@@ -402,6 +402,11 @@ public class BillPayActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     @Override
+    public void paymentGatewayStatus(int statusCode, String statusMessage) {
+
+    }
+
+    @Override
     public void showSuccess(JSONObject successJSON) {
 
     }

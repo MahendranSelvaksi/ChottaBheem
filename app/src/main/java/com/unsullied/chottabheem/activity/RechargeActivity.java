@@ -492,6 +492,11 @@ public class RechargeActivity extends AppCompatActivity implements View.OnClickL
     }
 
     @Override
+    public void paymentGatewayStatus(int statusCode, String statusMessage) {
+
+    }
+
+    @Override
     public void showSuccess(JSONObject successJSON) {
 
     }

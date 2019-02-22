@@ -59,7 +59,7 @@ public class OperationSelectionAdapter extends /*SectionedRecyclerViewAdapter*/ 
     }
 
     @Override
-    protected void onBindSectionHeaderViewHolder(RecyclerView.ViewHolder holder, int section) {
+    protected void onBindSectionHeaderViewHolder(final RecyclerView.ViewHolder holder, final int section) {
         if (holder instanceof HeaderHolder) {
             ((HeaderHolder) holder).mSubheaderText.setText(mData.get(section).getOperatorName().trim());
             ((HeaderHolder) holder).mSubheaderText.setOnClickListener(new View.OnClickListener() {
@@ -97,7 +97,7 @@ public class OperationSelectionAdapter extends /*SectionedRecyclerViewAdapter*/ 
     }
 
     @Override
-    protected void onBindItemViewHolder(RecyclerView.ViewHolder holder, int section, int position) {
+    protected void onBindItemViewHolder(RecyclerView.ViewHolder holder, final int section, final int position) {
         if (holder instanceof CircleHolder) {
             ((CircleHolder) holder).circleTV.setText(mData.get(section).getCircleList().get(position).getCircleName());
             ((CircleHolder) holder).circleTV.setOnClickListener(new View.OnClickListener() {

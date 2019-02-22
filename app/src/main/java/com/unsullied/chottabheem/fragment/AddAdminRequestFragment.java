@@ -128,7 +128,7 @@ public class AddAdminRequestFragment extends BaseFragment implements ProfileMVP.
         super.onViewCreated(view, savedInstanceState);
         mContext = getActivity();
         mOperaterList = new ArrayList<>();
-        String[] operatorArry = getResources().getStringArray(R.array.operatorArry);
+        final String[] operatorArry = getResources().getStringArray(R.array.operatorArry);
         mOperaterList.addAll(Arrays.asList(operatorArry));
         startValueTV.setText("0");
         endValueTV.setText("1500");

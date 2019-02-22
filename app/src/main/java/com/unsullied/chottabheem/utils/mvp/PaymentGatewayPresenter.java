@@ -14,6 +14,7 @@ import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.JSONObjectRequestListener;
 import com.payumoney.core.PayUmoneyConfig;
 import com.payumoney.core.PayUmoneySdkInitializer;
+
 import com.razorpay.Checkout;
 import com.razorpay.PaymentResultListener;
 import com.unsullied.chottabheem.BuildConfig;
@@ -146,7 +147,7 @@ product_info:Subscription
 customer_name:Prashanth
 customer_email:test@test.com"*//*
     }*/
-    @Override
+   /* @Override
     public void generateHashFromServer(String mobileNumber, String accountId, String name, String email, String payableAmount, String productInfo, String buttonText,
                                        String pageTitle) {
         if (ConnectivityReceiver.isConnected()) {
@@ -248,31 +249,12 @@ customer_email:test@test.com"*//*
 
                                 try {
                                     mPaymentParams = builder.build();
-                                   /* String hashSequence = responseJSON.getString("mkey")+"|"+ responseJSON.getString("tid") +"|"+ amount +"|"+ productInfo +"|"+ name +"|"+ email+" |"+ udf1 +"|"+ udf2 +"|"+ udf3 +"|"+ udf4 +"|"+ udf5 +"||||||"+responseJSON.getString("salt_key");
-                                    mPaymentParams.setMerchantHash(hashCal("SHA-512", hashSequence));*/
+                                   *//* String hashSequence = responseJSON.getString("mkey")+"|"+ responseJSON.getString("tid") +"|"+ amount +"|"+ productInfo +"|"+ name +"|"+ email+" |"+ udf1 +"|"+ udf2 +"|"+ udf3 +"|"+ udf4 +"|"+ udf5 +"||||||"+responseJSON.getString("salt_key");
+                                    mPaymentParams.setMerchantHash(hashCal("SHA-512", hashSequence));*//*
                                     mPaymentParams.setMerchantHash(responseJSON.getString("hash"));
                                     mView.getSuccessfulHash(mPaymentParams);
 
-               /* if (AppPreference.selectedTheme != -1) {
-                    PayUmoneyFlowManager.startPayUMoneyFlow(mPaymentParams, mActivity, AppPreference.selectedTheme, mAppPreference.isOverrideResultScreen());
-                } else {
-                    PayUmoneyFlowManager.startPayUMoneyFlow(mPaymentParams, mActivity, R.style.AppTheme_default, mAppPreference.isOverrideResultScreen());
-                }*/
-                                    //   mView.getSuccessfulHash(mPaymentParams);
-                                    // String hashSequence = responseJSON.getString("mkey")+"|"+ responseJSON.getString("tid") +"|"+ amount +"|"+ productInfo +"|"+ name +"|"+ email+" |"+ udf1 +"|"+ udf2 +"|"+ udf3 +"|"+ udf4 +"|"+ udf5 +"||||||"+name;
-                                    //   String serverCalculatedHash = hashCal("SHA-512", hashSequence);
-             /*                                   *
-                                     * Do not use below code when going live
-                                     * Below code is provided to generate hash from sdk.
-                                     * It is recommended to generate hash from server side only.
-                                     *
-            mPaymentParams = calculateServerSideHashAndInitiatePayment1(mPaymentParams);
 
-           if (AppPreference.selectedTheme != -1) {
-                PayUmoneyFlowManager.startPayUMoneyFlow(mPaymentParams,mActivity, AppPreference.selectedTheme,mAppPreference.isOverrideResultScreen());
-            } else {
-                PayUmoneyFlowManager.startPayUMoneyFlow(mPaymentParams,mActivity, R.style.AppTheme_default, mAppPreference.isOverrideResultScreen());
-            }*/
 
                                 } catch (Exception e) {
                                     // some exception occurred
@@ -313,29 +295,8 @@ customer_email:test@test.com"*//*
 
             });
 
-            /*request.getAsJSONObject(new JSONObjectRequestListener() {
-                @Override
-                public void onResponse(JSONObject response) {
-                    try {
-                        myUtility.printLogcat("Login API Response:::" + response.toString());
 
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                @Override
-                public void onError(ANError anError) {
-                    myUtility.printLogcat("ErrorCode:::" + anError.getErrorCode());
-                    myUtility.printLogcat("ErrorMessage:::" + anError.getErrorDetail());
-                    myUtility.printLogcat("ErrorBody:::" + anError.getErrorBody());
-                  //  mView.showError(anError.getErrorCode(), anError.getErrorDetail());
-                }
-            });
-        } else {
-            //  Toast.makeText(this, "" + AppConstants.NO_CONNECTION_ERROR, Toast.LENGTH_SHORT).show();
         }*/
-        }
 
 
         /**
@@ -468,7 +429,7 @@ customer_email:test@test.com"*//*
     }*/
 
 
-    }
+
 
     public String hashCal(String type, String hashString) {
         StringBuilder hash = new StringBuilder();
@@ -487,14 +448,14 @@ customer_email:test@test.com"*//*
     }
 
     public void startPayment(Context mContext, Activity mActivity, String description, String amount) {
-        /*
-         To ensure faster loading of the Checkout form,
-          call this method as early as possible in your checkout flow.
-         */
+
+       /*  To ensure faster loading of the Checkout form,
+          call this method as early as possible in your checkout flow.*/
+
         Checkout.preload(mContext);
-        /*
-          You need to pass current activity in order to let Razorpay create CheckoutActivity
-         */
+
+         /* You need to pass current activity in order to let Razorpay create CheckoutActivity*/
+
         final Checkout co = new Checkout();
 
         try {
@@ -528,4 +489,8 @@ customer_email:test@test.com"*//*
     }
 
 
+    @Override
+    public void generateHashFromServer(String mobileNumber, String accountId, String name, String email, String payableAmount, String productInfo, String buttonText, String pageTitle) {
+
+    }
 }

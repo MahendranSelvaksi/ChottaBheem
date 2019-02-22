@@ -37,7 +37,7 @@ public class LoginPresenter implements LoginMVP.Presenter {
     }
 
     @Override
-    public void callLoginAPI(String apiName, String versioncode, String accountid, String phone, String loginType, String deviceId, String osName,
+    public void callLoginAPI(String apiName, String versioncode, final String accountid, String phone, String loginType, String deviceId, String osName,
                              String deviceType) {
         if (ConnectivityReceiver.isConnected()) {
             myUtility.printLogcat("api::::" + apiName);
