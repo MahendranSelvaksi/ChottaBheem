@@ -149,6 +149,12 @@
             android:name=".utils.TestService"
             android:exported="false" />
 
+        <meta-data
+            android:name="com.razorpay.ApiKey"
+            android:value="rzp_test_vRQQNdwHLoQK86"/>
+       <!--rzp_test_vRQQNdwHLoQK86-->
+        <!--rzp_live_yDoxmDlcWRq4ok-->
+
     </application>
 
 </manifest>

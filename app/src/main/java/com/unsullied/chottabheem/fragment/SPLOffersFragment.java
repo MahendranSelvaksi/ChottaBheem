@@ -48,7 +48,7 @@ import static android.app.Activity.RESULT_OK;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class SPLOffersFragment extends Fragment implements PlansMVP.PlansView,PaymentGatewayMVP.View{
+public class SPLOffersFragment extends Fragment implements PlansMVP.PlansView{
     private RelativeLayout includeLayout;
     private RecyclerView mRecyclerView;
     private CustomTextView mNoDataTV;
@@ -60,16 +60,38 @@ public class SPLOffersFragment extends Fragment implements PlansMVP.PlansView,Pa
     private ProgressDialog mProgressDialog;
     private Activity mActivity;
     private Utility myUtility;
-    private PaymentGatewayPresenter mPaymentGatewayPresenter;
+    private SPLOffersFragmentListener mListener;
     private String rechargeAmount;
-    private AppPreference mAppPreference;
-    private SessionManager sessionManager;
+
 
 
     public SPLOffersFragment() {
         // Required empty public constructor
     }
 
+    public static SPLOffersFragment newInstance(String param1) {
+        SPLOffersFragment fragment = new SPLOffersFragment();
+        Bundle args = new Bundle();
+        //args.putString(ARG_PARAM1, param1);
+        //args.putString(ARG_PARAM2, param2);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof SPLOffersFragmentListener) {
+            mListener = (SPLOffersFragmentListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnFragmentInteractionListener");
+        }
+    }
+
+    public interface SPLOffersFragmentListener{
+        void updateRechargeAmount(String rechargeAmount);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -80,10 +102,10 @@ public class SPLOffersFragment extends Fragment implements PlansMVP.PlansView,Pa
         mContext = getActivity();
         mActivity = getActivity();
         myUtility = new Utility();
-        mAppPreference = new AppPreference();
+
         mPlansData = new ArrayList<>();
         mPlansPresenter = new BrowsPlansPresenter(mContext, this);
-        mPaymentGatewayPresenter = new PaymentGatewayPresenter(mContext, mActivity, this);
+
         mProgressDialog = new ProgressDialog(mActivity);
         mProgressDialog.setCancelable(false);
         mProgressDialog.setMessage("Please wait...");
@@ -114,7 +136,7 @@ public class SPLOffersFragment extends Fragment implements PlansMVP.PlansView,Pa
                         sessionManager.getValueFromSessionByKey(mContext,AppConstants.USER_SESSION_NAME,AppConstants.USER_EMAIL_ID_KEY),
                         String.valueOf(rechargeAmount), "Recharge","Pay Now","Recharge");*/
 
-                long time = System.currentTimeMillis();
+               /* long time = System.currentTimeMillis();
                 try {
                     String url = AppConstants.RECHARGE_LIVE_URL + AppConstants.RECHARGE_API + AppConstants.FORMAT_KEY + AppConstants.FORMAT_JSON_VALUE +
                             AppConstants.TOKEN_KEY + AppConstants.TOKEN_VALUE + AppConstants.MOBILE_KEY + BrowsePlansActivity.selectedMobileNumber +
@@ -126,7 +148,8 @@ public class SPLOffersFragment extends Fragment implements PlansMVP.PlansView,Pa
                     //mRechargePresenter.callRechargeAPI(url);
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
-                }
+                }*/
+               mListener.updateRechargeAmount(rechargeAmount);
             }
 
             @Override
@@ -158,24 +181,7 @@ public class SPLOffersFragment extends Fragment implements PlansMVP.PlansView,Pa
         mNoDataTV.setText(errorMsg.trim());
     }
 
-    @Override
-    public void getSuccessfulHash(PayUmoneySdkInitializer.PaymentParam mPaymentParams) {
-        if (AppPreference.selectedTheme != -1) {
-            PayUmoneyFlowManager.startPayUMoneyFlow(mPaymentParams, mActivity, AppPreference.selectedTheme, mAppPreference.isOverrideResultScreen());
-        } else {
-            PayUmoneyFlowManager.startPayUMoneyFlow(mPaymentParams, mActivity, R.style.AppTheme_default, mAppPreference.isOverrideResultScreen());
-        }
-    }
 
-    @Override
-    public void showError(String errorMsg) {
-        Toast.makeText(mContext, errorMsg, Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void paymentGatewayStatus(int statusCode, String statusMessage) {
-
-    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

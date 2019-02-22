@@ -1,5 +1,7 @@
 package com.unsullied.chottabheem.activity;
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -15,6 +17,8 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
+import com.payumoney.core.PayUmoneySdkInitializer;
+import com.razorpay.PaymentResultListener;
 import com.unsullied.chottabheem.R;
 import com.unsullied.chottabheem.fragment.DataPlansFragment;
 import com.unsullied.chottabheem.fragment.FTTFragment;
@@ -23,14 +27,25 @@ import com.unsullied.chottabheem.fragment.SPLOffersFragment;
 import com.unsullied.chottabheem.fragment.TopupFragment;
 import com.unsullied.chottabheem.utils.AppConstants;
 import com.unsullied.chottabheem.utils.CustomTextView;
+import com.unsullied.chottabheem.utils.SessionManager;
+import com.unsullied.chottabheem.utils.Utility;
+import com.unsullied.chottabheem.utils.mvp.PaymentGatewayMVP;
+import com.unsullied.chottabheem.utils.mvp.PaymentGatewayPresenter;
+import com.unsullied.chottabheem.utils.mvp.RechargeMVP;
 
+import org.json.JSONObject;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import io.fabric.sdk.android.Fabric;
 
-public class BrowsePlansActivity extends AppCompatActivity {
+public class BrowsePlansActivity extends AppCompatActivity implements PaymentGatewayMVP.View,RechargeMVP.RechargeView,PaymentResultListener,
+        DataPlansFragment.DataPlansFragmentListener,FTTFragment.FTTFragmentListener,RoamingFragment.RoamingFragmentListener,
+        TopupFragment.TopupFragmentListener,SPLOffersFragment.SPLOffersFragmentListener{
 
     public static int operatorId = 0, selectedCircleId = 0;
     public static String emailIdStr, selectedMobileNumber;
@@ -49,9 +64,15 @@ public class BrowsePlansActivity extends AppCompatActivity {
     private ViewPager mViewPager;
     private TabLayout mTabLayout;
     private List<String> titleData;
+    private PaymentGatewayPresenter mPaymentGatewayPresenter;
     //public List<String> hintData;
     private Toolbar toolbar;
     private CustomTextView tittleTV;
+    private Context mContext;
+    private Activity mActivity;
+    private Utility myUtility;
+    private SessionManager sessionManager;
+    String rechargeAmount="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,12 +80,16 @@ public class BrowsePlansActivity extends AppCompatActivity {
         Fabric.with(this, new Crashlytics());
         setContentView(R.layout.activity_browse_plans);
 
+        mContext = getApplicationContext();
+        mActivity = this;
+        myUtility = new Utility();
+        sessionManager = new SessionManager();
         titleData = new ArrayList<>();
         operatorId = getIntent().getIntExtra(AppConstants.JSON_OPERATOR_ID_KEY, 0);
         selectedMobileNumber = getIntent().getStringExtra(AppConstants.USER_MOBILE_KEY);
         selectedCircleId = getIntent().getIntExtra(AppConstants.JSON_CIRCLE_ID_KEY, 0);
         emailIdStr = getIntent().getStringExtra(AppConstants.USER_EMAIL_ID_KEY);
-
+        mPaymentGatewayPresenter = new PaymentGatewayPresenter(mContext, mActivity, this);
         String[] titleArray = getResources().getStringArray(R.array.browse_plans_titles);
         String[] hintArray = getResources().getStringArray(R.array.browse_plans_key);
         titleData.addAll(Arrays.asList(titleArray));
@@ -169,6 +194,64 @@ public class BrowsePlansActivity extends AppCompatActivity {
         tabFive.setTextColor(ContextCompat.getColor(this, R.color.white));
         mTabLayout.getTabAt(4).setCustomView(tabFive);
 
+    }
+
+    @Override
+    public void onPaymentSuccess(String s) {
+        paymentGatewayStatus(0, s);
+    }
+
+    @Override
+    public void onPaymentError(int i, String s) {
+        paymentGatewayStatus(i, s);
+    }
+
+    @Override
+    public void updateRechargeAmount(String rechargeAmount) {
+        this.rechargeAmount=rechargeAmount;
+        mPaymentGatewayPresenter.startPayment(mContext,mActivity,"Recharge", rechargeAmount.concat("00"),
+                sessionManager.getValueFromSessionByKey(mContext,AppConstants.USER_SESSION_NAME,AppConstants.USER_EMAIL_ID_KEY),
+                sessionManager.getValueFromSessionByKey(mContext,AppConstants.USER_SESSION_NAME,AppConstants.USER_MOBILE_KEY));
+    }
+
+    @Override
+    public void getSuccessfulHash(PayUmoneySdkInitializer.PaymentParam mPaymentParam) {
+
+    }
+
+    @Override
+    public void showError(String errorMsg) {
+
+    }
+
+    @Override
+    public void showSuccess(JSONObject successJSON) {
+
+    }
+
+    @Override
+    public void clearView() {
+
+    }
+
+    @Override
+    public void paymentGatewayStatus(int statusCode, String statusMessage) {
+        if (statusCode == 0) {
+            long time = System.currentTimeMillis();
+            try {
+                String url = AppConstants.RECHARGE_LIVE_URL + AppConstants.RECHARGE_API + AppConstants.FORMAT_KEY + AppConstants.FORMAT_JSON_VALUE +
+                        AppConstants.TOKEN_KEY + AppConstants.TOKEN_VALUE + AppConstants.MOBILE_KEY + BrowsePlansActivity.selectedMobileNumber +
+                        AppConstants.AMOUNT_KEY + rechargeAmount + AppConstants.OPERATOR_ID_KEY + BrowsePlansActivity.operatorId +
+                        AppConstants.UNIQUE_ID_KEY + time + AppConstants.OPIONAL_VALUE1_KEY + URLEncoder.encode("Recharge", "utf-8") +
+                        AppConstants.OPIONAL_VALUE2_KEY + URLEncoder.encode("Recharge", "utf-8");
+                myUtility.printLogcat("API::::" + url);
+
+                //mRechargePresenter.callRechargeAPI(url);
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+
+        }
     }
 
     /**

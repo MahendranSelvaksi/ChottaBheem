@@ -31,6 +31,7 @@ import com.payumoney.core.PayUmoneySdkInitializer;
 import com.payumoney.core.entity.TransactionResponse;
 import com.payumoney.sdkui.ui.utils.PayUmoneyFlowManager;
 import com.payumoney.sdkui.ui.utils.ResultModel;
+import com.razorpay.PaymentResultListener;
 import com.unsullied.chottabheem.R;
 import com.unsullied.chottabheem.utils.AppConstants;
 import com.unsullied.chottabheem.utils.AppController;
@@ -57,7 +58,7 @@ import io.fabric.sdk.android.Fabric;
 
 import static com.unsullied.chottabheem.utils.AppConstants.PICK_CONTACT;
 
-public class BillPayActivity extends AppCompatActivity implements View.OnClickListener, RechargeMVP.RechargeView, PaymentGatewayMVP.View {
+public class BillPayActivity extends AppCompatActivity implements View.OnClickListener, RechargeMVP.RechargeView, PaymentGatewayMVP.View, PaymentResultListener {
 
     Toolbar toolbar;
     private TextView tittleTV;
@@ -170,13 +171,13 @@ public class BillPayActivity extends AppCompatActivity implements View.OnClickLi
         amountLayout.setVisibility(View.GONE);
         numberLayout.setVisibility(View.GONE);
 
-        mobileNumberET.setFilters(new InputFilter[]{smileyRemover,symbolsRemover});
-        operatorET.setFilters(new InputFilter[]{smileyRemover,symbolsRemover});
-        amountET.setFilters(new InputFilter[]{smileyRemover,symbolsRemover});
-        optionValue1ET.setFilters(new InputFilter[]{smileyRemover,symbolsRemover});
-        optionValue2ET.setFilters(new InputFilter[]{smileyRemover,symbolsRemover});
-        optionValue3ET.setFilters(new InputFilter[]{smileyRemover,symbolsRemover});
-        optionValue4ET.setFilters(new InputFilter[]{smileyRemover,symbolsRemover});
+        mobileNumberET.setFilters(new InputFilter[]{smileyRemover, symbolsRemover});
+        operatorET.setFilters(new InputFilter[]{smileyRemover, symbolsRemover});
+        amountET.setFilters(new InputFilter[]{smileyRemover, symbolsRemover});
+        optionValue1ET.setFilters(new InputFilter[]{smileyRemover, symbolsRemover});
+        optionValue2ET.setFilters(new InputFilter[]{smileyRemover, symbolsRemover});
+        optionValue3ET.setFilters(new InputFilter[]{smileyRemover, symbolsRemover});
+        optionValue4ET.setFilters(new InputFilter[]{smileyRemover, symbolsRemover});
 
         showHide();
         nameStr = mSessionManager.getValueFromSessionByKey(mContext, AppConstants.USER_SESSION_NAME, AppConstants.USER_NAME_KEY);
@@ -302,19 +303,9 @@ public class BillPayActivity extends AppCompatActivity implements View.OnClickLi
                         .setMessage("Successfully Added payment....")
                         .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
-                                long time = System.currentTimeMillis();
-                                try {
-                                    String url = AppConstants.RECHARGE_LIVE_URL + AppConstants.RECHARGE_API + AppConstants.FORMAT_KEY + AppConstants.FORMAT_JSON_VALUE +
-                                            AppConstants.TOKEN_KEY + AppConstants.TOKEN_VALUE + AppConstants.MOBILE_KEY + selectedMobileNumber +
-                                            AppConstants.AMOUNT_KEY + rechargeAmount + AppConstants.OPERATOR_ID_KEY + selectedOperatorId +
-                                            AppConstants.UNIQUE_ID_KEY + time + AppConstants.OPIONAL_VALUE1_KEY + URLEncoder.encode(intentTitleStr, "utf-8") +
-                                            AppConstants.OPIONAL_VALUE2_KEY + URLEncoder.encode("Recharge", "utf-8");
-                                    myUtility.printLogcat("API::::" + url);
-
-                                    //mRechargePresenter.callRechargeAPI(url);
-                                } catch (UnsupportedEncodingException e) {
-                                    e.printStackTrace();
-                                }
+                                mPaymentGatewayPresenter.startPayment(mContext,mActivity,"Recharge", String.valueOf(rechargeAmount).concat("00"),
+                                        mSessionManager.getValueFromSessionByKey(mContext,AppConstants.USER_SESSION_NAME,AppConstants.USER_EMAIL_ID_KEY),
+                                        mSessionManager.getValueFromSessionByKey(mContext,AppConstants.USER_SESSION_NAME,AppConstants.USER_MOBILE_KEY));
 
                                 dialog.dismiss();
                             }
@@ -403,7 +394,21 @@ public class BillPayActivity extends AppCompatActivity implements View.OnClickLi
 
     @Override
     public void paymentGatewayStatus(int statusCode, String statusMessage) {
+        if (statusCode == 0) {
+            long time = System.currentTimeMillis();
+            try {
+                String url = AppConstants.RECHARGE_LIVE_URL + AppConstants.RECHARGE_API + AppConstants.FORMAT_KEY + AppConstants.FORMAT_JSON_VALUE +
+                        AppConstants.TOKEN_KEY + AppConstants.TOKEN_VALUE + AppConstants.MOBILE_KEY + selectedMobileNumber +
+                        AppConstants.AMOUNT_KEY + rechargeAmount + AppConstants.OPERATOR_ID_KEY + selectedOperatorId +
+                        AppConstants.UNIQUE_ID_KEY + time + AppConstants.OPIONAL_VALUE1_KEY + URLEncoder.encode(intentTitleStr, "utf-8") +
+                        AppConstants.OPIONAL_VALUE2_KEY + URLEncoder.encode("Recharge", "utf-8");
+                myUtility.printLogcat("API::::" + url);
 
+                //mRechargePresenter.callRechargeAPI(url);
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override
@@ -509,5 +514,15 @@ public class BillPayActivity extends AppCompatActivity implements View.OnClickLi
 
     private void updateServiceProviderUI() {
         operatorET.setText(selectedServiceProvider.concat("(" + selectedLocation + ")"));
+    }
+
+    @Override
+    public void onPaymentSuccess(String s) {
+paymentGatewayStatus(0,s);
+    }
+
+    @Override
+    public void onPaymentError(int i, String s) {
+        paymentGatewayStatus(i,s);
     }
 }

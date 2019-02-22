@@ -48,7 +48,7 @@ import static android.app.Activity.RESULT_OK;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class DataPlansFragment extends Fragment implements PlansMVP.PlansView, PaymentGatewayMVP.View {
+public class DataPlansFragment extends Fragment implements PlansMVP.PlansView {
 
     private RelativeLayout includeLayout;
     private RecyclerView mRecyclerView;
@@ -61,15 +61,35 @@ public class DataPlansFragment extends Fragment implements PlansMVP.PlansView, P
     private ProgressDialog mProgressDialog;
     private Activity mActivity;
     private Utility myUtility;
-    private PaymentGatewayPresenter mPaymentGatewayPresenter;
+
+    private DataPlansFragmentListener mListener;
     private String rechargeAmount;
     private AppPreference mAppPreference;
-    private SessionManager sessionManager;
+
 
     public DataPlansFragment() {
         // Required empty public constructor
     }
 
+    public static DataPlansFragment newInstance(String param1) {
+        DataPlansFragment fragment = new DataPlansFragment();
+        Bundle args = new Bundle();
+        //args.putString(ARG_PARAM1, param1);
+        //args.putString(ARG_PARAM2, param2);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof DataPlansFragmentListener) {
+            mListener = (DataPlansFragmentListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnFragmentInteractionListener");
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -82,9 +102,9 @@ public class DataPlansFragment extends Fragment implements PlansMVP.PlansView, P
         myUtility = new Utility();
         mAppPreference = new AppPreference();
         mPlansData = new ArrayList<>();
-        sessionManager=new SessionManager();
+
         mPlansPresenter = new BrowsPlansPresenter(mContext, this);
-        mPaymentGatewayPresenter = new PaymentGatewayPresenter(mContext, mActivity, this);
+
         mProgressDialog = new ProgressDialog(mActivity);
         mProgressDialog.setCancelable(false);
         mProgressDialog.setMessage("Please wait...");
@@ -114,20 +134,11 @@ public class DataPlansFragment extends Fragment implements PlansMVP.PlansView, P
                         sessionManager.getValueFromSessionByKey(mContext,AppConstants.USER_SESSION_NAME,AppConstants.USER_NAME_KEY),
                         sessionManager.getValueFromSessionByKey(mContext,AppConstants.USER_SESSION_NAME,AppConstants.USER_EMAIL_ID_KEY),
                 String.valueOf(rechargeAmount), "Recharge","Pay Now","Recharge");*/
+              /*  mPaymentGatewayPresenter.startPayment(mContext,mActivity,"Recharge", String.valueOf(rechargeAmount).concat("00"),
+                        sessionManager.getValueFromSessionByKey(mContext,AppConstants.USER_SESSION_NAME,AppConstants.USER_EMAIL_ID_KEY),
+                        sessionManager.getValueFromSessionByKey(mContext,AppConstants.USER_SESSION_NAME,AppConstants.USER_MOBILE_KEY));*/
+                mListener.updateRechargeAmount(String.valueOf(rechargeAmount).concat("00"));
 
-                long time = System.currentTimeMillis();
-                try {
-                    String url = AppConstants.RECHARGE_LIVE_URL + AppConstants.RECHARGE_API + AppConstants.FORMAT_KEY + AppConstants.FORMAT_JSON_VALUE +
-                            AppConstants.TOKEN_KEY + AppConstants.TOKEN_VALUE + AppConstants.MOBILE_KEY + BrowsePlansActivity.selectedMobileNumber +
-                            AppConstants.AMOUNT_KEY + rechargeAmount + AppConstants.OPERATOR_ID_KEY + BrowsePlansActivity.operatorId +
-                            AppConstants.UNIQUE_ID_KEY + time + AppConstants.OPIONAL_VALUE1_KEY + URLEncoder.encode("Recharge", "utf-8") +
-                            AppConstants.OPIONAL_VALUE2_KEY + URLEncoder.encode("Recharge", "utf-8");
-                    myUtility.printLogcat("API::::" + url);
-
-                    //mRechargePresenter.callRechargeAPI(url);
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
             }
 
             @Override
@@ -160,26 +171,9 @@ public class DataPlansFragment extends Fragment implements PlansMVP.PlansView, P
         mNoDataTV.setText(errorMsg.trim());
     }
 
-    @Override
-    public void getSuccessfulHash(PayUmoneySdkInitializer.PaymentParam mPaymentParams) {
-        if (AppPreference.selectedTheme != -1) {
-            PayUmoneyFlowManager.startPayUMoneyFlow(mPaymentParams, mActivity, AppPreference.selectedTheme, mAppPreference.isOverrideResultScreen());
-        } else {
-            PayUmoneyFlowManager.startPayUMoneyFlow(mPaymentParams, mActivity, R.style.AppTheme_default, mAppPreference.isOverrideResultScreen());
-        }
-    }
 
-    @Override
-    public void showError(String errorMsg) {
-        Toast.makeText(mContext, errorMsg, Toast.LENGTH_SHORT).show();
-    }
 
-    @Override
-    public void paymentGatewayStatus(int statusCode, String statusMessage) {
-
-    }
-
-    @Override
+   /* @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
@@ -236,5 +230,9 @@ public class DataPlansFragment extends Fragment implements PlansMVP.PlansView, P
                 myUtility.printLogcat("Both objects are null!");
             }
         }
+    }*/
+
+    public interface DataPlansFragmentListener{
+         void updateRechargeAmount(String rechargeAmount);
     }
 }

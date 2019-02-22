@@ -26,6 +26,7 @@ import com.payumoney.core.PayUmoneySdkInitializer;
 import com.payumoney.core.entity.TransactionResponse;
 import com.payumoney.sdkui.ui.utils.PayUmoneyFlowManager;
 import com.payumoney.sdkui.ui.utils.ResultModel;
+import com.razorpay.PaymentResultListener;
 import com.unsullied.chottabheem.BuildConfig;
 import com.unsullied.chottabheem.R;
 import com.unsullied.chottabheem.utils.AppConstants;
@@ -48,7 +49,7 @@ import java.util.List;
 
 import io.fabric.sdk.android.Fabric;
 
-public class VerificationActivity extends AppCompatActivity implements View.OnClickListener, LoginMVP.View, PaymentGatewayMVP.View {
+public class VerificationActivity extends AppCompatActivity implements View.OnClickListener, LoginMVP.View, PaymentGatewayMVP.View , PaymentResultListener {
 
     Toolbar toolbar;
     private Button submitBtn;
@@ -159,9 +160,10 @@ public class VerificationActivity extends AppCompatActivity implements View.OnCl
                         String deviceType = Build.DEVICE;
                         referralCodePass = referralCodeET.getVisibility() == View.VISIBLE ? referralCodeET.getText().toString().trim() : referralCodePass;
                         myUtility.printLogcat("Referral:::"+referralCodePass);
+
                        /* mLoginPresenter.callUpdateLoginAPI(AppConstants.REGISTER_LOGIN_API, accountId, mobileNumberStr, versionCode, paymentId,
                                 nameStr, emailIdStr, "99", AppConstants.OS_NAME_VALUE, deviceId, deviceType, referralCodePass);*/
-                       mPaymentGatewayPresenter.startPayment(mContext,mActivity,"Subscription","9900");
+                       mPaymentGatewayPresenter.startPayment(mContext,mActivity,"Subscription","10000",emailIdStr,mobileNumberStr);
 
                       /*  mSessionManager.addValueToSession(getApplicationContext(), AppConstants.USER_SESSION_NAME,
                                 AppConstants.USER_NAME_KEY, nameStr);
@@ -191,7 +193,7 @@ public class VerificationActivity extends AppCompatActivity implements View.OnCl
         return key + "=" + value + "&";
     }
 
-    @Override
+    /*@Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
@@ -265,7 +267,7 @@ public class VerificationActivity extends AppCompatActivity implements View.OnCl
                 myUtility.printLogcat("Both objects are null!");
             }
         }
-    }
+    }*/
 
     @Override
     public void showSuccess(int code, String message) {
@@ -342,94 +344,16 @@ public class VerificationActivity extends AppCompatActivity implements View.OnCl
                 nameStr, emailIdStr, "99", AppConstants.OS_NAME_VALUE, deviceId, deviceType, referralCodePass);
     }
 
-    /**
-     * This AsyncTask generates hash from server.
-     *//*
-    private class GetHashesFromServerTask extends AsyncTask<String, String, String> {
-        private ProgressDialog progressDialog;
+    @Override
+    public void onPaymentSuccess(String s) {
+        myUtility.printLogcat("Payment Success:::::"+s);
+        //paymentGatewayStatus(0, s);
+    }
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            progressDialog = new ProgressDialog(VerificationActivity.this);
-            progressDialog.setMessage("Please wait...");
-            progressDialog.show();
-        }
-
-        @Override
-        protected String doInBackground(String... postParams) {
-
-            String merchantHash = "";
-            try {
-                //TODO Below url is just for testing purpose, merchant needs to replace this with their server side hash generation url
-                URL url = new URL("https://payu.herokuapp.com/get_hash");
-
-                String postParam = postParams[0];
-
-                byte[] postParamsByte = postParam.getBytes("UTF-8");
-
-                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                conn.setRequestMethod("POST");
-                conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-                conn.setRequestProperty("Content-Length", String.valueOf(postParamsByte.length));
-                conn.setDoOutput(true);
-                conn.getOutputStream().write(postParamsByte);
-
-                InputStream responseInputStream = conn.getInputStream();
-                StringBuffer responseStringBuffer = new StringBuffer();
-                byte[] byteContainer = new byte[1024];
-                for (int i; (i = responseInputStream.read(byteContainer)) != -1; ) {
-                    responseStringBuffer.append(new String(byteContainer, 0, i));
-                }
-
-                JSONObject response = new JSONObject(responseStringBuffer.toString());
-
-                Iterator<String> payuHashIterator = response.keys();
-                while (payuHashIterator.hasNext()) {
-                    String key = payuHashIterator.next();
-                    switch (key) {
-                        *//**
-     * This hash is mandatory and needs to be generated from merchant's server side
-     *
-     *//*
-                        case "payment_hash":
-                            merchantHash = response.getString(key);
-                            break;
-                        default:
-                            break;
-                    }
-                }
-
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            } catch (ProtocolException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            return merchantHash;
-        }
-
-        @Override
-        protected void onPostExecute(String merchantHash) {
-            super.onPostExecute(merchantHash);
-
-            progressDialog.dismiss();
-            // payNowButton.setEnabled(true);
-
-            if (merchantHash.isEmpty() || merchantHash.equals("")) {
-                Toast.makeText(VerificationActivity.this, "Could not generate hash", Toast.LENGTH_SHORT).show();
-            } else {
-                mPaymentParams.setMerchantHash(merchantHash);
-
-                if (AppPreference.selectedTheme != -1) {
-                    PayUmoneyFlowManager.startPayUMoneyFlow(mPaymentParams, VerificationActivity.this, AppPreference.selectedTheme, mAppPreference.isOverrideResultScreen());
-                } else {
-                    PayUmoneyFlowManager.startPayUMoneyFlow(mPaymentParams, VerificationActivity.this, R.style.AppTheme_default, mAppPreference.isOverrideResultScreen());
-                }
-            }
-        }
-    }*/
+    @Override
+    public void onPaymentError(int i, String s) {
+        myUtility.printLogcat("Payment Error:::::"+s);
+        myUtility.printLogcat("Payment Error code:::::"+i);
+       // paymentGatewayStatus(i, s);
+    }
 }

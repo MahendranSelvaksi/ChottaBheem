@@ -36,6 +36,7 @@ import com.payumoney.core.PayUmoneySdkInitializer;
 import com.payumoney.core.entity.TransactionResponse;
 import com.payumoney.sdkui.ui.utils.PayUmoneyFlowManager;
 import com.payumoney.sdkui.ui.utils.ResultModel;
+import com.razorpay.PaymentResultListener;
 import com.unsullied.chottabheem.R;
 import com.unsullied.chottabheem.utils.AppConstants;
 import com.unsullied.chottabheem.utils.AppController;
@@ -62,7 +63,7 @@ import io.fabric.sdk.android.Fabric;
 
 import static com.unsullied.chottabheem.utils.AppConstants.PICK_CONTACT;
 
-public class RechargeActivity extends AppCompatActivity implements View.OnClickListener, RechargeMVP.RechargeView, PaymentGatewayMVP.View {
+public class RechargeActivity extends AppCompatActivity implements View.OnClickListener, RechargeMVP.RechargeView, PaymentGatewayMVP.View, PaymentResultListener {
 
     Toolbar toolbar;
     private TextView tittleTV;
@@ -143,7 +144,6 @@ public class RechargeActivity extends AppCompatActivity implements View.OnClickL
         rechargeTitleTV = findViewById(R.id.rechargeTitleTV);
         browsePlansTV = findViewById(R.id.browsePlansTV);
         rechargeIconIV = findViewById(R.id.rechargeIconIV);
-
 
 
         myUtility.printLogcat("Image ::::" + pageIcon);
@@ -326,7 +326,7 @@ public class RechargeActivity extends AppCompatActivity implements View.OnClickL
                     Toast.makeText(this, "Please enter recharge amount...", Toast.LENGTH_SHORT).show();
                 }
             } else {
-               // mPaymentGatewayPresenter.launchPayUMoneyFlow(String.valueOf(rechargeAmount), selectedMobileNumber, emailIdStr);
+                // mPaymentGatewayPresenter.launchPayUMoneyFlow(String.valueOf(rechargeAmount), selectedMobileNumber, emailIdStr);
                /* mPaymentGatewayPresenter.generateHashFromServer(selectedMobileNumber,
                         mSessionManager.getValueFromSessionByKey(mContext,AppConstants.USER_SESSION_NAME,AppConstants.FB_ID_KEY),
                         nameStr,emailIdStr, String.valueOf(rechargeAmount),
@@ -403,20 +403,10 @@ public class RechargeActivity extends AppCompatActivity implements View.OnClickL
                         .setMessage("Successfully Added payment....")
                         .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
-                                long time = System.currentTimeMillis();
-                                try {
-                                    String url = AppConstants.RECHARGE_LIVE_URL + AppConstants.RECHARGE_API + AppConstants.FORMAT_KEY + AppConstants.FORMAT_JSON_VALUE +
-                                            AppConstants.TOKEN_KEY + AppConstants.TOKEN_VALUE + AppConstants.MOBILE_KEY + selectedMobileNumber +
-                                            AppConstants.AMOUNT_KEY + "10" + AppConstants.OPERATOR_ID_KEY + selectedOperatorId +
-                                            AppConstants.UNIQUE_ID_KEY + time + AppConstants.OPIONAL_VALUE1_KEY + URLEncoder.encode(intentTitleStr, "utf-8") +
-                                            AppConstants.OPIONAL_VALUE2_KEY + URLEncoder.encode("Recharge", "utf-8");
-                                    myUtility.printLogcat("API::::" + url);
 
-                                    mRechargePresenter.callRechargeAPI(url);
-                                } catch (UnsupportedEncodingException e) {
-                                    e.printStackTrace();
-                                }
-
+                                mPaymentGatewayPresenter.startPayment(mContext,mActivity,"Recharge",String.valueOf(rechargeAmount),
+                                        mSessionManager.getValueFromSessionByKey(mContext,AppConstants.USER_SESSION_NAME,AppConstants.USER_EMAIL_ID_KEY),
+                                        mSessionManager.getValueFromSessionByKey(mContext,AppConstants.USER_SESSION_NAME,AppConstants.USER_MOBILE_KEY));
                                 dialog.dismiss();
                             }
                         }).show();
@@ -493,7 +483,21 @@ public class RechargeActivity extends AppCompatActivity implements View.OnClickL
 
     @Override
     public void paymentGatewayStatus(int statusCode, String statusMessage) {
+        if (statusCode == 0) {
+            long time = System.currentTimeMillis();
+            try {
+                String url = AppConstants.RECHARGE_LIVE_URL + AppConstants.RECHARGE_API + AppConstants.FORMAT_KEY + AppConstants.FORMAT_JSON_VALUE +
+                        AppConstants.TOKEN_KEY + AppConstants.TOKEN_VALUE + AppConstants.MOBILE_KEY + selectedMobileNumber +
+                        AppConstants.AMOUNT_KEY + "10" + AppConstants.OPERATOR_ID_KEY + selectedOperatorId +
+                        AppConstants.UNIQUE_ID_KEY + time + AppConstants.OPIONAL_VALUE1_KEY + URLEncoder.encode(intentTitleStr, "utf-8") +
+                        AppConstants.OPIONAL_VALUE2_KEY + URLEncoder.encode("Recharge", "utf-8");
+                myUtility.printLogcat("API::::" + url);
 
+                mRechargePresenter.callRechargeAPI(url);
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override
@@ -638,4 +642,13 @@ public class RechargeActivity extends AppCompatActivity implements View.OnClickL
     }
 
 
+    @Override
+    public void onPaymentSuccess(String s) {
+        paymentGatewayStatus(0, s);
+    }
+
+    @Override
+    public void onPaymentError(int i, String s) {
+        paymentGatewayStatus(i, s);
+    }
 }

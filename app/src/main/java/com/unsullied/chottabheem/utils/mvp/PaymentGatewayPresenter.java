@@ -29,7 +29,7 @@ import org.json.JSONObject;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-public class PaymentGatewayPresenter implements PaymentGatewayMVP.Presenter, PaymentResultListener {
+public class PaymentGatewayPresenter implements PaymentGatewayMVP.Presenter {
 
     AppPreference mAppPreference;
     private PayUmoneySdkInitializer.PaymentParam mPaymentParams;
@@ -447,7 +447,7 @@ customer_email:test@test.com"*//*
         return hash.toString();
     }
 
-    public void startPayment(Context mContext, Activity mActivity, String description, String amount) {
+    public void startPayment(Context mContext, Activity mActivity, String description, String amount,String email,String contact) {
 
        /*  To ensure faster loading of the Checkout form,
           call this method as early as possible in your checkout flow.*/
@@ -466,8 +466,8 @@ customer_email:test@test.com"*//*
             options.put("amount", amount);
 
             JSONObject preFill = new JSONObject();
-            preFill.put("email", "ragulcse994@gmail.com");
-            preFill.put("contact", "9944724718");
+            preFill.put("email", email);
+            preFill.put("contact", contact);
 
             options.put("prefill", preFill);
 
@@ -478,15 +478,7 @@ customer_email:test@test.com"*//*
     }
 
 
-    @Override
-    public void onPaymentSuccess(String s) {
-        mView.paymentGatewayStatus(0, s);
-    }
 
-    @Override
-    public void onPaymentError(int i, String s) {
-        mView.paymentGatewayStatus(i, s);
-    }
 
 
     @Override

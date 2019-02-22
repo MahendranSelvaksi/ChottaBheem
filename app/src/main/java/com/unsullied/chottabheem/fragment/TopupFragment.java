@@ -48,7 +48,7 @@ import static android.app.Activity.RESULT_OK;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class TopupFragment extends Fragment implements PlansMVP.PlansView,PaymentGatewayMVP.View {
+public class TopupFragment extends Fragment implements PlansMVP.PlansView {
     private RelativeLayout includeLayout;
     private RecyclerView mRecyclerView;
     private CustomTextView mNoDataTV;
@@ -60,16 +60,37 @@ public class TopupFragment extends Fragment implements PlansMVP.PlansView,Paymen
     private ProgressDialog mProgressDialog;
     private Activity mActivity;
     private Utility myUtility;
-    private PaymentGatewayPresenter mPaymentGatewayPresenter;
+    private TopupFragmentListener mListener;
     private String rechargeAmount;
-    private AppPreference mAppPreference;
-    private SessionManager sessionManager;
+
 
 
     public TopupFragment() {
         // Required empty public constructor
     }
+    public static TopupFragment newInstance(String param1) {
+        TopupFragment fragment = new TopupFragment();
+        Bundle args = new Bundle();
+        //args.putString(ARG_PARAM1, param1);
+        //args.putString(ARG_PARAM2, param2);
+        fragment.setArguments(args);
+        return fragment;
+    }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof TopupFragmentListener) {
+            mListener = (TopupFragmentListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnFragmentInteractionListener");
+        }
+    }
+
+    public interface TopupFragmentListener{
+        void updateRechargeAmount(String rechargeAmount);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -80,10 +101,10 @@ public class TopupFragment extends Fragment implements PlansMVP.PlansView,Paymen
         mContext = getActivity();
         mActivity = getActivity();
         myUtility = new Utility();
-        mAppPreference = new AppPreference();
+
         mPlansData = new ArrayList<>();
         mPlansPresenter = new BrowsPlansPresenter(mContext, this);
-        mPaymentGatewayPresenter = new PaymentGatewayPresenter(mContext, mActivity, this);
+
         mProgressDialog = new ProgressDialog(mActivity);
         mProgressDialog.setCancelable(false);
         mProgressDialog.setMessage("Please wait...");
@@ -114,7 +135,7 @@ public class TopupFragment extends Fragment implements PlansMVP.PlansView,Paymen
                         sessionManager.getValueFromSessionByKey(mContext,AppConstants.USER_SESSION_NAME,AppConstants.USER_EMAIL_ID_KEY),
                         String.valueOf(rechargeAmount), "Recharge","Pay Now","Recharge");*/
 
-                long time = System.currentTimeMillis();
+               /* long time = System.currentTimeMillis();
                 try {
                     String url = AppConstants.RECHARGE_LIVE_URL + AppConstants.RECHARGE_API + AppConstants.FORMAT_KEY + AppConstants.FORMAT_JSON_VALUE +
                             AppConstants.TOKEN_KEY + AppConstants.TOKEN_VALUE + AppConstants.MOBILE_KEY + BrowsePlansActivity.selectedMobileNumber +
@@ -126,7 +147,8 @@ public class TopupFragment extends Fragment implements PlansMVP.PlansView,Paymen
                     //mRechargePresenter.callRechargeAPI(url);
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
-                }
+                }*/
+               mListener.updateRechargeAmount(rechargeAmount);
             }
 
             @Override
@@ -157,81 +179,5 @@ public class TopupFragment extends Fragment implements PlansMVP.PlansView,Paymen
         mNoDataTV.setVisibility(View.VISIBLE);
         mNoDataTV.setText(errorMsg.trim());
     }
-    @Override
-    public void getSuccessfulHash(PayUmoneySdkInitializer.PaymentParam mPaymentParams) {
-        if (AppPreference.selectedTheme != -1) {
-            PayUmoneyFlowManager.startPayUMoneyFlow(mPaymentParams, mActivity, AppPreference.selectedTheme, mAppPreference.isOverrideResultScreen());
-        } else {
-            PayUmoneyFlowManager.startPayUMoneyFlow(mPaymentParams, mActivity, R.style.AppTheme_default, mAppPreference.isOverrideResultScreen());
-        }
-    }
 
-    @Override
-    public void showError(String errorMsg) {
-        Toast.makeText(mContext, errorMsg, Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void paymentGatewayStatus(int statusCode, String statusMessage) {
-
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        // Result Code is -1 send from Payumoney activity
-        Log.d("MainActivity", "request code " + requestCode + " resultcode " + resultCode);
-        if (requestCode == PayUmoneyFlowManager.REQUEST_CODE_PAYMENT && resultCode == RESULT_OK && data !=
-                null) {
-            TransactionResponse transactionResponse = data.getParcelableExtra(PayUmoneyFlowManager
-                    .INTENT_EXTRA_TRANSACTION_RESPONSE);
-
-            ResultModel resultModel = data.getParcelableExtra(PayUmoneyFlowManager.ARG_RESULT);
-
-            // Check which object is non-null
-            if (transactionResponse != null && transactionResponse.getPayuResponse() != null) {
-                if (transactionResponse.getTransactionStatus().equals(TransactionResponse.TransactionStatus.SUCCESSFUL)) {
-                    //Success Transaction
-                } else {
-                    //Failure Transaction
-                }
-
-                // Response from Payumoney
-                String payuResponse = transactionResponse.getPayuResponse();
-
-                // Response from SURl and FURL
-                String merchantResponse = transactionResponse.getTransactionDetails();
-
-                new AlertDialog.Builder(mActivity)
-                        .setCancelable(false)
-                        .setTitle("Payment Status")
-                        .setMessage("Successfully Added payment....")
-                        .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int whichButton) {
-                                long time = System.currentTimeMillis();
-                                try {
-                                    String url = AppConstants.RECHARGE_LIVE_URL + AppConstants.RECHARGE_API + AppConstants.FORMAT_KEY + AppConstants.FORMAT_JSON_VALUE +
-                                            AppConstants.TOKEN_KEY + AppConstants.TOKEN_VALUE + AppConstants.MOBILE_KEY + BrowsePlansActivity.selectedMobileNumber +
-                                            AppConstants.AMOUNT_KEY + rechargeAmount + AppConstants.OPERATOR_ID_KEY + BrowsePlansActivity.operatorId +
-                                            AppConstants.UNIQUE_ID_KEY + time + AppConstants.OPIONAL_VALUE1_KEY + URLEncoder.encode("", "utf-8") +
-                                            AppConstants.OPIONAL_VALUE2_KEY + URLEncoder.encode("Recharge", "utf-8");
-                                    myUtility.printLogcat("API::::" + url);
-
-                                    //mRechargePresenter.callRechargeAPI(url);
-                                } catch (UnsupportedEncodingException e) {
-                                    e.printStackTrace();
-                                }
-
-                                dialog.dismiss();
-                            }
-                        }).show();
-
-            } else if (resultModel != null && resultModel.getError() != null) {
-                myUtility.printLogcat("Error response : " + resultModel.getError().getTransactionResponse());
-            } else {
-                myUtility.printLogcat("Both objects are null!");
-            }
-        }
-    }
 }
