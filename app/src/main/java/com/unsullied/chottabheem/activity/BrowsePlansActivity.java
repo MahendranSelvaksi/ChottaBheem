@@ -259,7 +259,9 @@ public class BrowsePlansActivity extends AppCompatActivity implements PaymentGat
 
     @Override
     public void showSuccess(int code, String message) {
-
+        if (code == 1001){
+            finish();
+        }
     }
 
     /**

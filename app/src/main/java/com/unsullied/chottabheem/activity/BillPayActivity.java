@@ -415,7 +415,9 @@ public class BillPayActivity extends AppCompatActivity implements View.OnClickLi
 
     @Override
     public void showSuccess(int code, String message) {
-
+        if (code == 1001){
+            finish();
+        }
     }
 
     @Override

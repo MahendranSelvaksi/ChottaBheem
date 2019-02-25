@@ -345,9 +345,19 @@ public class VerificationActivity extends AppCompatActivity implements View.OnCl
         paymentId=statusMessage;
         mLoginPresenter.callUpdateLoginAPI(AppConstants.REGISTER_LOGIN_API, accountId, mobileNumberStr, versionCode, paymentId,
                 nameStr, emailIdStr, "99", AppConstants.OS_NAME_VALUE, deviceId, deviceType, referralCodePass);*/
+        myUtility.printLogcat("statusCode::::"+statusCode);
+        String paymentStatus="0";
+        if (statusCode==100001){
+            paymentStatus="1";
+        }else if (statusCode==0){
+            paymentStatus="0";
+        }else {
+            paymentStatus="2";
+        }
+        myUtility.printLogcat("paymentStatus::::"+paymentStatus);
         mPaymentGatewayPresenter.updatePaymentStatus(String.valueOf(mSessionManager.getIntValueFromSessionByKey(mContext, AppConstants.USER_SESSION_NAME, AppConstants.USER_ID_KEY)),
                 mSessionManager.getValueFromSessionByKey(mContext, AppConstants.USER_SESSION_NAME, AppConstants.ACCESS_TOKEN_KEY),
-                "99", statusMessage, "Subscription", statusMessage, statusCode == 100001 ? "1" : "2");
+                "99", statusMessage, "Subscription", statusMessage, paymentStatus);
     }
 
     @Override
@@ -362,6 +372,6 @@ public class VerificationActivity extends AppCompatActivity implements View.OnCl
         myUtility.printLogcat("Payment Error:::::" + s);
         myUtility.printLogcat("Payment Error code:::::" + i);
         mSessionManager.addIntValueToSession(mContext,AppConstants.USER_SESSION_NAME,AppConstants.PAYMENT_STATUS_KEY,0);
-        paymentGatewayStatus(2, s);
+        paymentGatewayStatus(i, s);
     }
 }
