@@ -17,6 +17,7 @@ import com.unsullied.chottabheem.R;
 import com.unsullied.chottabheem.adapter.AdminRequestAdapter;
 import com.unsullied.chottabheem.utils.AppConstants;
 import com.unsullied.chottabheem.utils.BaseFragment;
+import com.unsullied.chottabheem.utils.CustomTextView;
 import com.unsullied.chottabheem.utils.RedeemModel;
 import com.unsullied.chottabheem.utils.SessionManager;
 import com.unsullied.chottabheem.utils.Utility;
@@ -48,6 +49,7 @@ public class AdminRequestFragment extends BaseFragment implements ProfileMVP.Vie
     private String mParam2;
 
     private RecyclerView adminRequestRecyclerView;
+    private CustomTextView mNoDataTV;
     private FloatingActionButton addRequestFAB;
     private AdminRequestAdapter mAdminRequestAdapter;
     private List<RedeemModel> mRedeemData;
@@ -98,7 +100,7 @@ public class AdminRequestFragment extends BaseFragment implements ProfileMVP.Vie
 
         mActivity = getActivity();
         mContext = getContext();
-        myUtility=new Utility();
+        myUtility = new Utility();
         sessionManager = new SessionManager();
         pd = new ProgressDialog(mActivity);
         pd.setCancelable(false);
@@ -109,6 +111,7 @@ public class AdminRequestFragment extends BaseFragment implements ProfileMVP.Vie
 
         addRequestFAB = rootView.findViewById(R.id.addRequestFAB);
         adminRequestRecyclerView = rootView.findViewById(R.id.adminRequestRecyclerView);
+        mNoDataTV = rootView.findViewById(R.id.adminRequestNoDataTV);
         adminRequestRecyclerView.setHasFixedSize(true);
         adminRequestRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mAdminRequestAdapter = new AdminRequestAdapter(getActivity(), mRedeemData);
@@ -152,6 +155,10 @@ public class AdminRequestFragment extends BaseFragment implements ProfileMVP.Vie
         if (pd != null && pd.isShowing())
             pd.dismiss();
         Toast.makeText(mActivity, errorMsg, Toast.LENGTH_SHORT).show();
+        //if (code==1){
+        adminRequestRecyclerView.setVisibility(View.GONE);
+        mNoDataTV.setVisibility(View.VISIBLE);
+        //}
     }
 
     @Override
@@ -165,10 +172,11 @@ public class AdminRequestFragment extends BaseFragment implements ProfileMVP.Vie
     public void updateAdapter(List<RedeemModel> mData) {
         if (pd != null && pd.isShowing())
             pd.dismiss();
-        myUtility.printLogcat("Come updateAdapter"+mData.size());
+        myUtility.printLogcat("Come updateAdapter" + mData.size());
         mRedeemData.addAll(mData);
         mAdminRequestAdapter.notifyDataSetChanged();
         adminRequestRecyclerView.setVisibility(mRedeemData.size() > 0 ? View.VISIBLE : View.GONE);
+        mNoDataTV.setVisibility(adminRequestRecyclerView.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
     }
 
     /**

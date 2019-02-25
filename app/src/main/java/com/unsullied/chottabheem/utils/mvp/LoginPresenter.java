@@ -36,18 +36,12 @@ public class LoginPresenter implements LoginMVP.Presenter {
         sessionManager = new SessionManager();
     }
 
+    /*After Facebook Account kit check weather user exist or not?*/
     @Override
     public void callLoginAPI(String apiName, String versioncode, final String accountid, String phone, String loginType, String deviceId, String osName,
                              String deviceType) {
         if (ConnectivityReceiver.isConnected()) {
             myUtility.printLogcat("api::::" + apiName);
-         /*   myUtility.printLogcat("VersionCode::::" + versioncode);
-            myUtility.printLogcat("accountid::::" + accountid);
-            myUtility.printLogcat("phone::::" + phone);
-            myUtility.printLogcat("loginType::::" + loginType);
-            myUtility.printLogcat("deviceId::::" + deviceId);
-            myUtility.printLogcat("osName::::" + osName);
-            myUtility.printLogcat("deviceType::::" + deviceType);*/
             String loginInfo = AppConstants.APP_USER_NAME_VALUE + ":" + AppConstants.APP_PASSWORD_VALUE;
             byte[] encodingByte = Base64.encode(loginInfo.getBytes(), Base64.NO_WRAP);
             String encoding = new String(encodingByte);
@@ -59,60 +53,12 @@ public class LoginPresenter implements LoginMVP.Presenter {
                     .addBodyParameter(AppConstants.ACCOUNT_ID_KEY, accountid)
                     .addBodyParameter(AppConstants.PHONE_KEY, phone)
                     .addBodyParameter(AppConstants.LOGIN_TYPE_KEY, loginType)
-                    .addBodyParameter(AppConstants.DEVICE_ID_KEY, sessionManager.getValueFromSessionByKey(mContext,"FCM",AppConstants.DEVICE_ID_KEY))
+                    .addBodyParameter(AppConstants.DEVICE_ID_KEY, sessionManager.getValueFromSessionByKey(mContext, "FCM", AppConstants.DEVICE_ID_KEY))
                     .addBodyParameter(AppConstants.OS_NAME_KEY, osName)
                     .addBodyParameter(AppConstants.DEVICE_TYPE_KEY, deviceType)
                     .setPriority(Priority.HIGH)
                     .build();
 
-            /*request.getAsOkHttpResponseAndJSONObject(new OkHttpResponseAndJSONObjectRequestListener() {
-                @Override
-                public void onResponse(Response okHttpResponse, JSONObject response) {
-                    try {
-
-                        myUtility.printLogcat("RESPOSE CODE:::" + okHttpResponse.code());
-                        myUtility.printLogcat("Login API Response:::" + response.toString());
-                        if (response != null) {
-                            if (response.getInt(AppConstants.API_STATUS_CODE_KEY) == AppConstants.API_STATUS_CODE_VALUE) {
-
-                                JSONObject userJsonObject = response.getJSONObject(AppConstants.RESPONSE_JSON_OBJECT_KEY);
-                                sessionManager.addIntValueToSession(mContext, AppConstants.USER_SESSION_NAME, AppConstants.USER_ID_KEY, userJsonObject.getInt(AppConstants.USER_ID_KEY));
-                                sessionManager.addValueToSession(mContext, AppConstants.USER_SESSION_NAME, AppConstants.USER_NAME_KEY, userJsonObject.getString(AppConstants.NAME_KEY));
-                                sessionManager.addValueToSession(mContext, AppConstants.USER_SESSION_NAME, AppConstants.USER_EMAIL_ID_KEY, userJsonObject.getString(AppConstants.EMAIL_KEY));
-                                sessionManager.addValueToSession(mContext, AppConstants.USER_SESSION_NAME, AppConstants.USER_MOBILE_KEY, userJsonObject.getString(AppConstants.PHONE_KEY));
-                                sessionManager.addValueToSession(mContext, AppConstants.USER_SESSION_NAME, AppConstants.ACCESS_TOKEN_KEY, userJsonObject.getString(AppConstants.ACCESS_TOKEN_KEY));
-                                sessionManager.addValueToSession(mContext, AppConstants.USER_SESSION_NAME, AppConstants.API_REDEEM_POINT_KEY, userJsonObject.getString(AppConstants.API_REDEEM_POINT_KEY));
-                                sessionManager.addValueToSession(mContext, AppConstants.USER_SESSION_NAME, AppConstants.API_REDEEM_PROGRESS_KEY, userJsonObject.getString(AppConstants.API_REDEEM_PROGRESS_KEY));
-                                sessionManager.addValueToSession(mContext, AppConstants.USER_SESSION_NAME, AppConstants.API_OVERALL_REFERRAL_KEY, userJsonObject.getString(AppConstants.API_OVERALL_REFERRAL_KEY));
-                                sessionManager.addValueToSession(mContext, AppConstants.USER_SESSION_NAME, AppConstants.API_CURRENT_REFERRAL_KEY, userJsonObject.getString(AppConstants.API_CURRENT_REFERRAL_KEY));
-                                sessionManager.addValueToSession(mContext, AppConstants.USER_SESSION_NAME, AppConstants.ACCOUNT_ID_KEY, accountid);
-                                mView.showSuccess(1, "Login Successfully!!");
-                            } else if (response.getInt(AppConstants.API_STATUS_CODE_KEY) == 201) {
-                               *//* JSONObject userJsonObject = response.getJSONObject(AppConstants.RESPONSE_JSON_OBJECT_KEY);
-                                sessionManager.addIntValueToSession(mContext, AppConstants.USER_SESSION_NAME, AppConstants.USER_ID_KEY, userJsonObject.getInt(AppConstants.USER_ID_KEY));
-                                sessionManager.addValueToSession(mContext, AppConstants.USER_SESSION_NAME, AppConstants.USER_NAME_KEY, userJsonObject.getString(AppConstants.NAME_KEY));
-                                sessionManager.addValueToSession(mContext, AppConstants.USER_SESSION_NAME, AppConstants.USER_EMAIL_ID_KEY, userJsonObject.getString(AppConstants.EMAIL_KEY));
-                                sessionManager.addValueToSession(mContext, AppConstants.USER_SESSION_NAME, AppConstants.USER_MOBILE_KEY, userJsonObject.getString(AppConstants.PHONE_KEY));
-                                sessionManager.addValueToSession(mContext, AppConstants.USER_SESSION_NAME, AppConstants.ACCESS_TOKEN_KEY, userJsonObject.getString(AppConstants.ACCESS_TOKEN_KEY));
-                                sessionManager.addValueToSession(mContext, AppConstants.USER_SESSION_NAME, AppConstants.API_REDEEM_POINT_KEY, userJsonObject.getString(AppConstants.API_REDEEM_POINT_KEY));
-                                sessionManager.addValueToSession(mContext, AppConstants.USER_SESSION_NAME, AppConstants.API_REDEEM_PROGRESS_KEY, userJsonObject.getString(AppConstants.API_REDEEM_PROGRESS_KEY));
-                                sessionManager.addValueToSession(mContext, AppConstants.USER_SESSION_NAME, AppConstants.API_OVERALL_REFERRAL_KEY, userJsonObject.getString(AppConstants.API_OVERALL_REFERRAL_KEY));
-                                sessionManager.addValueToSession(mContext, AppConstants.USER_SESSION_NAME, AppConstants.API_CURRENT_REFERRAL_KEY, userJsonObject.getString(AppConstants.API_CURRENT_REFERRAL_KEY));*//*
-                                mView.showSuccess(0, "Login Successfully!!");
-                            }
-                        } else {
-                            mView.showError(1, AppConstants.COMMON_EXCEPTION);
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                @Override
-                public void onError(ANError anError) {
-                    mView.showError(anError.getErrorCode(), anError.getErrorDetail());
-                }
-            });*/
             request.getAsJSONObject(new JSONObjectRequestListener() {
                 @Override
                 public void onResponse(JSONObject response) {
@@ -124,17 +70,26 @@ public class LoginPresenter implements LoginMVP.Presenter {
                             if (response.getInt(AppConstants.API_STATUS_CODE_KEY) == AppConstants.API_STATUS_CODE_VALUE) {
 
                                 JSONObject userJsonObject = response.getJSONObject(AppConstants.RESPONSE_JSON_OBJECT_KEY);
-                                sessionManager.addIntValueToSession(mContext, AppConstants.USER_SESSION_NAME, AppConstants.USER_ID_KEY, userJsonObject.getInt(AppConstants.USER_ID_KEY));
-                                sessionManager.addValueToSession(mContext, AppConstants.USER_SESSION_NAME, AppConstants.USER_NAME_KEY, userJsonObject.getString(AppConstants.NAME_KEY));
-                                sessionManager.addValueToSession(mContext, AppConstants.USER_SESSION_NAME, AppConstants.USER_EMAIL_ID_KEY, userJsonObject.getString(AppConstants.EMAIL_KEY));
-                                sessionManager.addValueToSession(mContext, AppConstants.USER_SESSION_NAME, AppConstants.USER_MOBILE_KEY, userJsonObject.getString(AppConstants.PHONE_KEY));
-                                sessionManager.addValueToSession(mContext, AppConstants.USER_SESSION_NAME, AppConstants.ACCESS_TOKEN_KEY, userJsonObject.getString(AppConstants.ACCESS_TOKEN_KEY));
-                                sessionManager.addValueToSession(mContext, AppConstants.USER_SESSION_NAME, AppConstants.API_REDEEM_POINT_KEY, userJsonObject.getString(AppConstants.API_REDEEM_POINT_KEY));
-                                sessionManager.addValueToSession(mContext, AppConstants.USER_SESSION_NAME, AppConstants.API_REDEEM_PROGRESS_KEY, userJsonObject.getString(AppConstants.API_REDEEM_PROGRESS_KEY));
-                                sessionManager.addValueToSession(mContext, AppConstants.USER_SESSION_NAME, AppConstants.API_OVERALL_REFERRAL_KEY, userJsonObject.getString(AppConstants.API_OVERALL_REFERRAL_KEY));
-                                //   sessionManager.addValueToSession(mContext, AppConstants.USER_SESSION_NAME, AppConstants.API_CURRENT_REFERRAL_KEY, userJsonObject.getString(AppConstants.API_CURRENT_REFERRAL_KEY));
-                                sessionManager.addValueToSession(mContext, AppConstants.USER_SESSION_NAME, AppConstants.ACCOUNT_ID_KEY, accountid);
-                                mView.showSuccess(1, "Login Successfully!!");
+                                if (response.getInt(AppConstants.API_STATUS_CODE_KEY) == AppConstants.RES_CODE_VALUE) {
+
+                                    sessionManager.addIntValueToSession(mContext, AppConstants.USER_SESSION_NAME, AppConstants.USER_ID_KEY, userJsonObject.getInt(AppConstants.USER_ID_KEY));
+                                    sessionManager.addValueToSession(mContext, AppConstants.USER_SESSION_NAME, AppConstants.USER_NAME_KEY, userJsonObject.getString(AppConstants.NAME_KEY));
+                                    sessionManager.addValueToSession(mContext, AppConstants.USER_SESSION_NAME, AppConstants.USER_EMAIL_ID_KEY, userJsonObject.getString(AppConstants.EMAIL_KEY));
+                                    sessionManager.addValueToSession(mContext, AppConstants.USER_SESSION_NAME, AppConstants.USER_MOBILE_KEY, userJsonObject.getString(AppConstants.PHONE_KEY));
+                                    sessionManager.addValueToSession(mContext, AppConstants.USER_SESSION_NAME, AppConstants.ACCESS_TOKEN_KEY, userJsonObject.getString(AppConstants.ACCESS_TOKEN_KEY));
+                                    sessionManager.addValueToSession(mContext, AppConstants.USER_SESSION_NAME, AppConstants.API_REDEEM_POINT_KEY, userJsonObject.getString(AppConstants.API_REDEEM_POINT_KEY));
+                                    sessionManager.addValueToSession(mContext, AppConstants.USER_SESSION_NAME, AppConstants.API_REDEEM_PROGRESS_KEY, userJsonObject.getString(AppConstants.API_REDEEM_PROGRESS_KEY));
+                                    sessionManager.addValueToSession(mContext, AppConstants.USER_SESSION_NAME, AppConstants.API_OVERALL_REFERRAL_KEY, userJsonObject.getString(AppConstants.API_OVERALL_REFERRAL_KEY));
+                                    sessionManager.addValueToSession(mContext, AppConstants.USER_SESSION_NAME, AppConstants.API_CURRENT_REFERRAL_KEY, userJsonObject.getString(AppConstants.API_CURRENT_REFERRAL_KEY));
+                                    sessionManager.addValueToSession(mContext, AppConstants.USER_SESSION_NAME, AppConstants.ACCOUNT_ID_KEY, accountid);
+                                    if (userJsonObject.getBoolean(AppConstants.PAYMENT_STATUS_KEY)) {
+
+                                        mView.showSuccess(1001, "Login Successfully!!");
+                                    }else {
+                                        mView.callPayment();
+                                    }
+                                }
+
                             } else if (response.getInt(AppConstants.API_STATUS_CODE_KEY) == 201) {
                                /* JSONObject userJsonObject = response.getJSONObject(AppConstants.RESPONSE_JSON_OBJECT_KEY);
                                 sessionManager.addIntValueToSession(mContext, AppConstants.USER_SESSION_NAME, AppConstants.USER_ID_KEY, userJsonObject.getInt(AppConstants.USER_ID_KEY));
@@ -146,8 +101,8 @@ public class LoginPresenter implements LoginMVP.Presenter {
                                 sessionManager.addValueToSession(mContext, AppConstants.USER_SESSION_NAME, AppConstants.API_REDEEM_PROGRESS_KEY, userJsonObject.getString(AppConstants.API_REDEEM_PROGRESS_KEY));
                                 sessionManager.addValueToSession(mContext, AppConstants.USER_SESSION_NAME, AppConstants.API_OVERALL_REFERRAL_KEY, userJsonObject.getString(AppConstants.API_OVERALL_REFERRAL_KEY));
                                 sessionManager.addValueToSession(mContext, AppConstants.USER_SESSION_NAME, AppConstants.API_CURRENT_REFERRAL_KEY, userJsonObject.getString(AppConstants.API_CURRENT_REFERRAL_KEY));*/
-                               //Call VerificationActivity and register api
-                                mView.showSuccess(0, "Login Successfully!!");
+                                //Call VerificationActivity and register api
+                                mView.showSuccess(1, "Please Register....");
                             }
                         } else {
                             mView.showError(1, AppConstants.COMMON_EXCEPTION);
@@ -171,6 +126,7 @@ public class LoginPresenter implements LoginMVP.Presenter {
         }
     }
 
+    /*This method call when user complete the Subscription (Rs.99)*/
     @Override
     public void callUpdateLoginAPI(String apiName, String accountId, String phone, String versioncode, String paymentid, String name,
                                    String email, String paymentAmount, String osName, String deviceId, String deviceType, String referralCode) {
@@ -196,7 +152,7 @@ public class LoginPresenter implements LoginMVP.Presenter {
                     .addBodyParameter(AppConstants.ACCOUNT_ID_KEY, accountId)
                     .addBodyParameter(AppConstants.PHONE_KEY, phone)
                     .addBodyParameter(AppConstants.REG_TYPE_KEY, "accountkitlogin")
-                    .addBodyParameter(AppConstants.DEVICE_ID_KEY, sessionManager.getValueFromSessionByKey(mContext,"FCM",AppConstants.DEVICE_ID_KEY))
+                    .addBodyParameter(AppConstants.DEVICE_ID_KEY, sessionManager.getValueFromSessionByKey(mContext, "FCM", AppConstants.DEVICE_ID_KEY))
                     .addBodyParameter(AppConstants.OS_NAME_KEY, osName)
                     .addBodyParameter(AppConstants.DEVICE_TYPE_KEY, deviceType)
                     .addBodyParameter(AppConstants.NAME_KEY, name)
@@ -207,18 +163,6 @@ public class LoginPresenter implements LoginMVP.Presenter {
                     .addBodyParameter(AppConstants.PAYMENT_VIA_KEY, "payumoney")
                     .setPriority(Priority.HIGH)
                     .build();
-
-           /* request.getAsOkHttpResponseAndJSONObject(new OkHttpResponseAndJSONObjectRequestListener() {
-                @Override
-                public void onResponse(Response okHttpResponse, JSONObject response) {
-
-                }
-
-                @Override
-                public void onError(ANError anError) {
-                    mView.showError(anError.getErrorCode(), anError.getErrorDetail());
-                }
-            });*/
             request.getAsJSONObject(new JSONObjectRequestListener() {
                 @Override
                 public void onResponse(JSONObject response) {
@@ -234,15 +178,16 @@ public class LoginPresenter implements LoginMVP.Presenter {
                             sessionManager.addValueToSession(mContext, AppConstants.USER_SESSION_NAME, AppConstants.API_REDEEM_POINT_KEY, userJsonObject.getString(AppConstants.API_REDEEM_POINT_KEY));
                             sessionManager.addValueToSession(mContext, AppConstants.USER_SESSION_NAME, AppConstants.API_REDEEM_PROGRESS_KEY, userJsonObject.getString(AppConstants.API_REDEEM_PROGRESS_KEY));
                             sessionManager.addValueToSession(mContext, AppConstants.USER_SESSION_NAME, AppConstants.API_OVERALL_REFERRAL_KEY, userJsonObject.getString(AppConstants.API_OVERALL_REFERRAL_KEY));
-                            mView.showSuccess(0, "Login Successfully!!");
+                           sessionManager.addIntValueToSession(mContext,AppConstants.USER_SESSION_NAME,AppConstants.PAYMENT_STATUS_KEY,0);
+                            mView.callPayment();
                         } else if (response.getInt(AppConstants.API_STATUS_CODE_KEY) == 202) {
-                           mView.showError(2, response.getString(AppConstants.API_MESSAGE_KEY));
-                            JSONArray jsonArray=response.getJSONArray(AppConstants.RESPONSE_JSON_OBJECT_KEY);
-                            List<Object> list=new ArrayList<>();
+                            mView.showError(2, response.getString(AppConstants.API_MESSAGE_KEY));
+                            JSONArray jsonArray = response.getJSONArray(AppConstants.RESPONSE_JSON_OBJECT_KEY);
+                            List<Object> list = new ArrayList<>();
                             list.add("Select Referral Code");
                             for (int i = 0; i < jsonArray.length(); i++) {
-                                JSONObject object=jsonArray.getJSONObject(i);
-                                String spnrData=object.getString("name").concat("-").concat(object.getString("referral_code"));
+                                JSONObject object = jsonArray.getJSONObject(i);
+                                String spnrData = object.getString("name").concat("-").concat(object.getString("referral_code"));
                                 list.add(spnrData);
                             }
                             mView.showListOfReferralCode(list);

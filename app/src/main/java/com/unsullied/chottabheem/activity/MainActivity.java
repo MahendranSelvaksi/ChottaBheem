@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity
         ProfileFragment.OnFragmentInteractionListener, AdminRequestFragment.OnFragmentInteractionListener,
         TermsAndConditionsFragment.OnFragmentInteractionListener, PrivatePolicyFragment.OnFragmentInteractionListener,
         AboutUsFragment.OnFragmentInteractionListener, SettingsFragment.OnFragmentInteractionListener,
-        AddAdminRequestFragment.OnFragmentInteractionListener,NotificationFragment.OnFragmentInteractionListener {
+        AddAdminRequestFragment.OnFragmentInteractionListener, NotificationFragment.OnFragmentInteractionListener {
     DrawerLayout drawer;
     Toolbar toolbar;
     private CustomTextView titleTV, logoutTV, userNameTV, userMobileTV, referralCodeTV, overallTV, progressTV, pointsTV;
@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
-        pointsTV.setText("100 ".concat(getString(R.string.pointStr)));
+        pointsTV.setText(mSessionManager.getValueFromSessionByKey(mContext,AppConstants.USER_SESSION_NAME,AppConstants.API_REDEEM_POINT_KEY).trim().concat(getString(R.string.pointStr)));
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
@@ -105,6 +105,7 @@ public class MainActivity extends AppCompatActivity
                 }
             }
         });
+
 
         updateToolbarTitle(getString(R.string.homeTitle));
         replaceFragment(new HomeFragment(), "");
@@ -459,12 +460,15 @@ public class MainActivity extends AppCompatActivity
         userNameTV.setText(mSessionManager.getValueFromSessionByKey(mContext, AppConstants.USER_SESSION_NAME, AppConstants.USER_NAME_KEY));
         userMobileTV.setText(mSessionManager.getValueFromSessionByKey(mContext, AppConstants.USER_SESSION_NAME, AppConstants.USER_MOBILE_KEY));
         referralCodeTV.setText(mSessionManager.getValueFromSessionByKey(mContext, AppConstants.USER_SESSION_NAME, AppConstants.API_REFERRAL_CODE_KEY));
-        progressTV.setText(String.valueOf(pbId.getProgress()).concat("/").concat(String.valueOf(pbId.getMax())));
+       // progressTV.setText(String.valueOf(pbId.getProgress()).concat("/").concat(String.valueOf(pbId.getMax())));
         // overallTV.setText(mSessionManager.getValueFromSessionByKey(mContext, AppConstants.USER_SESSION_NAME, AppConstants.API_REDEEM_PROGRESS_KEY));
+        progressTV.setText(mSessionManager.getValueFromSessionByKey(mContext, AppConstants.USER_SESSION_NAME, AppConstants.API_CURRENT_REFERRAL_KEY).trim().concat("/").
+                concat(mSessionManager.getValueFromSessionByKey(mContext, AppConstants.USER_SESSION_NAME, AppConstants.API_OVERALL_REFERRAL_KEY).trim()));
+        pbId.setProgress(Integer.parseInt(mSessionManager.getValueFromSessionByKey(mContext, AppConstants.USER_SESSION_NAME, AppConstants.API_REDEEM_PROGRESS_KEY).trim()));
     }
 
     @Override
     public void onNotificationFragmentInteraction(BaseFragment mFragment, String parameter) {
-        replaceFragment(mFragment,parameter);
+        replaceFragment(mFragment, parameter);
     }
 }

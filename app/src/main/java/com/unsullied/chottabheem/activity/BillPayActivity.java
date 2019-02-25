@@ -403,12 +403,19 @@ public class BillPayActivity extends AppCompatActivity implements View.OnClickLi
                         AppConstants.UNIQUE_ID_KEY + time + AppConstants.OPIONAL_VALUE1_KEY + URLEncoder.encode(intentTitleStr, "utf-8") +
                         AppConstants.OPIONAL_VALUE2_KEY + URLEncoder.encode("Recharge", "utf-8");
                 myUtility.printLogcat("API::::" + url);
-
-                //mRechargePresenter.callRechargeAPI(url);
+                mRechargePresenter.callRechargeAPI(url);
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
         }
+        mPaymentGatewayPresenter.updatePaymentStatus(String.valueOf(mSessionManager.getIntValueFromSessionByKey(mContext, AppConstants.USER_SESSION_NAME, AppConstants.USER_ID_KEY)),
+                mSessionManager.getValueFromSessionByKey(mContext, AppConstants.USER_SESSION_NAME, AppConstants.ACCESS_TOKEN_KEY),
+                String.valueOf(rechargeAmount), statusMessage, "Bill Pay", statusMessage, statusCode == 100001 ? "1" : "2");
+    }
+
+    @Override
+    public void showSuccess(int code, String message) {
+
     }
 
     @Override
@@ -518,7 +525,7 @@ public class BillPayActivity extends AppCompatActivity implements View.OnClickLi
 
     @Override
     public void onPaymentSuccess(String s) {
-paymentGatewayStatus(0,s);
+paymentGatewayStatus(100001,s);
     }
 
     @Override

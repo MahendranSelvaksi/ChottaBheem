@@ -35,7 +35,7 @@ public class RegistrationIntentService extends FirebaseInstanceIdService {
     public void onTokenRefresh() {
         super.onTokenRefresh();
         regId_str = FirebaseInstanceId.getInstance().getToken();
-        Log.d(TAG, "Refreshed token: " + regId_str);
+        Log.w(TAG, "Refreshed token: " + regId_str);
         new SessionManager().saveFCMToken(getApplicationContext(),regId_str);
         /*networkCheck = new ConnectionManager(this);
         session=this.getSharedPreferences(SESSION_NAME, Context.MODE_PRIVATE);

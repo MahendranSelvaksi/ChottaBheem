@@ -498,6 +498,14 @@ public class RechargeActivity extends AppCompatActivity implements View.OnClickL
                 e.printStackTrace();
             }
         }
+        mPaymentGatewayPresenter.updatePaymentStatus(String.valueOf(mSessionManager.getIntValueFromSessionByKey(mContext, AppConstants.USER_SESSION_NAME, AppConstants.USER_ID_KEY)),
+                mSessionManager.getValueFromSessionByKey(mContext, AppConstants.USER_SESSION_NAME, AppConstants.ACCESS_TOKEN_KEY),
+                String.valueOf(rechargeAmount), statusMessage, "Bill Pay", statusMessage, statusCode == 100001 ? "1" : "2");
+    }
+
+    @Override
+    public void showSuccess(int code, String message) {
+
     }
 
     @Override
@@ -644,7 +652,7 @@ public class RechargeActivity extends AppCompatActivity implements View.OnClickL
 
     @Override
     public void onPaymentSuccess(String s) {
-        paymentGatewayStatus(0, s);
+        paymentGatewayStatus(100001, s);
     }
 
     @Override

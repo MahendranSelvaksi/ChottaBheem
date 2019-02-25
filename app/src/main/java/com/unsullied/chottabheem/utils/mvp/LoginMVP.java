@@ -8,6 +8,7 @@ public interface LoginMVP {
         void showSuccess(int code ,String message);
         void showError(int code,String errorMsg);
         void showListOfReferralCode(List<Object> referralList);
+        void callPayment();
     }
 
     interface Presenter{

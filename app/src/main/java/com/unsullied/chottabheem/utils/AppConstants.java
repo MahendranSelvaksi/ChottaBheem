@@ -26,6 +26,7 @@ public class AppConstants {
     public static final String UPDATE_PROFILE_API = "profile/update";
     public static final String GENERATE_CHECKSUM_API="payment/hash_generator";
     public static final String NOTIFICATION_API="announcement";
+    public static final String PAYMENT_STATUS_API="payment/payment_update";
     //.addHeaders("Authorization", Credentials.basic(AppConstants.APP_USER_NAME_VALUE,AppConstants.APP_PASSWORD_VALUE))
 
     public static final String APP_USER_NAME_VALUE = "CB_App";
@@ -83,7 +84,7 @@ public class AppConstants {
     public static final int API_STATUS_CODE_VALUE = 200;
     public static final String API_MESSAGE_KEY = "message";
     public static final String API_OVERALL_REFERRAL_KEY = "overall_referal";
-    public static final String API_CURRENT_REFERRAL_KEY = "current_referal";
+    public static final String API_CURRENT_REFERRAL_KEY = "current_referral";
     public static final String API_REDEEM_PROGRESS_KEY = "redeem_progress";
     public static final String API_REDEEM_POINT_KEY = "redeem_point";
     public static final String API_PARENT_KEY = "parent";
@@ -93,6 +94,11 @@ public class AppConstants {
     public static final String API_REDEEM_NAME_KEY = "redeem_name";
     public static final String API_REDEEM_VALUE_KEY = "redeem_value";
     public static final String API_OPERATOR_KEY = "operator";
+    public static final String API_PAYMENT_TXN_ID_KEY="payment_txn_id";
+    public static final String API_PAYMENT_TYPE_KEY="payment_type";
+    public static final String API_PAYMENT_RESPONSE_KEY="payment_response";
+    public static final String API_PAYMENT_STATUS_KEY="payment_status";
+
 
     public static final String REDEEM_REQUEST_NAME_KEY = "redeem_req_name";
     public static final String REDEEM_REQUEST_ID_KEY = "redeem_req_id";
@@ -148,6 +154,8 @@ public class AppConstants {
     public static final String USER_EMAIL_ID_KEY = "EmailID";
     public static final String USER_MOBILE_KEY = "MobileNumber";
     public static final String USER_SESSION_NAME = "userSession";
+    public static final String PAYMENT_STATUS_KEY="paymentStatus";
+
 
 
     /*Selected Intent Value*/
@@ -177,7 +185,8 @@ public class AppConstants {
     public static final String GET_REDEEM_API_CALL_DIALOG_MSG = "Getting your requests, Please wait...";
     public static final String ADD_REDEEM_API_CALL_DIALOG_MSG = "Adding your request, Please wait...";
     public static final String CONTACT_US_API_CALL_DIALOG_MSG = "Adding your comments, Please wait...";
-    public static final String UPDATE_PROFILE_API_CALL_DIALOG_MSG = "Updading your profile details, Please wait...";
+    public static final String UPDATE_PROFILE_API_CALL_DIALOG_MSG = "Updating your profile details, Please wait...";
+    public static final String REGISTER_API_CALL_DIALOG_MSG = "Registering your details, Please wait...";
 
     /*App Update Dialoge*/
     public static final String UPDATE_CONTENT = "A new version of " + AppConstants.APP_NAME + " is available.Please update to the version " + BuildConfig.VERSION_CODE + " now.";

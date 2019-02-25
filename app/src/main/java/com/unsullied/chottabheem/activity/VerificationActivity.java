@@ -42,7 +42,7 @@ import java.util.List;
 
 import io.fabric.sdk.android.Fabric;
 
-public class VerificationActivity extends AppCompatActivity implements View.OnClickListener, LoginMVP.View, PaymentGatewayMVP.View , PaymentResultListener {
+public class VerificationActivity extends AppCompatActivity implements View.OnClickListener, LoginMVP.View, PaymentGatewayMVP.View, PaymentResultListener {
 
     Toolbar toolbar;
     private Button submitBtn;
@@ -152,11 +152,12 @@ public class VerificationActivity extends AppCompatActivity implements View.OnCl
                         String deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
                         String deviceType = Build.DEVICE;
                         referralCodePass = referralCodeET.getVisibility() == View.VISIBLE ? referralCodeET.getText().toString().trim() : referralCodePass;
-                        myUtility.printLogcat("Referral:::"+referralCodePass);
-
+                        myUtility.printLogcat("Referral:::" + referralCodePass);
+                        pd.setMessage(AppConstants.REGISTER_API_CALL_DIALOG_MSG);
+                        pd.show();
                         mLoginPresenter.callUpdateLoginAPI(AppConstants.REGISTER_LOGIN_API, accountId, mobileNumberStr, versionCode, paymentId,
                                 nameStr, emailIdStr, "99", AppConstants.OS_NAME_VALUE, deviceId, deviceType, referralCodePass);
-                      // mPaymentGatewayPresenter.startPayment(mContext,mActivity,"Subscription","10000",emailIdStr,mobileNumberStr);
+                        // mPaymentGatewayPresenter.startPayment(mContext,mActivity,"Subscription","10000",emailIdStr,mobileNumberStr);
 
                       /*  mSessionManager.addValueToSession(getApplicationContext(), AppConstants.USER_SESSION_NAME,
                                 AppConstants.USER_NAME_KEY, nameStr);
@@ -265,9 +266,11 @@ public class VerificationActivity extends AppCompatActivity implements View.OnCl
     @Override
     public void showSuccess(int code, String message) {
         closeProgressDialog();
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-        startActivity(new Intent(VerificationActivity.this, MainActivity.class));
-        finish();
+        if (code == 1001) {
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(VerificationActivity.this, MainActivity.class));
+            finish();
+        }
     }
 
     @Override
@@ -293,6 +296,11 @@ public class VerificationActivity extends AppCompatActivity implements View.OnCl
         });
     }
 
+    @Override
+    public void callPayment() {
+        mPaymentGatewayPresenter.startPayment(mContext, mActivity, "Subscription", "9900", emailIdStr, mobileNumberStr);
+    }
+
     private void closeProgressDialog() {
         if (pd != null && pd.isShowing()) {
             pd.dismiss();
@@ -310,12 +318,14 @@ public class VerificationActivity extends AppCompatActivity implements View.OnCl
 
     @Override
     public void showError(String errorMsg) {
-
+        closeProgressDialog();
+        Toast.makeText(mContext, errorMsg, Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void paymentGatewayStatus(int statusCode, String statusMessage) {
-        mSessionManager.addValueToSession(getApplicationContext(), AppConstants.USER_SESSION_NAME,
+      //  pd.show();
+        /*mSessionManager.addValueToSession(getApplicationContext(), AppConstants.USER_SESSION_NAME,
                 AppConstants.USER_NAME_KEY, nameStr);
         mSessionManager.addValueToSession(getApplicationContext(), AppConstants.USER_SESSION_NAME,
                 AppConstants.USER_MOBILE_KEY, mobileNumberStr);
@@ -334,19 +344,24 @@ public class VerificationActivity extends AppCompatActivity implements View.OnCl
         pd.show();
         paymentId=statusMessage;
         mLoginPresenter.callUpdateLoginAPI(AppConstants.REGISTER_LOGIN_API, accountId, mobileNumberStr, versionCode, paymentId,
-                nameStr, emailIdStr, "99", AppConstants.OS_NAME_VALUE, deviceId, deviceType, referralCodePass);
+                nameStr, emailIdStr, "99", AppConstants.OS_NAME_VALUE, deviceId, deviceType, referralCodePass);*/
+        mPaymentGatewayPresenter.updatePaymentStatus(String.valueOf(mSessionManager.getIntValueFromSessionByKey(mContext, AppConstants.USER_SESSION_NAME, AppConstants.USER_ID_KEY)),
+                mSessionManager.getValueFromSessionByKey(mContext, AppConstants.USER_SESSION_NAME, AppConstants.ACCESS_TOKEN_KEY),
+                "99", statusMessage, "Subscription", statusMessage, statusCode == 100001 ? "1" : "2");
     }
 
     @Override
     public void onPaymentSuccess(String s) {
-        myUtility.printLogcat("Payment Success:::::"+s);
-        //paymentGatewayStatus(0, s);
+        myUtility.printLogcat("Payment Success:::::" + s);
+        mSessionManager.addIntValueToSession(mContext,AppConstants.USER_SESSION_NAME,AppConstants.PAYMENT_STATUS_KEY,1);
+        paymentGatewayStatus(100001, s);
     }
 
     @Override
     public void onPaymentError(int i, String s) {
-        myUtility.printLogcat("Payment Error:::::"+s);
-        myUtility.printLogcat("Payment Error code:::::"+i);
-       // paymentGatewayStatus(i, s);
+        myUtility.printLogcat("Payment Error:::::" + s);
+        myUtility.printLogcat("Payment Error code:::::" + i);
+        mSessionManager.addIntValueToSession(mContext,AppConstants.USER_SESSION_NAME,AppConstants.PAYMENT_STATUS_KEY,0);
+        paymentGatewayStatus(2, s);
     }
 }

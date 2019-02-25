@@ -1,10 +1,7 @@
 package com.unsullied.chottabheem.utils.mvp;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
-import android.os.Build;
-import android.provider.Settings;
 import android.util.Base64;
 
 import com.androidnetworking.AndroidNetworking;
@@ -12,18 +9,14 @@ import com.androidnetworking.common.ANRequest;
 import com.androidnetworking.common.Priority;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.JSONObjectRequestListener;
-import com.payumoney.core.PayUmoneyConfig;
 import com.payumoney.core.PayUmoneySdkInitializer;
-
 import com.razorpay.Checkout;
-import com.razorpay.PaymentResultListener;
-import com.unsullied.chottabheem.BuildConfig;
 import com.unsullied.chottabheem.utils.AppConstants;
 import com.unsullied.chottabheem.utils.ConnectivityReceiver;
-import com.unsullied.chottabheem.utils.SessionManager;
 import com.unsullied.chottabheem.utils.Utility;
 import com.unsullied.chottabheem.utils.paymentgateway.AppPreference;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.security.MessageDigest;
@@ -299,11 +292,11 @@ customer_email:test@test.com"*//*
         }*/
 
 
-        /**
-         * This method generates hash from server.
-         *
-         * @param// paymentParam payments params used for hash generation
-         */
+    /**
+     * This method generates hash from server.
+     *
+     * @param// paymentParam payments params used for hash generation
+     */
    /* private void generateHashFromServer(PayUmoneySdkInitializer.PaymentParam paymentParam) {
         //nextButton.setEnabled(false); // lets not allow the user to click the button again and again.
 
@@ -334,9 +327,9 @@ customer_email:test@test.com"*//*
     }*/
 
 
-        /**
-         * This AsyncTask generates hash from server.
-         */
+    /**
+     * This AsyncTask generates hash from server.
+     */
    /* @SuppressLint("StaticFieldLeak")
     private class GetHashesFromServerTask extends AsyncTask<String, String, String> {
         private ProgressDialog progressDialog;
@@ -381,10 +374,11 @@ customer_email:test@test.com"*//*
                 while (payuHashIterator.hasNext()) {
                     String key = payuHashIterator.next();
                     switch (key) {
-                        *//**
-         * This hash is mandatory and needs to be generated from merchant's server side
-         *
-         *//*
+                        */
+
+    /**
+     * This hash is mandatory and needs to be generated from merchant's server side
+     *//*
                         case "payment_hash":
                             merchantHash = response.getString(key);
                             break;
@@ -427,10 +421,6 @@ customer_email:test@test.com"*//*
             }
         }
     }*/
-
-
-
-
     public String hashCal(String type, String hashString) {
         StringBuilder hash = new StringBuilder();
         MessageDigest messageDigest = null;
@@ -447,14 +437,14 @@ customer_email:test@test.com"*//*
         return hash.toString();
     }
 
-    public void startPayment(Context mContext, Activity mActivity, String description, String amount,String email,String contact) {
+    public void startPayment(Context mContext, Activity mActivity, String description, String amount, String email, String contact) {
 
        /*  To ensure faster loading of the Checkout form,
           call this method as early as possible in your checkout flow.*/
 
         Checkout.preload(mContext);
 
-         /* You need to pass current activity in order to let Razorpay create CheckoutActivity*/
+        /* You need to pass current activity in order to let Razorpay create CheckoutActivity*/
 
         final Checkout co = new Checkout();
 
@@ -478,11 +468,51 @@ customer_email:test@test.com"*//*
     }
 
 
-
-
-
     @Override
     public void generateHashFromServer(String mobileNumber, String accountId, String name, String email, String payableAmount, String productInfo, String buttonText, String pageTitle) {
 
+    }
+
+    @Override
+    public void updatePaymentStatus(String userId, String accessToken, String paymentAmount, String txnId, String paymentType, String paymentResponse, final String paymentStatus) {
+        if (ConnectivityReceiver.isConnected()) {
+            myUtility.printLogcat("api::::" + AppConstants.PAYMENT_STATUS_API);
+            String loginInfo = AppConstants.APP_USER_NAME_VALUE + ":" + AppConstants.APP_PASSWORD_VALUE;
+            byte[] encodingByte = Base64.encode(loginInfo.getBytes(), Base64.NO_WRAP);
+            String encoding = new String(encodingByte);
+            ANRequest request = AndroidNetworking.post(AppConstants.API_LIVE_URL + AppConstants.PAYMENT_STATUS_API)
+                    .addHeaders(AppConstants.HEADER_API_KEY, AppConstants.HEADER_API_KEY_VALUE)
+                    .addHeaders("Authorization", "Basic " + encoding)
+                    .setTag(AppConstants.APP_NAME)
+                    .addBodyParameter(AppConstants.ACCESS_TOKEN_KEY, accessToken)
+                    .addBodyParameter(AppConstants.USER_ID_KEY, userId)
+                    .addBodyParameter(AppConstants.PAYMENT_AMOUNT_KEY, paymentAmount)
+                    .addBodyParameter(AppConstants.API_PAYMENT_TXN_ID_KEY, txnId)
+                    .addBodyParameter(AppConstants.API_PAYMENT_TYPE_KEY, paymentType)
+                    .addBodyParameter(AppConstants.API_PAYMENT_RESPONSE_KEY, paymentResponse)
+                    .addBodyParameter(AppConstants.API_PAYMENT_STATUS_KEY, paymentStatus)
+                    .setPriority(Priority.HIGH)
+                    .build();
+
+            request.getAsJSONObject(new JSONObjectRequestListener() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    try {
+                        if (response.getInt(AppConstants.API_STATUS_CODE_KEY) == 200) {
+                            mView.showSuccess(Integer.parseInt(paymentStatus) == 2 ? 0 : 1001, "Successfully updated!!!");
+                        } else {
+                            mView.showError(response.getString(AppConstants.API_MESSAGE_KEY));
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onError(ANError anError) {
+
+                }
+            });
+        }
     }
 }

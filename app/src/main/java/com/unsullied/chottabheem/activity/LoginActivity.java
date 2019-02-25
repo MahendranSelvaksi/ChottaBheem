@@ -33,14 +33,18 @@ import com.facebook.accountkit.PhoneNumber;
 import com.facebook.accountkit.ui.AccountKitActivity;
 import com.facebook.accountkit.ui.AccountKitConfiguration;
 import com.facebook.accountkit.ui.LoginType;
+import com.payumoney.core.PayUmoneySdkInitializer;
+import com.razorpay.PaymentResultListener;
 import com.unsullied.chottabheem.BuildConfig;
 import com.unsullied.chottabheem.R;
 import com.unsullied.chottabheem.utils.AppConstants;
 import com.unsullied.chottabheem.utils.PatternEditableBuilder;
+import com.unsullied.chottabheem.utils.SessionManager;
 import com.unsullied.chottabheem.utils.Utility;
 import com.unsullied.chottabheem.utils.mvp.LoginMVP;
 import com.unsullied.chottabheem.utils.mvp.LoginPresenter;
-import com.unsullied.chottabheem.utils.paymentgateway.AvenuesParams;
+import com.unsullied.chottabheem.utils.mvp.PaymentGatewayMVP;
+import com.unsullied.chottabheem.utils.mvp.PaymentGatewayPresenter;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -49,7 +53,7 @@ import java.util.regex.Pattern;
 
 import io.fabric.sdk.android.Fabric;
 
-public class LoginActivity extends AppCompatActivity implements LoginMVP.View {
+public class LoginActivity extends AppCompatActivity implements LoginMVP.View, PaymentGatewayMVP.View, PaymentResultListener {
     Button loginBtn;
     public static int APP_REQUEST_CODE = 99;
     Toolbar toolbar;
@@ -57,9 +61,11 @@ public class LoginActivity extends AppCompatActivity implements LoginMVP.View {
     private Utility myUtility;
     private String deviceId, accountId, versionCode, phoneNumberString, deviceType;
     private LoginPresenter mLoginPresenter;
+    private PaymentGatewayPresenter mPaymentGatewayPresenter;
     private ProgressDialog pd;
     private Context mContext;
     private Activity mActivity;
+    private SessionManager mSessionManager;
 
     @SuppressWarnings("deprecation")
     public static Spanned fromHtml(String html) {
@@ -81,7 +87,8 @@ public class LoginActivity extends AppCompatActivity implements LoginMVP.View {
         myUtility = new Utility();
         pd = new ProgressDialog(this);
         pd.setCancelable(false);
-
+        mSessionManager = new SessionManager();
+        mPaymentGatewayPresenter = new PaymentGatewayPresenter(mContext, mActivity, this);
 
         toolbar = (Toolbar) findViewById(R.id.loginToolBar);
         tittleTV = toolbar.findViewById(R.id.toolbar_title);
@@ -286,11 +293,31 @@ public class LoginActivity extends AppCompatActivity implements LoginMVP.View {
     }
 
     @Override
+    public void getSuccessfulHash(PayUmoneySdkInitializer.PaymentParam mPaymentParam) {
+
+    }
+
+    @Override
+    public void showError(String errorMsg) {
+
+    }
+
+    @Override
+    public void paymentGatewayStatus(int statusCode, String statusMessage) {
+        mPaymentGatewayPresenter.updatePaymentStatus(String.valueOf(mSessionManager.getIntValueFromSessionByKey(mContext, AppConstants.USER_SESSION_NAME, AppConstants.USER_ID_KEY)),
+                mSessionManager.getValueFromSessionByKey(mContext, AppConstants.USER_SESSION_NAME, AppConstants.ACCESS_TOKEN_KEY),
+                "99", statusMessage, "Subscription", statusMessage, statusCode == 100001 ? "1" : "2");
+    }
+
+    @Override
     public void showSuccess(int code, String message) {
         closeProgressDialog();
         myUtility.printLogcat("Code:::" + code);
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-        callNextActivity(code == 1);
+      //  Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+        if (code == 1001)
+            callNextActivity(true);
+        else if (code ==1)
+            callNextActivity(false);
     }
 
     @Override
@@ -304,9 +331,34 @@ public class LoginActivity extends AppCompatActivity implements LoginMVP.View {
 
     }
 
+    @Override
+    public void callPayment() {
+        mPaymentGatewayPresenter.startPayment(mContext, mActivity, "Subscription", "9900",
+                mSessionManager.getValueFromSessionByKey(mContext, AppConstants.USER_SESSION_NAME, AppConstants.USER_EMAIL_ID_KEY),
+                mSessionManager.getValueFromSessionByKey(mContext, AppConstants.USER_SESSION_NAME, AppConstants.USER_MOBILE_KEY));
+    }
+
     private void closeProgressDialog() {
         if (pd != null && pd.isShowing()) {
             pd.dismiss();
         }
+    }
+
+    @Override
+    public void onPaymentSuccess(String s) {
+        pd.show();
+        myUtility.printLogcat("Payment Success:::::" + s);
+        mSessionManager.addIntValueToSession(mContext, AppConstants.USER_SESSION_NAME, AppConstants.PAYMENT_STATUS_KEY, 1);
+        paymentGatewayStatus(100001, s);
+
+    }
+
+    @Override
+    public void onPaymentError(int i, String s) {
+        pd.show();
+        myUtility.printLogcat("Payment Error:::::" + s);
+        myUtility.printLogcat("Payment Error code:::::" + i);
+        mSessionManager.addIntValueToSession(mContext, AppConstants.USER_SESSION_NAME, AppConstants.PAYMENT_STATUS_KEY, 2);
+        paymentGatewayStatus(2, s);
     }
 }

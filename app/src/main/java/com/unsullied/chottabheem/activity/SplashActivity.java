@@ -9,6 +9,7 @@ import android.view.View;
 
 import com.crashlytics.android.Crashlytics;
 import com.unsullied.chottabheem.R;
+import com.unsullied.chottabheem.utils.AppConstants;
 import com.unsullied.chottabheem.utils.SessionManager;
 
 import io.fabric.sdk.android.Fabric;
@@ -112,7 +113,8 @@ public class SplashActivity extends AppCompatActivity {
             @Override
             public void run() {
                 //Do something after 100ms
-                if (new SessionManager().isLogged(getApplicationContext()) > 0) {
+                if (new SessionManager().isLogged(getApplicationContext()) > 0 && new SessionManager().getIntValueFromSessionByKey(getApplicationContext(),
+                        AppConstants.USER_SESSION_NAME, AppConstants.PAYMENT_STATUS_KEY) == 1) {
                     Intent nextIntent = new Intent(SplashActivity.this, MainActivity.class);
                     startActivity(nextIntent);
                     finishAffinity();

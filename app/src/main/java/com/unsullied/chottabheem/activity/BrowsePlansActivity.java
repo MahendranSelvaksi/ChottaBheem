@@ -198,7 +198,7 @@ public class BrowsePlansActivity extends AppCompatActivity implements PaymentGat
 
     @Override
     public void onPaymentSuccess(String s) {
-        paymentGatewayStatus(0, s);
+        paymentGatewayStatus(100001, s);
     }
 
     @Override
@@ -252,6 +252,14 @@ public class BrowsePlansActivity extends AppCompatActivity implements PaymentGat
             }
 
         }
+        mPaymentGatewayPresenter.updatePaymentStatus(String.valueOf(sessionManager.getIntValueFromSessionByKey(mContext, AppConstants.USER_SESSION_NAME, AppConstants.USER_ID_KEY)),
+                sessionManager.getValueFromSessionByKey(mContext, AppConstants.USER_SESSION_NAME, AppConstants.ACCESS_TOKEN_KEY),
+                String.valueOf(rechargeAmount), statusMessage, "Bill Pay", statusMessage, statusCode == 100001 ? "1" : "2");
+    }
+
+    @Override
+    public void showSuccess(int code, String message) {
+
     }
 
     /**
