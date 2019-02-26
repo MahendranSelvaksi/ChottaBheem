@@ -453,7 +453,7 @@ customer_email:test@test.com"*//*
             options.put("name", AppConstants.APP_NAME);
             options.put("description", description);
             options.put("currency", "INR");
-            options.put("amount", amount);
+            options.put("amount", Integer.parseInt(amount));
 
             JSONObject preFill = new JSONObject();
             preFill.put("email", email);

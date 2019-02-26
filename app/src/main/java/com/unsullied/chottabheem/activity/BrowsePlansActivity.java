@@ -1,6 +1,7 @@
 package com.unsullied.chottabheem.activity;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -32,6 +33,7 @@ import com.unsullied.chottabheem.utils.Utility;
 import com.unsullied.chottabheem.utils.mvp.PaymentGatewayMVP;
 import com.unsullied.chottabheem.utils.mvp.PaymentGatewayPresenter;
 import com.unsullied.chottabheem.utils.mvp.RechargeMVP;
+import com.unsullied.chottabheem.utils.mvp.RechargePresenter;
 
 import org.json.JSONObject;
 
@@ -65,6 +67,7 @@ public class BrowsePlansActivity extends AppCompatActivity implements PaymentGat
     private TabLayout mTabLayout;
     private List<String> titleData;
     private PaymentGatewayPresenter mPaymentGatewayPresenter;
+    private RechargePresenter mRechargePresenter;
     //public List<String> hintData;
     private Toolbar toolbar;
     private CustomTextView tittleTV;
@@ -72,7 +75,8 @@ public class BrowsePlansActivity extends AppCompatActivity implements PaymentGat
     private Activity mActivity;
     private Utility myUtility;
     private SessionManager sessionManager;
-    String rechargeAmount="";
+    String rechargeAmount="",paymentId,paymentStatus,rechargeURL;
+    private ProgressDialog pd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +87,8 @@ public class BrowsePlansActivity extends AppCompatActivity implements PaymentGat
         mContext = getApplicationContext();
         mActivity = this;
         myUtility = new Utility();
+        pd = new ProgressDialog(this);
+        pd.setCancelable(false);
         sessionManager = new SessionManager();
         titleData = new ArrayList<>();
         operatorId = getIntent().getIntExtra(AppConstants.JSON_OPERATOR_ID_KEY, 0);
@@ -90,6 +96,7 @@ public class BrowsePlansActivity extends AppCompatActivity implements PaymentGat
         selectedCircleId = getIntent().getIntExtra(AppConstants.JSON_CIRCLE_ID_KEY, 0);
         emailIdStr = getIntent().getStringExtra(AppConstants.USER_EMAIL_ID_KEY);
         mPaymentGatewayPresenter = new PaymentGatewayPresenter(mContext, mActivity, this);
+        mRechargePresenter = new RechargePresenter(mContext,this);
         String[] titleArray = getResources().getStringArray(R.array.browse_plans_titles);
         String[] hintArray = getResources().getStringArray(R.array.browse_plans_key);
         titleData.addAll(Arrays.asList(titleArray));
@@ -198,17 +205,22 @@ public class BrowsePlansActivity extends AppCompatActivity implements PaymentGat
 
     @Override
     public void onPaymentSuccess(String s) {
+        paymentId=s;
+        paymentStatus="1";
         paymentGatewayStatus(100001, s);
     }
 
     @Override
     public void onPaymentError(int i, String s) {
+        paymentStatus="2";
         paymentGatewayStatus(i, s);
     }
 
     @Override
     public void updateRechargeAmount(String rechargeAmount) {
+        showProgressDialog("Initiate payment, Please wait...");
         this.rechargeAmount=rechargeAmount;
+        paymentStatus="";
         mPaymentGatewayPresenter.startPayment(mContext,mActivity,"Recharge", rechargeAmount.concat("00"),
                 sessionManager.getValueFromSessionByKey(mContext,AppConstants.USER_SESSION_NAME,AppConstants.USER_EMAIL_ID_KEY),
                 sessionManager.getValueFromSessionByKey(mContext,AppConstants.USER_SESSION_NAME,AppConstants.USER_MOBILE_KEY));
@@ -221,32 +233,36 @@ public class BrowsePlansActivity extends AppCompatActivity implements PaymentGat
 
     @Override
     public void showError(String errorMsg) {
-
+closeProgressDialog();
     }
 
     @Override
     public void showSuccess(JSONObject successJSON) {
-
+        closeProgressDialog();
+        mRechargePresenter.updateStatus(paymentId,paymentStatus,rechargeURL,successJSON);
     }
 
     @Override
     public void clearView() {
-
+        closeProgressDialog();
+        finish();
     }
 
     @Override
     public void paymentGatewayStatus(int statusCode, String statusMessage) {
-        if (statusCode == 0) {
+        closeProgressDialog();
+        if (statusCode == 100001) {
+            showProgressDialog("You request processed, Please wait...");
             long time = System.currentTimeMillis();
             try {
-                String url = AppConstants.RECHARGE_LIVE_URL + AppConstants.RECHARGE_API + AppConstants.FORMAT_KEY + AppConstants.FORMAT_JSON_VALUE +
+                rechargeURL = AppConstants.RECHARGE_LIVE_URL + AppConstants.RECHARGE_API + AppConstants.FORMAT_KEY + AppConstants.FORMAT_JSON_VALUE +
                         AppConstants.TOKEN_KEY + AppConstants.TOKEN_VALUE + AppConstants.MOBILE_KEY + BrowsePlansActivity.selectedMobileNumber +
                         AppConstants.AMOUNT_KEY + rechargeAmount + AppConstants.OPERATOR_ID_KEY + BrowsePlansActivity.operatorId +
                         AppConstants.UNIQUE_ID_KEY + time + AppConstants.OPIONAL_VALUE1_KEY + URLEncoder.encode("Recharge", "utf-8") +
                         AppConstants.OPIONAL_VALUE2_KEY + URLEncoder.encode("Recharge", "utf-8");
-                myUtility.printLogcat("API::::" + url);
+                myUtility.printLogcat("API::::" + rechargeURL);
 
-                //mRechargePresenter.callRechargeAPI(url);
+                mRechargePresenter.callRechargeAPI(rechargeURL);
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
@@ -259,9 +275,9 @@ public class BrowsePlansActivity extends AppCompatActivity implements PaymentGat
 
     @Override
     public void showSuccess(int code, String message) {
-        if (code == 1001){
+        /*if (code == 1001){
             finish();
-        }
+        }*/
     }
 
     /**
@@ -302,6 +318,17 @@ public class BrowsePlansActivity extends AppCompatActivity implements PaymentGat
         public int getCount() {
             // Show 3 total pages.
             return 5;
+        }
+    }
+
+    private void showProgressDialog(String message) {
+        pd.setMessage(message);
+        pd.show();
+    }
+
+    private void closeProgressDialog() {
+        if (pd != null && pd.isShowing()) {
+            pd.dismiss();
         }
     }
 }

@@ -27,6 +27,7 @@ public class AppConstants {
     public static final String GENERATE_CHECKSUM_API="payment/hash_generator";
     public static final String NOTIFICATION_API="announcement";
     public static final String PAYMENT_STATUS_API="payment/payment_update";
+    public static final String RECHARGE_STATUS_API="payment/recharge";
     //.addHeaders("Authorization", Credentials.basic(AppConstants.APP_USER_NAME_VALUE,AppConstants.APP_PASSWORD_VALUE))
 
     public static final String APP_USER_NAME_VALUE = "CB_App";
@@ -98,6 +99,11 @@ public class AppConstants {
     public static final String API_PAYMENT_TYPE_KEY="payment_type";
     public static final String API_PAYMENT_RESPONSE_KEY="payment_response";
     public static final String API_PAYMENT_STATUS_KEY="payment_status";
+    public static final String API_ORDER_ID_KEY="orderid";
+    public static final String API_RECHARGE_PARAM_KEY="rechparam";// Send that URL That your passing to RechApi
+    public static final String API_RETURN_JSON_KEY="rechreturnjson";// Return Json from Rechapi
+    public static final String API_RECHARGE_AMOUNT_KEY="amount";
+    public static final String REACH_API_STATUS_KEY="rech_status";//Rech Api Status
 
 
     public static final String REDEEM_REQUEST_NAME_KEY = "redeem_req_name";

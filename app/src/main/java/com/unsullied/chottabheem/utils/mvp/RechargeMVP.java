@@ -11,5 +11,6 @@ public interface RechargeMVP {
     }
     public interface Presenter{
         void callRechargeAPI(String url);
+        void updateStatus(String paymentId,String paymentStatus,String rechargeURL,JSONObject json);
     }
 }

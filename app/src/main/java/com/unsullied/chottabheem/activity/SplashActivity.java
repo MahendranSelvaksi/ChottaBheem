@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 
 import com.crashlytics.android.Crashlytics;
@@ -89,6 +90,8 @@ public class SplashActivity extends AppCompatActivity {
             return false;
         }
     };*/
+    private SessionManager mSessionManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -109,11 +112,16 @@ public class SplashActivity extends AppCompatActivity {
                 toggle();
             }
         });*/
+       mSessionManager = new SessionManager();
+        Log.w("Succcess","USER id ::: "+mSessionManager.isLogged(getApplicationContext()));
+        Log.w("Succcess","Payment status ::: "+mSessionManager.getIntValueFromSessionByKey(getApplicationContext(),
+                AppConstants.USER_SESSION_NAME, AppConstants.PAYMENT_STATUS_KEY));
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 //Do something after 100ms
-                if (new SessionManager().isLogged(getApplicationContext()) > 0 && new SessionManager().getIntValueFromSessionByKey(getApplicationContext(),
+                if (mSessionManager.isLogged(getApplicationContext()) > 0 &&
+                        mSessionManager.getIntValueFromSessionByKey(getApplicationContext(),
                         AppConstants.USER_SESSION_NAME, AppConstants.PAYMENT_STATUS_KEY) == 1) {
                     Intent nextIntent = new Intent(SplashActivity.this, MainActivity.class);
                     startActivity(nextIntent);

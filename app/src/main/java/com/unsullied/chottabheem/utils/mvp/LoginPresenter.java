@@ -82,9 +82,10 @@ public class LoginPresenter implements LoginMVP.Presenter {
                                     sessionManager.addValueToSession(mContext, AppConstants.USER_SESSION_NAME, AppConstants.API_OVERALL_REFERRAL_KEY, userJsonObject.getString(AppConstants.API_OVERALL_REFERRAL_KEY));
                                     sessionManager.addValueToSession(mContext, AppConstants.USER_SESSION_NAME, AppConstants.API_CURRENT_REFERRAL_KEY, userJsonObject.getString(AppConstants.API_CURRENT_REFERRAL_KEY));
                                     sessionManager.addValueToSession(mContext, AppConstants.USER_SESSION_NAME, AppConstants.ACCOUNT_ID_KEY, accountid);
+                                    sessionManager.addIntValueToSession(mContext, AppConstants.USER_SESSION_NAME, AppConstants.PAYMENT_STATUS_KEY, userJsonObject.getBoolean(AppConstants.PAYMENT_STATUS_KEY) ? 1 : 0);
                                     if (userJsonObject.getBoolean(AppConstants.PAYMENT_STATUS_KEY)) {
                                         mView.showSuccess(1001, "Login Successfully!!");
-                                    }else {
+                                    } else {
                                         mView.callPayment();
                                     }
                                 }
@@ -177,7 +178,7 @@ public class LoginPresenter implements LoginMVP.Presenter {
                             sessionManager.addValueToSession(mContext, AppConstants.USER_SESSION_NAME, AppConstants.API_REDEEM_POINT_KEY, userJsonObject.getString(AppConstants.API_REDEEM_POINT_KEY));
                             sessionManager.addValueToSession(mContext, AppConstants.USER_SESSION_NAME, AppConstants.API_REDEEM_PROGRESS_KEY, userJsonObject.getString(AppConstants.API_REDEEM_PROGRESS_KEY));
                             sessionManager.addValueToSession(mContext, AppConstants.USER_SESSION_NAME, AppConstants.API_OVERALL_REFERRAL_KEY, userJsonObject.getString(AppConstants.API_OVERALL_REFERRAL_KEY));
-                            sessionManager.addIntValueToSession(mContext,AppConstants.USER_SESSION_NAME,AppConstants.PAYMENT_STATUS_KEY,0);
+                            sessionManager.addIntValueToSession(mContext, AppConstants.USER_SESSION_NAME, AppConstants.PAYMENT_STATUS_KEY, userJsonObject.getBoolean(AppConstants.PAYMENT_STATUS_KEY) ? 1 : 0);
                             mView.callPayment();
                         } else if (response.getInt(AppConstants.API_STATUS_CODE_KEY) == 202) {
                             mView.showError(2, response.getString(AppConstants.API_MESSAGE_KEY));

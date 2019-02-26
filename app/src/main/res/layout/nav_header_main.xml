@@ -156,7 +156,7 @@
             android:layout_gravity="center|center_horizontal|center_vertical"
             android:layout_margin="10dp"
             android:max="10"
-            android:progress="9"
+            android:progress="0"
             />
     </LinearLayout>
 

@@ -11,10 +11,10 @@
                 android:radius="5dip" />
             <gradient
                 android:angle="270"
-                android:centerColor="#ffdddddd"
+                android:centerColor="@color/app_primary_text_disabled_material_light"
                 android:centerY="0.50"
-                android:endColor="#ffffffff"
-                android:startColor="#ffffffff" />
+                android:endColor="@color/app_primary_text_disabled_material_light"
+                android:startColor="@color/app_primary_text_disabled_material_light" />
         </shape>
     </item>
     <item
@@ -25,8 +25,8 @@
                     android:radius="5dip" />
                 <gradient
                     android:angle="90"
-                    android:endColor="#771997e1"
-                    android:startColor="#770e75af" />
+                    android:endColor="@color/colorPrimary"
+                    android:startColor="@color/black_overlay" />
             </shape>
         </clip>
     </item>
@@ -38,8 +38,8 @@
                     android:radius="5dip" />
                 <gradient
                     android:angle="90"
-                    android:endColor="#ff1997e1"
-                    android:startColor="#ff0e75af" />
+                    android:endColor="@color/colorPrimaryDark"
+                    android:startColor="@color/colorPrimaryDark" />
             </shape>
         </clip>
     </item>

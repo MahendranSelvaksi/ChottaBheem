@@ -1,6 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
-String APK_NAME = "Chotta Bheem-Test", VERSION_NAME = "v1", SUFFIX = "25022019"
+String APK_NAME = "Chotta Bheem-Live", VERSION_NAME = "v1", SUFFIX = "26022019"
 repositories {
     jcenter()
 }

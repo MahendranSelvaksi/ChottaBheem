@@ -352,7 +352,7 @@
                                 android:cursorVisible="true"
                                 android:gravity="center_vertical"
                                 android:hint="Enter amount"
-                                android:imeOptions="actionNext"
+                                android:imeOptions="actionDone"
                                 android:inputType="numberDecimal"
                                 android:maxLines="1"
                                 android:singleLine="true"

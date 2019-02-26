@@ -455,6 +455,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void updateHeaderViewValue() {
+        mUtility.printLogcat("Progress::::"+mSessionManager.getValueFromSessionByKey(mContext, AppConstants.USER_SESSION_NAME, AppConstants.API_REDEEM_PROGRESS_KEY));
         pbId.setMax(Integer.parseInt(mSessionManager.getValueFromSessionByKey(mContext, AppConstants.USER_SESSION_NAME, AppConstants.API_OVERALL_REFERRAL_KEY)));
         pbId.setProgress(Integer.parseInt(mSessionManager.getValueFromSessionByKey(mContext, AppConstants.USER_SESSION_NAME, AppConstants.API_REDEEM_PROGRESS_KEY)));
         userNameTV.setText(mSessionManager.getValueFromSessionByKey(mContext, AppConstants.USER_SESSION_NAME, AppConstants.USER_NAME_KEY));
@@ -464,7 +465,8 @@ public class MainActivity extends AppCompatActivity
         // overallTV.setText(mSessionManager.getValueFromSessionByKey(mContext, AppConstants.USER_SESSION_NAME, AppConstants.API_REDEEM_PROGRESS_KEY));
         progressTV.setText(mSessionManager.getValueFromSessionByKey(mContext, AppConstants.USER_SESSION_NAME, AppConstants.API_CURRENT_REFERRAL_KEY).trim().concat("/").
                 concat(mSessionManager.getValueFromSessionByKey(mContext, AppConstants.USER_SESSION_NAME, AppConstants.API_OVERALL_REFERRAL_KEY).trim()));
-        pbId.setProgress(Integer.parseInt(mSessionManager.getValueFromSessionByKey(mContext, AppConstants.USER_SESSION_NAME, AppConstants.API_REDEEM_PROGRESS_KEY).trim()));
+        //pbId.setProgress(Integer.parseInt(mSessionManager.getValueFromSessionByKey(mContext, AppConstants.USER_SESSION_NAME, AppConstants.API_REDEEM_PROGRESS_KEY).trim()));
+       //pbId.setProgress(2);
     }
 
     @Override

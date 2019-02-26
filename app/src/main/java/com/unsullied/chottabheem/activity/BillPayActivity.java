@@ -2,6 +2,7 @@ package com.unsullied.chottabheem.activity;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -21,11 +22,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.androidnetworking.AndroidNetworking;
-import com.androidnetworking.common.ANRequest;
-import com.androidnetworking.common.Priority;
-import com.androidnetworking.error.ANError;
-import com.androidnetworking.interfaces.JSONObjectRequestListener;
 import com.crashlytics.android.Crashlytics;
 import com.payumoney.core.PayUmoneySdkInitializer;
 import com.payumoney.core.entity.TransactionResponse;
@@ -34,9 +30,7 @@ import com.payumoney.sdkui.ui.utils.ResultModel;
 import com.razorpay.PaymentResultListener;
 import com.unsullied.chottabheem.R;
 import com.unsullied.chottabheem.utils.AppConstants;
-import com.unsullied.chottabheem.utils.AppController;
 import com.unsullied.chottabheem.utils.AppPermissions;
-import com.unsullied.chottabheem.utils.ConnectivityReceiver;
 import com.unsullied.chottabheem.utils.CustomEditText;
 import com.unsullied.chottabheem.utils.CustomTextView;
 import com.unsullied.chottabheem.utils.SessionManager;
@@ -73,13 +67,14 @@ public class BillPayActivity extends AppCompatActivity implements View.OnClickLi
     private int pageIcon;
     private Utility myUtility;
 
-    private int selectedCircleId = 0, selectedOperatorId = 0, rechargeAmount = 0;
-    private String selectedLocation, selectedServiceProvider, selectedMobileNumber;
+    private int /*selectedCircleId = 0,*/ selectedOperatorId = 0, rechargeAmount = 0;
+    private String selectedLocation, selectedServiceProvider, selectedMobileNumber, paymentId, paymentStatus, rechargeURL;
     private boolean selectedCircleIdFromApi = false;
     private SmileyRemover smileyRemover;
     private SymbolsRemover symbolsRemover;
     private Activity mActivity;
     private Context mContext;
+    private ProgressDialog pd;
 
     private AppPreference mAppPreference;
     //private PayUmoneySdkInitializer.PaymentParam mPaymentParams;
@@ -97,7 +92,8 @@ public class BillPayActivity extends AppCompatActivity implements View.OnClickLi
 
         mActivity = this;
         mContext = getApplicationContext();
-
+        pd = new ProgressDialog(this);
+        pd.setCancelable(false);
         myUtility = new Utility();
         smileyRemover = new SmileyRemover();
         symbolsRemover = new SymbolsRemover();
@@ -226,16 +222,24 @@ public class BillPayActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     public void onClick(View v) {
         if (v == payBtn) {
-            selectedMobileNumber = mobileNumberET.getText().toString().trim();
+            selectedMobileNumber = consumerNumberET.getText().toString().trim();
             rechargeAmount = amountET.getText().toString().trim().length() > 0 ? Integer.parseInt(amountET.getText().toString().trim()) : 0;
-            if (selectedCircleId == 0 || selectedOperatorId == 0 || rechargeAmount == 0 || selectedMobileNumber.length() == 0) {
-                if (selectedCircleId == 0 && selectedOperatorId == 0 && rechargeAmount == 0 && selectedMobileNumber.length() == 0) {
+            myUtility.printLogcat("Click pay button");
+            myUtility.printLogcat("selectedOperatorId:::" + selectedOperatorId);
+            myUtility.printLogcat("rechargeAmount:::" + rechargeAmount);
+            myUtility.printLogcat("selectedMobileNumber:::" + selectedMobileNumber);
+            if (/*selectedCircleId == 0 ||*/ selectedOperatorId == 0 || rechargeAmount == 0 || selectedMobileNumber.length() == 0) {
+                if (/*selectedCircleId == 0 &&*/ selectedOperatorId == 0 && rechargeAmount == 0 && selectedMobileNumber.length() == 0) {
+                    myUtility.printLogcat("Click pay button if selectedOperatorId == 0 && rechargeAmount == 0 && selectedMobileNumber.length() == 0");
                     Toast.makeText(this, "Please give " + intentHintStr, Toast.LENGTH_SHORT).show();
-                } else if (selectedOperatorId == 0 || selectedCircleId == 0) {
+                } else if (selectedOperatorId == 0 /*|| selectedCircleId == 0*/) {
+                    myUtility.printLogcat("Click pay button if selectedOperatorId == 0 ");
                     Toast.makeText(this, "Please choose operator..", Toast.LENGTH_SHORT).show();
                 } else if (rechargeAmount == 0) {
+                    myUtility.printLogcat("Click pay button if rechargeAmount == 0");
                     Toast.makeText(this, "Please enter recharge amount...", Toast.LENGTH_SHORT).show();
                 }
+                myUtility.printLogcat("Click pay button if ");
             } else {
                 //mPaymentGatewayPresenter.launchPayUMoneyFlow(String.valueOf(rechargeAmount), selectedMobileNumber, emailIdStr);
                /* mPaymentGatewayPresenter.generateHashFromServer(selectedMobileNumber,
@@ -243,7 +247,7 @@ public class BillPayActivity extends AppCompatActivity implements View.OnClickLi
                         nameStr,emailIdStr, String.valueOf(rechargeAmount),
                         "Recharge","Pay Now","Recharge");*/
 
-                long time = System.currentTimeMillis();
+             /*   long time = System.currentTimeMillis();
                 try {
                     String url = AppConstants.RECHARGE_LIVE_URL + AppConstants.RECHARGE_API + AppConstants.FORMAT_KEY + AppConstants.FORMAT_JSON_VALUE +
                             AppConstants.TOKEN_KEY + AppConstants.TOKEN_VALUE + AppConstants.MOBILE_KEY + selectedMobileNumber +
@@ -255,7 +259,13 @@ public class BillPayActivity extends AppCompatActivity implements View.OnClickLi
                     mRechargePresenter.callRechargeAPI(url);
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
-                }
+                }*/
+                showProgressDialog("Initiate payment, Please wait...");
+                myUtility.printLogcat("Click pay button else");
+                paymentStatus = "";
+                mPaymentGatewayPresenter.startPayment(mContext, mActivity, "Recharge", String.valueOf(rechargeAmount).concat("00"),
+                        mSessionManager.getValueFromSessionByKey(mContext, AppConstants.USER_SESSION_NAME, AppConstants.USER_EMAIL_ID_KEY),
+                        mSessionManager.getValueFromSessionByKey(mContext, AppConstants.USER_SESSION_NAME, AppConstants.USER_MOBILE_KEY));
             }
         } else if (v == operatorET || v == operatorLayout || v == operatorSelectBtn) {
             Intent operatorsIntent = new Intent(mActivity, SelectOperatorActivity.class);
@@ -303,9 +313,9 @@ public class BillPayActivity extends AppCompatActivity implements View.OnClickLi
                         .setMessage("Successfully Added payment....")
                         .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
-                                mPaymentGatewayPresenter.startPayment(mContext,mActivity,"Recharge", String.valueOf(rechargeAmount).concat("00"),
+                                /*mPaymentGatewayPresenter.startPayment(mContext,mActivity,"Recharge", String.valueOf(rechargeAmount).concat("00"),
                                         mSessionManager.getValueFromSessionByKey(mContext,AppConstants.USER_SESSION_NAME,AppConstants.USER_EMAIL_ID_KEY),
-                                        mSessionManager.getValueFromSessionByKey(mContext,AppConstants.USER_SESSION_NAME,AppConstants.USER_MOBILE_KEY));
+                                        mSessionManager.getValueFromSessionByKey(mContext,AppConstants.USER_SESSION_NAME,AppConstants.USER_MOBILE_KEY));*/
 
                                 dialog.dismiss();
                             }
@@ -336,7 +346,7 @@ public class BillPayActivity extends AppCompatActivity implements View.OnClickLi
                         cNumber = phones.getString(phones.getColumnIndex("data1"));
                         cNumber = cNumber.replaceAll(" ", "");
                         System.out.println("number is:" + cNumber);
-                        phoneNumberWithOutCountryCode(cNumber);
+                        //phoneNumberWithOutCountryCode(cNumber);
                     }
                     // String name = c.getString(c.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
 
@@ -346,6 +356,14 @@ public class BillPayActivity extends AppCompatActivity implements View.OnClickLi
         } else if (requestCode == AppConstants.OPERATOR_INTENT_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 if (data != null) {
+                    amountET.setText("");
+                    operatorET.setText("");
+                    mobileNumberET.setText("");
+                    consumerNumberET.setText("");
+                    optionValue1ET.setText("");
+                    optionValue2ET.setText("");
+                    optionValue3ET.setText("");
+                    optionValue4ET.setText("");
                     intentHintStr = data.getStringExtra(AppConstants.HINT_INTENT_KEY);
                     optionValue1 = data.getStringExtra(AppConstants.OPTION_VALUE_1_INTENT_KEY);
                     optionValue2 = data.getStringExtra(AppConstants.OPTION_VALUE_2_INTENT_KEY);
@@ -354,6 +372,7 @@ public class BillPayActivity extends AppCompatActivity implements View.OnClickLi
                     selectedServiceProvider = data.getStringExtra(AppConstants.JSON_OPERATOR_NAME_KEY);
                     selectedOperatorId = data.getIntExtra(AppConstants.JSON_OPERATORID_KEY, 0);
 
+                    myUtility.printLogcat("OperatorId::" + selectedOperatorId);
                     myUtility.printLogcat("Hint::" + intentHintStr);
                     myUtility.printLogcat("optionValue1::" + optionValue1);
                     myUtility.printLogcat("optionValue2::" + optionValue2);
@@ -389,44 +408,52 @@ public class BillPayActivity extends AppCompatActivity implements View.OnClickLi
 
     @Override
     public void showError(String errorMsg) {
+        closeProgressDialog();
         Toast.makeText(mActivity, errorMsg, Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void paymentGatewayStatus(int statusCode, String statusMessage) {
-        if (statusCode == 0) {
+        closeProgressDialog();
+        if (statusCode == 100001) {
+            showProgressDialog("You request processed, Please wait...");
+            rechargeURL = "";
             long time = System.currentTimeMillis();
             try {
-                String url = AppConstants.RECHARGE_LIVE_URL + AppConstants.RECHARGE_API + AppConstants.FORMAT_KEY + AppConstants.FORMAT_JSON_VALUE +
+                rechargeURL = AppConstants.RECHARGE_LIVE_URL + AppConstants.RECHARGE_API + AppConstants.FORMAT_KEY + AppConstants.FORMAT_JSON_VALUE +
                         AppConstants.TOKEN_KEY + AppConstants.TOKEN_VALUE + AppConstants.MOBILE_KEY + selectedMobileNumber +
                         AppConstants.AMOUNT_KEY + rechargeAmount + AppConstants.OPERATOR_ID_KEY + selectedOperatorId +
-                        AppConstants.UNIQUE_ID_KEY + time + AppConstants.OPIONAL_VALUE1_KEY + URLEncoder.encode(intentTitleStr, "utf-8") +
+                        AppConstants.UNIQUE_ID_KEY + time + AppConstants.OPIONAL_VALUE1_KEY + URLEncoder.encode("Recharge", "utf-8") +
                         AppConstants.OPIONAL_VALUE2_KEY + URLEncoder.encode("Recharge", "utf-8");
-                myUtility.printLogcat("API::::" + url);
-                mRechargePresenter.callRechargeAPI(url);
+                myUtility.printLogcat("API::::" + rechargeURL);
+                mRechargePresenter.callRechargeAPI(rechargeURL);
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
         }
         mPaymentGatewayPresenter.updatePaymentStatus(String.valueOf(mSessionManager.getIntValueFromSessionByKey(mContext, AppConstants.USER_SESSION_NAME, AppConstants.USER_ID_KEY)),
                 mSessionManager.getValueFromSessionByKey(mContext, AppConstants.USER_SESSION_NAME, AppConstants.ACCESS_TOKEN_KEY),
-                String.valueOf(rechargeAmount), statusMessage, "Bill Pay", statusMessage, statusCode == 100001 ? "1" : "2");
+                String.valueOf(rechargeAmount), statusMessage, "Bill Pay", statusMessage, paymentStatus);
+
     }
 
     @Override
     public void showSuccess(int code, String message) {
-        if (code == 1001){
+        closeProgressDialog();
+        /*if (code == 1001){
             finish();
-        }
+        }*/
     }
 
     @Override
     public void showSuccess(JSONObject successJSON) {
-
+        closeProgressDialog();
+        mRechargePresenter.updateStatus(paymentId, paymentStatus, rechargeURL, successJSON);
     }
 
     @Override
     public void clearView() {
+        closeProgressDialog();
         amountET.setText("");
         operatorET.setText("");
         mobileNumberET.setText("");
@@ -435,6 +462,7 @@ public class BillPayActivity extends AppCompatActivity implements View.OnClickLi
         optionValue2ET.setText("");
         optionValue3ET.setText("");
         optionValue4ET.setText("");
+        finish();
     }
 
     private void callContactIntent() {
@@ -442,7 +470,7 @@ public class BillPayActivity extends AppCompatActivity implements View.OnClickLi
         startActivityForResult(intent, PICK_CONTACT);
     }
 
-    public void phoneNumberWithOutCountryCode(String phoneNumberWithCountryCode) {
+   /* public void phoneNumberWithOutCountryCode(String phoneNumberWithCountryCode) {
         String phoneNumberWithoutCountryCode = "";
         if (phoneNumberWithCountryCode.startsWith("+") && phoneNumberWithCountryCode.length() == 13) {
             String[] phonenUmber = phoneNumberWithCountryCode.split("\\+91");
@@ -455,9 +483,9 @@ public class BillPayActivity extends AppCompatActivity implements View.OnClickLi
         Log.e("number is", phoneNumberWithoutCountryCode);
         consumerNumberET.setText(phoneNumberWithoutCountryCode);
         getOperatorBackground(phoneNumberWithoutCountryCode.substring(0, 4));
-    }
+    }*/
 
-    private void getOperatorBackground(String mobileNumber) {
+   /* private void getOperatorBackground(String mobileNumber) {
         if (ConnectivityReceiver.isConnected()) {
             String url = AppConstants.RECHARGE_LIVE_URL + AppConstants.OPERATOR_CHECK_API + AppConstants.FORMAT_KEY + AppConstants.FORMAT_JSON_VALUE +
                     AppConstants.TOKEN_KEY + AppConstants.TOKEN_VALUE + AppConstants.MOBILE_KEY + mobileNumber;
@@ -478,7 +506,7 @@ public class BillPayActivity extends AppCompatActivity implements View.OnClickLi
                                 JSONObject responseJSON = response.getJSONObject(AppConstants.RESPONSE_JSON_OBJECT_KEY);
                                 if (responseJSON.getInt(AppConstants.RES_CODE_KEY) == AppConstants.RES_CODE_VALUE) {
                                     selectedCircleIdFromApi = true;
-                                    selectedCircleId = Integer.parseInt(responseJSON.getString(AppConstants.JSON_CIRCLE_ID_KEY).trim());
+                                    //selectedCircleId = Integer.parseInt(responseJSON.getString(AppConstants.JSON_CIRCLE_ID_KEY).trim());
                                     selectedOperatorId = Integer.parseInt(responseJSON.getString(AppConstants.JSON_OPERATOR_ID_KEY).trim());
                                     selectedLocation = responseJSON.getString(AppConstants.JSON_LOCATION_KEY).trim();
                                     selectedServiceProvider = responseJSON.getString(AppConstants.JSON_SERVICE_KEY);
@@ -487,7 +515,6 @@ public class BillPayActivity extends AppCompatActivity implements View.OnClickLi
                                     selectedCircleIdFromApi = false;
                                     Toast.makeText(mActivity, "" + responseJSON.getString(AppConstants.RES_TEXT_KEY).trim(), Toast.LENGTH_SHORT).show();
                                 }
-
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -519,7 +546,7 @@ public class BillPayActivity extends AppCompatActivity implements View.OnClickLi
         } else {
             Toast.makeText(this, "" + AppConstants.NO_CONNECTION_ERROR, Toast.LENGTH_SHORT).show();
         }
-    }
+    }*/
 
     private void updateServiceProviderUI() {
         operatorET.setText(selectedServiceProvider.concat("(" + selectedLocation + ")"));
@@ -527,11 +554,25 @@ public class BillPayActivity extends AppCompatActivity implements View.OnClickLi
 
     @Override
     public void onPaymentSuccess(String s) {
-paymentGatewayStatus(100001,s);
+        paymentId = s;
+        paymentStatus = "1";
+        paymentGatewayStatus(100001, s);
     }
 
     @Override
     public void onPaymentError(int i, String s) {
-        paymentGatewayStatus(i,s);
+        paymentStatus = "2";
+        paymentGatewayStatus(i, s);
+    }
+
+    private void showProgressDialog(String message) {
+        pd.setMessage(message);
+        pd.show();
+    }
+
+    private void closeProgressDialog() {
+        if (pd != null && pd.isShowing()) {
+            pd.dismiss();
+        }
     }
 }
